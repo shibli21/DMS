@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
-import { HelloResolver } from "./resolvers/Hello";
 import { MyContext } from "./types/MyContext";
 
 config();
@@ -19,10 +18,10 @@ const main = async () => {
     port: 5433,
     password: "root",
     username: "postgres",
-    database: "my app",
+    database: "dms",
     synchronize: true,
     logging: true,
-    entities: [],
+    entities: ["src/entities/*.ts"],
   });
 
   const app = express();
@@ -35,14 +34,14 @@ const main = async () => {
     const token = req.cookies["token"];
     try {
       const response = jwt.verify(token, `${process.env.JWT_SECRET}`) as any;
-      (req as any).userId = response.userId;
+      (req as any).adminId = response.adminId;
     } catch {}
     next();
   });
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver],
+      resolvers: [__dirname + "/resolvers/*.ts"],
       validate: false,
     }),
     context: ({ req, res }): MyContext => ({

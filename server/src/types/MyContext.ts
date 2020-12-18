@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 interface R extends Request {
-  userId?: number;
+  adminId?: number;
 }
 
 export type MyContext = {
