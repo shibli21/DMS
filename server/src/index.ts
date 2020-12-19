@@ -35,6 +35,8 @@ const main = async () => {
     try {
       const response = jwt.verify(token, `${process.env.JWT_SECRET}`) as any;
       (req as any).adminId = response.adminId;
+      (req as any).studentId = response.studentId;
+      (req as any).facultyId = response.facultyId;
     } catch {}
     next();
   });
