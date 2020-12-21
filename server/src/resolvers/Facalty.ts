@@ -122,7 +122,7 @@ export class FacultyResolver {
       faculty = await Faculty.findOne({ where: { email: input.email } });
 
       const token = jwt.sign(
-        { studentId: faculty?.id },
+        { facultyId: faculty?.id },
         `${process.env.JWT_SECRET}`
       );
       res.cookie("token", token, {
