@@ -6,9 +6,11 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { CourseAssignToFaculty } from "./CourseAssignToFaculty";
 
 @Entity()
 @ObjectType()
@@ -40,6 +42,13 @@ export class Course extends BaseEntity {
   @ManyToOne(() => Department, (department) => department.courses)
   @Field(() => Department)
   department!: Department;
+
+  @OneToMany(
+    () => CourseAssignToFaculty,
+    (CourseAssignToFaculty) => CourseAssignToFaculty.course
+  )
+  @Field(() => [CourseAssignToFaculty])
+  assignedFaculty!: CourseAssignToFaculty[];
 
   @Field(() => String)
   @CreateDateColumn()

@@ -26,7 +26,7 @@ class CourseResponse {
 @Resolver()
 export class CourseResolver {
   @Query(() => [Course])
-  Courses(): Promise<Course[]> {
+  courses(): Promise<Course[]> {
     return Course.find();
   }
 

@@ -1,9 +1,11 @@
+import { CourseAssignToFaculty } from "./CourseAssignToFaculty";
 import { Field, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -45,6 +47,13 @@ export class Faculty extends BaseEntity {
   @Column()
   @Field()
   contactNumber: number;
+
+  @OneToMany(
+    () => CourseAssignToFaculty,
+    (courseAssignToFaculty) => courseAssignToFaculty.faculty
+  )
+  @Field(() => [CourseAssignToFaculty])
+  assignedTo: CourseAssignToFaculty[];
 
   @Field(() => String)
   @CreateDateColumn()
