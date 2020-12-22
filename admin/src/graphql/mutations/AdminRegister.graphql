@@ -1,0 +1,13 @@
+mutation AdminRegister($input: RegisterAdminInputType!) {
+  registerAdmin(input: $input) {
+    errors {
+      field
+      message
+    }
+    admin {
+      id
+      username
+      email
+    }
+  }
+}

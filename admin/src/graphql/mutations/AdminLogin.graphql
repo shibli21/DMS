@@ -1,0 +1,13 @@
+mutation AdminLogin($password: String!, $email: String!) {
+  adminLogin(password: $password, email: $email) {
+    errors {
+      field
+      message
+    }
+    admin {
+      id
+      username
+      email
+    }
+  }
+}
