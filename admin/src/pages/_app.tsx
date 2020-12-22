@@ -1,5 +1,6 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, Container } from "@chakra-ui/react";
+import Navbar from "../components/Navbar";
 import theme from "../theme/theme";
 
 function MyApp({ Component, pageProps }) {
@@ -11,7 +12,10 @@ function MyApp({ Component, pageProps }) {
   return (
     <ApolloProvider client={client}>
       <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
+        <Navbar />
+        <Container maxW="7xl">
+          <Component {...pageProps} />
+        </Container>
       </ChakraProvider>
     </ApolloProvider>
   );
