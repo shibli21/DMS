@@ -3,10 +3,10 @@ import { Field, InputType } from "type-graphql";
 @InputType()
 export class AssignCourseToFacultyInputType {
   @Field()
-  semester!: string;
+  semesterId!: number;
 
   @Field()
-  session!: string;
+  sessionId!: number;
 
   @Field()
   departmentCode!: string;

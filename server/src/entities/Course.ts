@@ -1,4 +1,3 @@
-import { Department } from "./Department";
 import { Field, ObjectType } from "type-graphql";
 import {
   BaseEntity,
@@ -11,6 +10,8 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { CourseAssignToFaculty } from "./CourseAssignToFaculty";
+import { Department } from "./Department";
+import { Semester } from "./Semester";
 
 @Entity()
 @ObjectType()
@@ -35,13 +36,13 @@ export class Course extends BaseEntity {
   @Field()
   description!: string;
 
-  @Column()
-  @Field()
-  semester!: string;
-
   @ManyToOne(() => Department, (department) => department.courses)
   @Field(() => Department)
   department!: Department;
+
+  @ManyToOne(() => Semester, (Semester) => Semester.course)
+  @Field(() => Semester)
+  semester!: Semester;
 
   @OneToMany(
     () => CourseAssignToFaculty,

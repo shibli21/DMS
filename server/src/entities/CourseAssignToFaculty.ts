@@ -1,14 +1,10 @@
 import { Field, ObjectType } from "type-graphql";
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { BaseEntity, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Course } from "./Course";
 import { Department } from "./Department";
 import { Faculty } from "./Faculty";
+import { Semester } from "./Semester";
+import { Session } from "./Session";
 
 @Entity()
 @ObjectType()
@@ -17,13 +13,13 @@ export class CourseAssignToFaculty extends BaseEntity {
   @Field()
   id!: number;
 
-  @Column()
-  @Field()
-  semester!: string;
+  @ManyToOne(() => Session)
+  @Field(() => Session)
+  session!: Session;
 
-  @Column()
-  @Field()
-  session!: string;
+  @ManyToOne(() => Semester)
+  @Field(() => Semester)
+  semester!: Semester;
 
   @ManyToOne(() => Faculty, (Faculty) => Faculty)
   @Field(() => Faculty)

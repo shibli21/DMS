@@ -1,3 +1,4 @@
+import { Session } from "./../entities/Session";
 import { Student } from "./../entities/Student";
 import { AddStudentInputType } from "./../types/InputTypes/AddStudentInputType";
 
@@ -14,6 +15,17 @@ export const validateAddStudent = async (input: AddStudentInputType) => {
       registrationNumber: input.registrationNumber,
     },
   });
+
+  const session = await Session.findOne({
+    where: { id: input.sessionId },
+  });
+
+  if (!session) {
+    errors.push({
+      field: "session",
+      message: "Session doesn't exists!",
+    });
+  }
 
   if (input.username.includes("@")) {
     errors.push({

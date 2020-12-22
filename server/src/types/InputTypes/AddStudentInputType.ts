@@ -12,7 +12,7 @@ export class AddStudentInputType {
   registrationNumber: number;
 
   @Field()
-  session: number;
+  sessionId: number;
 
   @Field()
   gender: string;

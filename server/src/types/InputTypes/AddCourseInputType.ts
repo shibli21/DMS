@@ -15,7 +15,7 @@ export class AddCourseInputType {
   description!: string;
 
   @Field()
-  semester!: string;
+  semesterId!: number;
 
   @Field()
   departmentCode!: string;

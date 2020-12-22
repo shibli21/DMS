@@ -4,9 +4,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Session } from "./Session";
 
 @Entity()
 @ObjectType()
@@ -27,9 +29,9 @@ export class Student extends BaseEntity {
   @Field()
   registrationNumber: number;
 
-  @Column()
-  @Field()
-  session: number;
+  @ManyToOne(() => Session)
+  @Field(() => Session)
+  session!: Session;
 
   @Column({ nullable: true })
   password!: string;

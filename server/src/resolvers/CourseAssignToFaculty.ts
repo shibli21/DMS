@@ -1,7 +1,3 @@
-import { Faculty } from "./../entities/Faculty";
-import { AssignCourseToFacultyInputType } from "./../types/InputTypes/AssignCourseToFaculty";
-import { CourseAssignToFaculty } from "./../entities/CourseAssignToFaculty";
-import { Department } from "./../entities/Department";
 import {
   Arg,
   Field,
@@ -12,9 +8,15 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
+import { Course } from "../entities/Course";
 import { isAdmin } from "../middleware/isAdmin";
 import { FieldError } from "../types/ObjectTypes/FieldErrorType";
-import { Course } from "../entities/Course";
+import { CourseAssignToFaculty } from "./../entities/CourseAssignToFaculty";
+import { Department } from "./../entities/Department";
+import { Faculty } from "./../entities/Faculty";
+import { Semester } from "./../entities/Semester";
+import { Session } from "./../entities/Session";
+import { AssignCourseToFacultyInputType } from "./../types/InputTypes/AssignCourseToFaculty";
 
 @ObjectType()
 class CourseAssignToFacultyResponse {
@@ -71,6 +73,37 @@ export class CourseAssignToFacultyResolver {
       };
     }
 
+    const semester = await Semester.findOne({
+      where: { department: department, id: input.semesterId },
+      relations: ["department"],
+    });
+
+    if (!semester) {
+      return {
+        errors: [
+          {
+            field: "semester",
+            message: "Semester doesn't exists!",
+          },
+        ],
+      };
+    }
+
+    const session = await Session.findOne({
+      where: { id: input.sessionId },
+    });
+
+    if (!session) {
+      return {
+        errors: [
+          {
+            field: "session",
+            message: "Session doesn't exists!",
+          },
+        ],
+      };
+    }
+
     const faculty = await Faculty.findOne({
       where: {
         id: input.facultyId,
@@ -98,8 +131,8 @@ export class CourseAssignToFacultyResolver {
           faculty: faculty,
           course: course,
           department: department,
-          semester: input.semester,
-          session: input.session,
+          semester: semester,
+          session: session,
         })
         .returning("*")
         .execute();

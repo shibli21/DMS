@@ -1,4 +1,3 @@
-import { Department } from "./../entities/Department";
 import {
   Arg,
   Field,
@@ -12,6 +11,8 @@ import { getConnection } from "typeorm";
 import { isAdmin } from "../middleware/isAdmin";
 import { FieldError } from "../types/ObjectTypes/FieldErrorType";
 import { Course } from "./../entities/Course";
+import { Department } from "./../entities/Department";
+import { Semester } from "./../entities/Semester";
 import { AddCourseInputType } from "./../types/InputTypes/AddCourseInputType";
 
 @ObjectType()
@@ -50,6 +51,22 @@ export class CourseResolver {
       };
     }
 
+    const semester = await Semester.findOne({
+      where: { department: department, id: input.semesterId },
+      relations: ["department"],
+    });
+
+    if (!semester) {
+      return {
+        errors: [
+          {
+            field: "semester",
+            message: "Semester doesn't exists!",
+          },
+        ],
+      };
+    }
+
     let course;
     try {
       await getConnection()
@@ -60,7 +77,7 @@ export class CourseResolver {
           name: input.name,
           department: department,
           description: input.description,
-          semester: input.semester,
+          semester: semester,
           code: input.code,
           credit: input.credit,
         })

@@ -1,3 +1,4 @@
+import { Session } from "./../entities/Session";
 import { hash, verify } from "argon2";
 import jwt from "jsonwebtoken";
 import {
@@ -58,7 +59,11 @@ export class StudentResolver {
           username: input.username,
           email: emailToLower,
           address: input.username,
-          session: input.session,
+          session: await Session.findOne({
+            where: {
+              id: input.sessionId,
+            },
+          }),
           gender: input.username,
           registrationNumber: input.registrationNumber,
           contactNumber: input.contactNumber,
