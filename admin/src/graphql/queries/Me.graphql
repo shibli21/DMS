@@ -1,0 +1,29 @@
+query Me {
+  me {
+    student {
+      id
+      username
+      email
+      registrationNumber
+      oneTimePassword
+      gender
+      address
+      contactNumber
+    }
+    admin {
+      id
+      username
+      email
+    }
+    faculty {
+      id
+      username
+      designation
+      email
+      oneTimePassword
+      gender
+      address
+      contactNumber
+    }
+  }
+}
