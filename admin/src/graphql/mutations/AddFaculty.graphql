@@ -1,0 +1,17 @@
+mutation AddFaculty($input: AddFacultyInputType!) {
+  addFaculty(input: $input) {
+    errors {
+      field
+      message
+    }
+    faculty {
+      id
+      email
+      username
+      designation
+      gender
+      address
+      contactNumber
+    }
+  }
+}

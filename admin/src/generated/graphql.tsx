@@ -373,6 +373,25 @@ export type MutationStudentLoginArgs = {
   email: Scalars['String'];
 };
 
+export type AddFacultyMutationVariables = Exact<{
+  input: AddFacultyInputType;
+}>;
+
+
+export type AddFacultyMutation = (
+  { __typename?: 'Mutation' }
+  & { addFaculty: (
+    { __typename?: 'FacultyResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>>, faculty?: Maybe<(
+      { __typename?: 'Faculty' }
+      & Pick<Faculty, 'id' | 'email' | 'username' | 'designation' | 'gender' | 'address' | 'contactNumber'>
+    )> }
+  ) }
+);
+
 export type AddSemesterMutationVariables = Exact<{
   input: AddSemesterInputType;
 }>;
@@ -520,6 +539,50 @@ export type SessionsQuery = (
 );
 
 
+export const AddFacultyDocument = gql`
+    mutation AddFaculty($input: AddFacultyInputType!) {
+  addFaculty(input: $input) {
+    errors {
+      field
+      message
+    }
+    faculty {
+      id
+      email
+      username
+      designation
+      gender
+      address
+      contactNumber
+    }
+  }
+}
+    `;
+export type AddFacultyMutationFn = Apollo.MutationFunction<AddFacultyMutation, AddFacultyMutationVariables>;
+
+/**
+ * __useAddFacultyMutation__
+ *
+ * To run a mutation, you first call `useAddFacultyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddFacultyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addFacultyMutation, { data, loading, error }] = useAddFacultyMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddFacultyMutation(baseOptions?: Apollo.MutationHookOptions<AddFacultyMutation, AddFacultyMutationVariables>) {
+        return Apollo.useMutation<AddFacultyMutation, AddFacultyMutationVariables>(AddFacultyDocument, baseOptions);
+      }
+export type AddFacultyMutationHookResult = ReturnType<typeof useAddFacultyMutation>;
+export type AddFacultyMutationResult = Apollo.MutationResult<AddFacultyMutation>;
+export type AddFacultyMutationOptions = Apollo.BaseMutationOptions<AddFacultyMutation, AddFacultyMutationVariables>;
 export const AddSemesterDocument = gql`
     mutation AddSemester($input: AddSemesterInputType!) {
   addSemester(input: $input) {
