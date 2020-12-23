@@ -87,7 +87,9 @@ const NavBar = (props: ChakraProps) => {
       >
         <Box>
           <NextLink href="/">
-            <Text color="white"> Logo</Text>
+            <Text color="white" cursor="pointer">
+              Logo
+            </Text>
           </NextLink>
         </Box>
         <Flex display={["none", "none", "inherit", "inherit"]} align="center">

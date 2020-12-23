@@ -371,6 +371,25 @@ export type MutationStudentLoginArgs = {
   email: Scalars['String'];
 };
 
+export type AddSessionMutationVariables = Exact<{
+  input: AddSessionInputType;
+}>;
+
+
+export type AddSessionMutation = (
+  { __typename?: 'Mutation' }
+  & { addSession: (
+    { __typename?: 'SessionResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>>, session?: Maybe<(
+      { __typename?: 'Session' }
+      & Pick<Session, 'id' | 'name' | 'startTime' | 'endTime'>
+    )> }
+  ) }
+);
+
 export type AdminLoginMutationVariables = Exact<{
   password: Scalars['String'];
   email: Scalars['String'];
@@ -438,7 +457,59 @@ export type MeQuery = (
   )> }
 );
 
+export type SessionsQueryVariables = Exact<{ [key: string]: never; }>;
 
+
+export type SessionsQuery = (
+  { __typename?: 'Query' }
+  & { sessions: Array<(
+    { __typename?: 'Session' }
+    & Pick<Session, 'id' | 'name' | 'startTime' | 'endTime'>
+  )> }
+);
+
+
+export const AddSessionDocument = gql`
+    mutation AddSession($input: AddSessionInputType!) {
+  addSession(input: $input) {
+    errors {
+      field
+      message
+    }
+    session {
+      id
+      name
+      startTime
+      endTime
+    }
+  }
+}
+    `;
+export type AddSessionMutationFn = Apollo.MutationFunction<AddSessionMutation, AddSessionMutationVariables>;
+
+/**
+ * __useAddSessionMutation__
+ *
+ * To run a mutation, you first call `useAddSessionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddSessionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addSessionMutation, { data, loading, error }] = useAddSessionMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddSessionMutation(baseOptions?: Apollo.MutationHookOptions<AddSessionMutation, AddSessionMutationVariables>) {
+        return Apollo.useMutation<AddSessionMutation, AddSessionMutationVariables>(AddSessionDocument, baseOptions);
+      }
+export type AddSessionMutationHookResult = ReturnType<typeof useAddSessionMutation>;
+export type AddSessionMutationResult = Apollo.MutationResult<AddSessionMutation>;
+export type AddSessionMutationOptions = Apollo.BaseMutationOptions<AddSessionMutation, AddSessionMutationVariables>;
 export const AdminLoginDocument = gql`
     mutation AdminLogin($password: String!, $email: String!) {
   adminLogin(password: $password, email: $email) {
@@ -605,3 +676,38 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const SessionsDocument = gql`
+    query Sessions {
+  sessions {
+    id
+    name
+    startTime
+    endTime
+  }
+}
+    `;
+
+/**
+ * __useSessionsQuery__
+ *
+ * To run a query within a React component, call `useSessionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSessionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSessionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSessionsQuery(baseOptions?: Apollo.QueryHookOptions<SessionsQuery, SessionsQueryVariables>) {
+        return Apollo.useQuery<SessionsQuery, SessionsQueryVariables>(SessionsDocument, baseOptions);
+      }
+export function useSessionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SessionsQuery, SessionsQueryVariables>) {
+          return Apollo.useLazyQuery<SessionsQuery, SessionsQueryVariables>(SessionsDocument, baseOptions);
+        }
+export type SessionsQueryHookResult = ReturnType<typeof useSessionsQuery>;
+export type SessionsLazyQueryHookResult = ReturnType<typeof useSessionsLazyQuery>;
+export type SessionsQueryResult = Apollo.QueryResult<SessionsQuery, SessionsQueryVariables>;

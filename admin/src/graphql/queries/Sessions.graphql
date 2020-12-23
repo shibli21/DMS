@@ -1,0 +1,8 @@
+query Sessions {
+  sessions {
+    id
+    name
+    startTime
+    endTime
+  }
+}
