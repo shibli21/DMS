@@ -153,7 +153,7 @@ const AddSession = (props: Props) => {
               isLoading={loading}
               colorScheme="purple"
             >
-              Add Session
+              Add Semester
             </Button>
           </Stack>
         </form>
