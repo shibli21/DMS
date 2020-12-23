@@ -36,6 +36,7 @@ export class SessionResolver {
     const session = await Session.create({
       startTime: input.startTime,
       name: input.name,
+      endTime: input.endTime ? input.endTime : undefined,
     }).save();
 
     return { session };
