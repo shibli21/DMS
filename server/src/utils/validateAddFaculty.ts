@@ -9,6 +9,30 @@ export const validateAddFaculty = async (input: AddFacultyInputType) => {
     },
   });
 
+  if (!input.contactNumber) {
+    errors.push({
+      field: "contactNumber",
+      message: "Invalid number!",
+    });
+  } else if (input.contactNumber.toString().length < 10) {
+    errors.push({
+      field: "contactNumber",
+      message: "Invalid number!",
+    });
+  }
+  if (!input.designation) {
+    errors.push({
+      field: "designation",
+      message: "Designation can't be empty",
+    });
+  }
+  if (!input.address) {
+    errors.push({
+      field: "address",
+      message: "Address can't be empty",
+    });
+  }
+
   if (input.username.includes("@")) {
     errors.push({
       field: "username",

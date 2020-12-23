@@ -21,11 +21,11 @@ export class CourseAssignToFaculty extends BaseEntity {
   @Field(() => Semester)
   semester!: Semester;
 
-  @ManyToOne(() => Faculty, (Faculty) => Faculty)
+  @ManyToOne(() => Faculty, (faculty) => faculty.assignedTo)
   @Field(() => Faculty)
   faculty!: Faculty;
 
-  @ManyToOne(() => Department, (department) => department)
+  @ManyToOne(() => Department)
   @Field(() => Department)
   department!: Department;
 

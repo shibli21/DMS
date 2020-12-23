@@ -17,6 +17,6 @@ export class AddFacultyInputType {
   @Field()
   address: string;
 
-  @Field()
+  @Field({ nullable: true })
   contactNumber: number;
 }

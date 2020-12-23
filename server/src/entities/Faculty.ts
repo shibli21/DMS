@@ -44,7 +44,7 @@ export class Faculty extends BaseEntity {
   @Field()
   address: string;
 
-  @Column()
+  @Column({ type: "bigint" })
   @Field()
   contactNumber: number;
 

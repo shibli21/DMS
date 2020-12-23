@@ -85,7 +85,7 @@ export const validateAddStudent = async (input: AddStudentInputType) => {
       field: "contactNumber",
       message: "Invalid number!",
     });
-  } else if (input.contactNumber.toString().length < 11) {
+  } else if (input.contactNumber.toString().length < 10) {
     errors.push({
       field: "contactNumber",
       message: "Invalid number!",
