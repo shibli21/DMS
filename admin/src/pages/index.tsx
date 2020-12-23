@@ -5,7 +5,7 @@ import { FaPlus } from "react-icons/fa";
 export default function Home() {
   return (
     <Box mt={10}>
-      <Grid templateColumns="1fr 1fr 1fr 1fr">
+      <Grid templateColumns="1fr 1fr 1fr 1fr" gap={10}>
         <Link href="/add-session">
           <Flex
             align="center"
@@ -15,6 +15,18 @@ export default function Home() {
             cursor="pointer"
           >
             <Text>Add Session</Text>
+            <FaPlus />
+          </Flex>
+        </Link>
+        <Link href="/add-semester">
+          <Flex
+            align="center"
+            justify="space-between"
+            bg="orange.300"
+            p={4}
+            cursor="pointer"
+          >
+            <Text>Add Semester</Text>
             <FaPlus />
           </Flex>
         </Link>

@@ -88,7 +88,7 @@ const NavBar = (props: ChakraProps) => {
         <Box>
           <NextLink href="/">
             <Text color="white" cursor="pointer">
-              Logo
+              Department Management System
             </Text>
           </NextLink>
         </Box>

@@ -18,11 +18,11 @@ import { useAddSessionMutation } from "../generated/graphql";
 interface Props {}
 
 const AddSession = (props: Props) => {
-  const [registerUser, { loading }] = useAddSessionMutation();
+  const [addSession, { loading }] = useAddSessionMutation();
   const router = useRouter();
   const { register, handleSubmit, setError, errors } = useForm();
   const onSubmit = async (data) => {
-    const response = await registerUser({
+    const response = await addSession({
       variables: {
         input: {
           name: data.name,

@@ -1,0 +1,14 @@
+mutation AddSemester($input: AddSemesterInputType!) {
+  addSemester(input: $input) {
+    errors {
+      field
+      message
+    }
+    semester {
+      id
+      number
+      startTime
+      endTime
+    }
+  }
+}
