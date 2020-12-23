@@ -39,6 +39,17 @@ export class SemesterResolver {
       where: { departmentCode: input.departmentCode },
     });
 
+    if (input.number > 9 || input.number === 0) {
+      return {
+        errors: [
+          {
+            field: "number",
+            message: "Semester number invalid",
+          },
+        ],
+      };
+    }
+
     if (!department) {
       return {
         errors: [
@@ -69,6 +80,7 @@ export class SemesterResolver {
       department: department,
       session: session,
       startTime: input.startTime,
+      endTime: input.endTime ? input.endTime : undefined,
     }).save();
 
     return { semester };
