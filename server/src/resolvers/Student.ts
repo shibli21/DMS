@@ -1,3 +1,4 @@
+import { Department } from "./../entities/Department";
 import { Session } from "./../entities/Session";
 import { hash, verify } from "argon2";
 import jwt from "jsonwebtoken";
@@ -34,7 +35,7 @@ class StudentResponse {
 export class StudentResolver {
   @Query(() => [Student])
   students(): Promise<Student[]> {
-    return Student.find();
+    return Student.find({ relations: ["session", "department"] });
   }
 
   @UseMiddleware(isAdmin)
@@ -62,6 +63,11 @@ export class StudentResolver {
           session: await Session.findOne({
             where: {
               id: input.sessionId,
+            },
+          }),
+          department: await Department.findOne({
+            where: {
+              departmentCode: input.departmentCode,
             },
           }),
           gender: input.username,

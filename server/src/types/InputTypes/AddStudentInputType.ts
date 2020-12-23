@@ -8,7 +8,7 @@ export class AddStudentInputType {
   @Field()
   username!: string;
 
-  @Field()
+  @Field({ nullable: true })
   registrationNumber: number;
 
   @Field()
@@ -20,6 +20,9 @@ export class AddStudentInputType {
   @Field()
   address: string;
 
-  @Field()
+  @Field({ nullable: true })
   contactNumber: number;
+
+  @Field({ nullable: true })
+  departmentCode: string;
 }

@@ -1,3 +1,4 @@
+import { Department } from "./Department";
 import { Field, ObjectType } from "type-graphql";
 import {
   BaseEntity,
@@ -25,7 +26,7 @@ export class Student extends BaseEntity {
   @Field()
   email!: string;
 
-  @Column({ unique: true })
+  @Column({ type: "bigint", unique: true })
   @Field()
   registrationNumber: number;
 
@@ -48,9 +49,13 @@ export class Student extends BaseEntity {
   @Field()
   address: string;
 
-  @Column()
+  @Column({ type: "bigint" })
   @Field()
   contactNumber: number;
+
+  @ManyToOne(() => Department)
+  @Field(() => Department)
+  department: Department;
 
   @Field(() => String)
   @CreateDateColumn()
