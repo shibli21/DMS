@@ -25,7 +25,11 @@ class SessionResponse {
 export class SessionResolver {
   @Query(() => [Session])
   sessions(): Promise<Session[]> {
-    return Session.find();
+    return Session.find({
+      order: {
+        id: "DESC",
+      },
+    });
   }
 
   @UseMiddleware(isAdmin)

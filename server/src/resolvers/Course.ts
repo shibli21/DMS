@@ -1,6 +1,7 @@
 import {
   Arg,
   Field,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -28,7 +29,31 @@ class CourseResponse {
 export class CourseResolver {
   @Query(() => [Course])
   courses(): Promise<Course[]> {
-    return Course.find();
+    return Course.find({
+      relations: ["department", "assignedFaculty", "semester"],
+    });
+  }
+
+  @Query(() => [Course])
+  async coursesByDeptSemester(
+    @Arg("code") code: string,
+    @Arg("semesterId", () => Int) semesterId: number
+  ): Promise<Course[]> {
+    return Course.find({
+      where: {
+        department: await Department.findOne({
+          where: {
+            departmentCode: code,
+          },
+        }),
+        semester: await Semester.findOne({
+          where: {
+            id: semesterId,
+          },
+        }),
+      },
+      relations: ["department", "semester"],
+    });
   }
 
   @UseMiddleware(isAdmin)

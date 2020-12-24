@@ -41,6 +41,42 @@ export class CourseAssignToFacultyResolver {
   async assignCourseToFaculty(
     @Arg("input") input: AssignCourseToFacultyInputType
   ): Promise<CourseAssignToFacultyResponse> {
+    let errors = [];
+    if (!input.courseCode) {
+      errors.push({
+        field: "courseCode",
+        message: "Invalid course!",
+      });
+    }
+    if (!input.departmentCode) {
+      errors.push({
+        field: "departmentCode",
+        message: "Invalid Department!",
+      });
+    }
+    if (!input.facultyId) {
+      errors.push({
+        field: "facultyId",
+        message: "Faculty can't be empty!",
+      });
+    }
+
+    if (!input.semesterId) {
+      errors.push({
+        field: "semesterId",
+        message: "Semester can't be empty!",
+      });
+    }
+    if (!input.sessionId) {
+      errors.push({
+        field: "sessionId",
+        message: "Session can't be empty!",
+      });
+    }
+    if (errors.length > 0) {
+      return { errors };
+    }
+
     const department = await Department.findOne({
       where: { departmentCode: input.departmentCode },
     });

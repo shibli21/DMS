@@ -2,18 +2,18 @@ import { Field, InputType } from "type-graphql";
 
 @InputType()
 export class AssignCourseToFacultyInputType {
-  @Field()
+  @Field({ nullable: true })
   semesterId!: number;
 
-  @Field()
+  @Field({ nullable: true })
   sessionId!: number;
 
-  @Field()
+  @Field({ nullable: true })
   departmentCode!: string;
 
-  @Field()
+  @Field({ nullable: true })
   facultyId!: number;
 
-  @Field()
+  @Field({ nullable: true })
   courseCode!: string;
 }
