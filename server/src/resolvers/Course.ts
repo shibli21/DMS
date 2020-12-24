@@ -55,7 +55,7 @@ export class CourseResolver {
         message: "Description can't be empty!",
       });
     }
-    if (!input.credit || input.credit < 5 || input.credit === 5) {
+    if (!input.credit || input.credit > 5 || input.credit === 0) {
       errors.push({
         field: "credit",
         message: "Invalid credit!",
