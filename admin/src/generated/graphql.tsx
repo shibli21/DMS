@@ -226,7 +226,7 @@ export type AddFacultyInputType = {
   designation: Scalars['String'];
   gender: Scalars['String'];
   address: Scalars['String'];
-  contactNumber: Scalars['Float'];
+  contactNumber?: Maybe<Scalars['Float']>;
 };
 
 export type RegisterFacultyInputType = {
@@ -372,6 +372,26 @@ export type MutationStudentLoginArgs = {
   password: Scalars['String'];
   email: Scalars['String'];
 };
+
+export type AddDepartmentMutationVariables = Exact<{
+  code: Scalars['String'];
+  name: Scalars['String'];
+}>;
+
+
+export type AddDepartmentMutation = (
+  { __typename?: 'Mutation' }
+  & { addDepartment: (
+    { __typename?: 'DepartmentResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>>, department?: Maybe<(
+      { __typename?: 'Department' }
+      & Pick<Department, 'id' | 'name' | 'departmentCode'>
+    )> }
+  ) }
+);
 
 export type AddFacultyMutationVariables = Exact<{
   input: AddFacultyInputType;
@@ -539,6 +559,47 @@ export type SessionsQuery = (
 );
 
 
+export const AddDepartmentDocument = gql`
+    mutation AddDepartment($code: String!, $name: String!) {
+  addDepartment(code: $code, name: $name) {
+    errors {
+      field
+      message
+    }
+    department {
+      id
+      name
+      departmentCode
+    }
+  }
+}
+    `;
+export type AddDepartmentMutationFn = Apollo.MutationFunction<AddDepartmentMutation, AddDepartmentMutationVariables>;
+
+/**
+ * __useAddDepartmentMutation__
+ *
+ * To run a mutation, you first call `useAddDepartmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddDepartmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addDepartmentMutation, { data, loading, error }] = useAddDepartmentMutation({
+ *   variables: {
+ *      code: // value for 'code'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useAddDepartmentMutation(baseOptions?: Apollo.MutationHookOptions<AddDepartmentMutation, AddDepartmentMutationVariables>) {
+        return Apollo.useMutation<AddDepartmentMutation, AddDepartmentMutationVariables>(AddDepartmentDocument, baseOptions);
+      }
+export type AddDepartmentMutationHookResult = ReturnType<typeof useAddDepartmentMutation>;
+export type AddDepartmentMutationResult = Apollo.MutationResult<AddDepartmentMutation>;
+export type AddDepartmentMutationOptions = Apollo.BaseMutationOptions<AddDepartmentMutation, AddDepartmentMutationVariables>;
 export const AddFacultyDocument = gql`
     mutation AddFaculty($input: AddFacultyInputType!) {
   addFaculty(input: $input) {

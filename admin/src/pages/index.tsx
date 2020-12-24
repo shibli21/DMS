@@ -30,6 +30,18 @@ export default function Home() {
             <FaPlus />
           </Flex>
         </Link>
+        <Link href="/add-department">
+          <Flex
+            align="center"
+            justify="space-between"
+            bg="purple.300"
+            p={4}
+            cursor="pointer"
+          >
+            <Text>Add Department</Text>
+            <FaPlus />
+          </Flex>
+        </Link>
         <Link href="/add-student">
           <Flex
             align="center"

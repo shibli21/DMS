@@ -1,0 +1,13 @@
+mutation AddDepartment($code: String!, $name: String!) {
+  addDepartment(code: $code, name: $name) {
+    errors {
+      field
+      message
+    }
+    department {
+      id
+      name
+      departmentCode
+    }
+  }
+}
