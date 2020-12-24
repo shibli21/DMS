@@ -1,0 +1,8 @@
+query Semesters {
+  semesters {
+    id
+    number
+    startTime
+    endTime
+  }
+}

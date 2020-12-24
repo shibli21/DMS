@@ -1,0 +1,19 @@
+mutation AddCourse($input: AddCourseInputType!) {
+  addCourse(input: $input) {
+    errors {
+      field
+      message
+    }
+    course {
+      id
+      name
+      credit
+      description
+      department {
+        id
+        name
+        departmentCode
+      }
+    }
+  }
+}

@@ -42,6 +42,18 @@ export default function Home() {
             <FaPlus />
           </Flex>
         </Link>
+        <Link href="/add-course">
+          <Flex
+            align="center"
+            justify="space-between"
+            bg="pink.300"
+            p={4}
+            cursor="pointer"
+          >
+            <Text>Add Course</Text>
+            <FaPlus />
+          </Flex>
+        </Link>
         <Link href="/add-student">
           <Flex
             align="center"

@@ -1,0 +1,6 @@
+query SemestersByDepartmentAndSession($sessionId: Int!, $code: String!) {
+  semestersByDepartmentAndSession(code: $code, sessionId: $sessionId) {
+    id
+    number
+  }
+}
