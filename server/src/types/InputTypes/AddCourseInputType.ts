@@ -8,15 +8,15 @@ export class AddCourseInputType {
   @Field()
   name!: string;
 
-  @Field()
-  credit!: number;
+  @Field({ nullable: true })
+  credit: number;
 
   @Field()
-  description!: string;
+  description: string;
 
-  @Field()
-  semesterId!: number;
+  @Field({ nullable: true })
+  semesterId: number;
 
-  @Field()
-  departmentCode!: string;
+  @Field({ nullable: true })
+  departmentCode: string;
 }

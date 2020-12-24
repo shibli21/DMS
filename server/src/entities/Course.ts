@@ -40,7 +40,7 @@ export class Course extends BaseEntity {
   @Field(() => Department)
   department!: Department;
 
-  @ManyToOne(() => Semester, (Semester) => Semester.course)
+  @ManyToOne(() => Semester, (semester) => semester.course)
   @Field(() => Semester)
   semester!: Semester;
 

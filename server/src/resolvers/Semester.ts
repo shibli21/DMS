@@ -1,6 +1,7 @@
 import {
   Arg,
   Field,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -27,7 +28,27 @@ class SemesterResponse {
 export class SemesterResolver {
   @Query(() => [Semester])
   semesters(): Promise<Semester[]> {
-    return Semester.find();
+    return Semester.find({
+      relations: ["department", "session"],
+    });
+  }
+
+  @Query(() => [Semester])
+  async semestersByDepartmentAndSession(
+    @Arg("code") code: string,
+    @Arg("sessionId", () => Int) sessionId: number
+  ): Promise<Semester[]> {
+    return Semester.find({
+      where: {
+        department: await Department.findOne({
+          where: {
+            departmentCode: code,
+          },
+        }),
+        session: await Session.findOne(sessionId),
+      },
+      relations: ["department", "session"],
+    });
   }
 
   @UseMiddleware(isAdmin)
@@ -38,18 +59,6 @@ export class SemesterResolver {
     const department = await Department.findOne({
       where: { departmentCode: input.departmentCode },
     });
-
-    if (input.number > 9 || input.number === 0) {
-      return {
-        errors: [
-          {
-            field: "number",
-            message: "Semester number invalid",
-          },
-        ],
-      };
-    }
-
     if (!department) {
       return {
         errors: [
@@ -61,6 +70,16 @@ export class SemesterResolver {
       };
     }
 
+    if (input.number > 9 || input.number === 0) {
+      return {
+        errors: [
+          {
+            field: "number",
+            message: "Semester number invalid",
+          },
+        ],
+      };
+    }
     const session = await Session.findOne({
       where: { id: input.sessionId },
     });
@@ -75,6 +94,25 @@ export class SemesterResolver {
         ],
       };
     }
+
+    const semesterExists = await Semester.findOne({
+      where: {
+        department: department,
+        number: input.number,
+      },
+    });
+
+    if (semesterExists) {
+      return {
+        errors: [
+          {
+            field: "number",
+            message: "Semester already exists!",
+          },
+        ],
+      };
+    }
+
     const semester = await Semester.create({
       number: input.number,
       department: department,

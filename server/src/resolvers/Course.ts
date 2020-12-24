@@ -36,6 +36,36 @@ export class CourseResolver {
   async addCourse(
     @Arg("input") input: AddCourseInputType
   ): Promise<CourseResponse> {
+    let errors = [];
+    if (!input.name) {
+      errors.push({
+        field: "name",
+        message: "Invalid name!",
+      });
+    }
+    if (!input.code) {
+      errors.push({
+        field: "code",
+        message: "Invalid code!",
+      });
+    }
+    if (!input.description) {
+      errors.push({
+        field: "description",
+        message: "Description can't be empty!",
+      });
+    }
+    if (!input.credit || input.credit < 5 || input.credit === 5) {
+      errors.push({
+        field: "credit",
+        message: "Invalid credit!",
+      });
+    }
+
+    if (errors.length > 0) {
+      return { errors };
+    }
+
     const department = await Department.findOne({
       where: { departmentCode: input.departmentCode },
     });
