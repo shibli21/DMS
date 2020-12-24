@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Center,
   Flex,
@@ -13,6 +12,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { FormLayout } from "../components/FormLayout";
 import { MeDocument, useAdminLoginMutation } from "../generated/graphql";
 
 interface Props {}
@@ -54,22 +54,7 @@ const login = (props: Props) => {
 
   return (
     <Flex justify="center" align="center">
-      <Box
-        w="400px"
-        bg="gray.50"
-        p={10}
-        mt={10}
-        pos="relative"
-        _after={{
-          pos: "absolute",
-          content: `""`,
-          h: "10px",
-          w: "100%",
-          bg: "purple.300",
-          top: 0,
-          left: 0,
-        }}
-      >
+      <FormLayout>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4}>
             <FormControl id="email" isInvalid={errors.email}>
@@ -107,7 +92,7 @@ const login = (props: Props) => {
             </Center>
           </Stack>
         </form>
-      </Box>
+      </FormLayout>
     </Flex>
   );
 };

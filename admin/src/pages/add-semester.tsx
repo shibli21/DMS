@@ -12,6 +12,7 @@ import {
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import { FormLayout } from "../components/FormLayout";
 import {
   useAddSemesterMutation,
   useDepartmentsQuery,
@@ -57,22 +58,7 @@ const AddSession = (props: Props) => {
   };
   return (
     <Flex justify="center" align="center">
-      <Box
-        w="400px"
-        bg="gray.50"
-        mt={10}
-        p={10}
-        pos="relative"
-        _after={{
-          pos: "absolute",
-          content: `""`,
-          h: "10px",
-          w: "100%",
-          bg: "purple.300",
-          top: 0,
-          left: 0,
-        }}
-      >
+      <FormLayout>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4}>
             <FormControl id="number" isInvalid={errors.number}>
@@ -157,7 +143,7 @@ const AddSession = (props: Props) => {
             </Button>
           </Stack>
         </form>
-      </Box>
+      </FormLayout>
     </Flex>
   );
 };
