@@ -1,0 +1,7 @@
+query CoursesByDeptSemester($departmentCode: String!, $semesterId: Int!) {
+  coursesByDeptSemester(semesterId: $semesterId, code: $departmentCode) {
+    id
+    code
+    name
+  }
+}

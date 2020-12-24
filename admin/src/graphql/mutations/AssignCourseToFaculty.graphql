@@ -1,0 +1,20 @@
+mutation AssignCourseToFaculty($input: AssignCourseToFacultyInputType!) {
+  assignCourseToFaculty(input: $input) {
+    errors {
+      field
+      message
+    }
+    courseAssignToFaculty {
+      id
+      faculty {
+        username
+      }
+      department {
+        name
+      }
+      course {
+        name
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+query Faculties {
+  faculties {
+    id
+    username
+    designation
+    email
+    gender
+    address
+    contactNumber
+  }
+}

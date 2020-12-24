@@ -206,10 +206,10 @@ export type AddClassScheduleInputType = {
 export type AddCourseInputType = {
   code: Scalars['String'];
   name: Scalars['String'];
-  credit: Scalars['Float'];
+  credit?: Maybe<Scalars['Float']>;
   description: Scalars['String'];
-  semesterId: Scalars['Float'];
-  departmentCode: Scalars['String'];
+  semesterId?: Maybe<Scalars['Float']>;
+  departmentCode?: Maybe<Scalars['String']>;
 };
 
 export type AssignCourseToFacultyInputType = {
@@ -271,6 +271,7 @@ export type Query = {
   hello: Scalars['String'];
   classSchedules: Array<ClassSchedule>;
   courses: Array<Course>;
+  coursesByDeptSemester: Array<Course>;
   courseAssignToFaculties: Array<CourseAssignToFaculty>;
   departments: Array<Department>;
   faculties: Array<Faculty>;
@@ -279,6 +280,12 @@ export type Query = {
   semestersByDepartmentAndSession: Array<Semester>;
   sessions: Array<Session>;
   students: Array<Student>;
+};
+
+
+export type QueryCoursesByDeptSemesterArgs = {
+  semesterId: Scalars['Int'];
+  code: Scalars['String'];
 };
 
 
@@ -538,12 +545,55 @@ export type AdminRegisterMutation = (
   ) }
 );
 
+export type AssignCourseToFacultyMutationVariables = Exact<{
+  input: AssignCourseToFacultyInputType;
+}>;
+
+
+export type AssignCourseToFacultyMutation = (
+  { __typename?: 'Mutation' }
+  & { assignCourseToFaculty: (
+    { __typename?: 'CourseAssignToFacultyResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>>, courseAssignToFaculty?: Maybe<(
+      { __typename?: 'CourseAssignToFaculty' }
+      & Pick<CourseAssignToFaculty, 'id'>
+      & { faculty: (
+        { __typename?: 'Faculty' }
+        & Pick<Faculty, 'username'>
+      ), department: (
+        { __typename?: 'Department' }
+        & Pick<Department, 'name'>
+      ), course: (
+        { __typename?: 'Course' }
+        & Pick<Course, 'name'>
+      ) }
+    )> }
+  ) }
+);
+
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'logout'>
+);
+
+export type CoursesByDeptSemesterQueryVariables = Exact<{
+  departmentCode: Scalars['String'];
+  semesterId: Scalars['Int'];
+}>;
+
+
+export type CoursesByDeptSemesterQuery = (
+  { __typename?: 'Query' }
+  & { coursesByDeptSemester: Array<(
+    { __typename?: 'Course' }
+    & Pick<Course, 'id' | 'code' | 'name'>
+  )> }
 );
 
 export type DepartmentsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -554,6 +604,17 @@ export type DepartmentsQuery = (
   & { departments: Array<(
     { __typename?: 'Department' }
     & Pick<Department, 'id' | 'name' | 'departmentCode'>
+  )> }
+);
+
+export type FacultiesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FacultiesQuery = (
+  { __typename?: 'Query' }
+  & { faculties: Array<(
+    { __typename?: 'Faculty' }
+    & Pick<Faculty, 'id' | 'username' | 'designation' | 'email' | 'gender' | 'address' | 'contactNumber'>
   )> }
 );
 
@@ -955,6 +1016,53 @@ export function useAdminRegisterMutation(baseOptions?: Apollo.MutationHookOption
 export type AdminRegisterMutationHookResult = ReturnType<typeof useAdminRegisterMutation>;
 export type AdminRegisterMutationResult = Apollo.MutationResult<AdminRegisterMutation>;
 export type AdminRegisterMutationOptions = Apollo.BaseMutationOptions<AdminRegisterMutation, AdminRegisterMutationVariables>;
+export const AssignCourseToFacultyDocument = gql`
+    mutation AssignCourseToFaculty($input: AssignCourseToFacultyInputType!) {
+  assignCourseToFaculty(input: $input) {
+    errors {
+      field
+      message
+    }
+    courseAssignToFaculty {
+      id
+      faculty {
+        username
+      }
+      department {
+        name
+      }
+      course {
+        name
+      }
+    }
+  }
+}
+    `;
+export type AssignCourseToFacultyMutationFn = Apollo.MutationFunction<AssignCourseToFacultyMutation, AssignCourseToFacultyMutationVariables>;
+
+/**
+ * __useAssignCourseToFacultyMutation__
+ *
+ * To run a mutation, you first call `useAssignCourseToFacultyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAssignCourseToFacultyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [assignCourseToFacultyMutation, { data, loading, error }] = useAssignCourseToFacultyMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAssignCourseToFacultyMutation(baseOptions?: Apollo.MutationHookOptions<AssignCourseToFacultyMutation, AssignCourseToFacultyMutationVariables>) {
+        return Apollo.useMutation<AssignCourseToFacultyMutation, AssignCourseToFacultyMutationVariables>(AssignCourseToFacultyDocument, baseOptions);
+      }
+export type AssignCourseToFacultyMutationHookResult = ReturnType<typeof useAssignCourseToFacultyMutation>;
+export type AssignCourseToFacultyMutationResult = Apollo.MutationResult<AssignCourseToFacultyMutation>;
+export type AssignCourseToFacultyMutationOptions = Apollo.BaseMutationOptions<AssignCourseToFacultyMutation, AssignCourseToFacultyMutationVariables>;
 export const LogoutDocument = gql`
     mutation Logout {
   logout
@@ -984,6 +1092,42 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const CoursesByDeptSemesterDocument = gql`
+    query CoursesByDeptSemester($departmentCode: String!, $semesterId: Int!) {
+  coursesByDeptSemester(semesterId: $semesterId, code: $departmentCode) {
+    id
+    code
+    name
+  }
+}
+    `;
+
+/**
+ * __useCoursesByDeptSemesterQuery__
+ *
+ * To run a query within a React component, call `useCoursesByDeptSemesterQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCoursesByDeptSemesterQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCoursesByDeptSemesterQuery({
+ *   variables: {
+ *      departmentCode: // value for 'departmentCode'
+ *      semesterId: // value for 'semesterId'
+ *   },
+ * });
+ */
+export function useCoursesByDeptSemesterQuery(baseOptions: Apollo.QueryHookOptions<CoursesByDeptSemesterQuery, CoursesByDeptSemesterQueryVariables>) {
+        return Apollo.useQuery<CoursesByDeptSemesterQuery, CoursesByDeptSemesterQueryVariables>(CoursesByDeptSemesterDocument, baseOptions);
+      }
+export function useCoursesByDeptSemesterLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CoursesByDeptSemesterQuery, CoursesByDeptSemesterQueryVariables>) {
+          return Apollo.useLazyQuery<CoursesByDeptSemesterQuery, CoursesByDeptSemesterQueryVariables>(CoursesByDeptSemesterDocument, baseOptions);
+        }
+export type CoursesByDeptSemesterQueryHookResult = ReturnType<typeof useCoursesByDeptSemesterQuery>;
+export type CoursesByDeptSemesterLazyQueryHookResult = ReturnType<typeof useCoursesByDeptSemesterLazyQuery>;
+export type CoursesByDeptSemesterQueryResult = Apollo.QueryResult<CoursesByDeptSemesterQuery, CoursesByDeptSemesterQueryVariables>;
 export const DepartmentsDocument = gql`
     query Departments {
   departments {
@@ -1018,6 +1162,44 @@ export function useDepartmentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type DepartmentsQueryHookResult = ReturnType<typeof useDepartmentsQuery>;
 export type DepartmentsLazyQueryHookResult = ReturnType<typeof useDepartmentsLazyQuery>;
 export type DepartmentsQueryResult = Apollo.QueryResult<DepartmentsQuery, DepartmentsQueryVariables>;
+export const FacultiesDocument = gql`
+    query Faculties {
+  faculties {
+    id
+    username
+    designation
+    email
+    gender
+    address
+    contactNumber
+  }
+}
+    `;
+
+/**
+ * __useFacultiesQuery__
+ *
+ * To run a query within a React component, call `useFacultiesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFacultiesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFacultiesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFacultiesQuery(baseOptions?: Apollo.QueryHookOptions<FacultiesQuery, FacultiesQueryVariables>) {
+        return Apollo.useQuery<FacultiesQuery, FacultiesQueryVariables>(FacultiesDocument, baseOptions);
+      }
+export function useFacultiesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FacultiesQuery, FacultiesQueryVariables>) {
+          return Apollo.useLazyQuery<FacultiesQuery, FacultiesQueryVariables>(FacultiesDocument, baseOptions);
+        }
+export type FacultiesQueryHookResult = ReturnType<typeof useFacultiesQuery>;
+export type FacultiesLazyQueryHookResult = ReturnType<typeof useFacultiesLazyQuery>;
+export type FacultiesQueryResult = Apollo.QueryResult<FacultiesQuery, FacultiesQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
