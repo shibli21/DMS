@@ -34,6 +34,24 @@ export class DepartmentResolver {
     @Arg("name") name: string,
     @Arg("code") code: string
   ): Promise<DepartmentResponse> {
+    let errors = [];
+
+    if (!code) {
+      errors.push({
+        field: "code",
+        message: "Invalid code!",
+      });
+    }
+    if (!name) {
+      errors.push({
+        field: "name",
+        message: "Invalid name!",
+      });
+    }
+    if (errors.length > 0) {
+      return { errors };
+    }
+
     let department;
     try {
       await getConnection()
