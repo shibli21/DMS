@@ -1,6 +1,7 @@
 import {
   Arg,
   Field,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -23,6 +24,16 @@ class SessionResponse {
 
 @Resolver()
 export class SessionResolver {
+  @Query(() => Session)
+  session(@Arg("sessionId", () => Int) sessionId: number): Promise<Session> {
+    return Session.findOneOrFail({
+      where: {
+        id: sessionId,
+      },
+      relations: ["semester", "semester.department"],
+    });
+  }
+
   @Query(() => [Session])
   sessions(): Promise<Session[]> {
     return Session.find({
