@@ -90,6 +90,30 @@ export default function Home() {
             <FaPlus />
           </Flex>
         </Link>
+
+        <Link href="/departments">
+          <Flex
+            align="center"
+            justify="space-between"
+            bg="gray.300"
+            p={4}
+            cursor="pointer"
+          >
+            <Text>Departments</Text>
+          </Flex>
+        </Link>
+
+        <Link href="/sessions">
+          <Flex
+            align="center"
+            justify="space-between"
+            bg="gray.300"
+            p={4}
+            cursor="pointer"
+          >
+            <Text>Session</Text>
+          </Flex>
+        </Link>
       </Grid>
     </Box>
   );

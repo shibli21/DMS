@@ -1,0 +1,12 @@
+query Session($sessionId: Int!) {
+  session(sessionId: $sessionId) {
+    id
+    name
+    startTime
+    endTime
+    semester {
+      id
+      number
+    }
+  }
+}
