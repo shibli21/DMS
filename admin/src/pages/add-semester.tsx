@@ -66,7 +66,7 @@ const AddSession = (props: Props) => {
               <Input
                 type="number"
                 name="number"
-                defaultValue={0}
+                defaultValue={undefined}
                 ref={register}
                 placeholder="semester number"
               />

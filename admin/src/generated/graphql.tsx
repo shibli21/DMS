@@ -213,11 +213,11 @@ export type AddCourseInputType = {
 };
 
 export type AssignCourseToFacultyInputType = {
-  semesterId: Scalars['Float'];
-  sessionId: Scalars['Float'];
-  departmentCode: Scalars['String'];
-  facultyId: Scalars['Float'];
-  courseCode: Scalars['String'];
+  semesterId?: Maybe<Scalars['Float']>;
+  sessionId?: Maybe<Scalars['Float']>;
+  departmentCode?: Maybe<Scalars['String']>;
+  facultyId?: Maybe<Scalars['Float']>;
+  courseCode?: Maybe<Scalars['String']>;
 };
 
 export type AddFacultyInputType = {
@@ -278,6 +278,7 @@ export type Query = {
   me?: Maybe<MeResponse>;
   semesters: Array<Semester>;
   semestersByDepartmentAndSession: Array<Semester>;
+  session: Session;
   sessions: Array<Session>;
   students: Array<Student>;
 };
@@ -292,6 +293,11 @@ export type QueryCoursesByDeptSemesterArgs = {
 export type QuerySemestersByDepartmentAndSessionArgs = {
   sessionId: Scalars['Int'];
   code: Scalars['String'];
+};
+
+
+export type QuerySessionArgs = {
+  sessionId: Scalars['Int'];
 };
 
 export type Mutation = {
@@ -646,6 +652,13 @@ export type SemestersQuery = (
   & { semesters: Array<(
     { __typename?: 'Semester' }
     & Pick<Semester, 'id' | 'number' | 'startTime' | 'endTime'>
+    & { department: (
+      { __typename?: 'Department' }
+      & Pick<Department, 'id' | 'name' | 'departmentCode'>
+    ), session: (
+      { __typename?: 'Session' }
+      & Pick<Session, 'id' | 'name' | 'startTime' | 'endTime'>
+    ) }
   )> }
 );
 
@@ -672,6 +685,41 @@ export type SessionsQuery = (
     { __typename?: 'Session' }
     & Pick<Session, 'id' | 'name' | 'startTime' | 'endTime'>
   )> }
+);
+
+export type StudentsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StudentsQuery = (
+  { __typename?: 'Query' }
+  & { students: Array<(
+    { __typename?: 'Student' }
+    & Pick<Student, 'id' | 'username' | 'email' | 'gender' | 'address' | 'registrationNumber' | 'contactNumber' | 'oneTimePassword'>
+    & { session: (
+      { __typename?: 'Session' }
+      & Pick<Session, 'id' | 'name'>
+    ), department: (
+      { __typename?: 'Department' }
+      & Pick<Department, 'id' | 'name' | 'departmentCode'>
+    ) }
+  )> }
+);
+
+export type SessionQueryVariables = Exact<{
+  sessionId: Scalars['Int'];
+}>;
+
+
+export type SessionQuery = (
+  { __typename?: 'Query' }
+  & { session: (
+    { __typename?: 'Session' }
+    & Pick<Session, 'id' | 'name' | 'startTime' | 'endTime'>
+    & { semester: Array<(
+      { __typename?: 'Semester' }
+      & Pick<Semester, 'id' | 'number'>
+    )> }
+  ) }
 );
 
 
@@ -1263,6 +1311,17 @@ export const SemestersDocument = gql`
     number
     startTime
     endTime
+    department {
+      id
+      name
+      departmentCode
+    }
+    session {
+      id
+      name
+      startTime
+      endTime
+    }
   }
 }
     `;
@@ -1361,3 +1420,91 @@ export function useSessionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<S
 export type SessionsQueryHookResult = ReturnType<typeof useSessionsQuery>;
 export type SessionsLazyQueryHookResult = ReturnType<typeof useSessionsLazyQuery>;
 export type SessionsQueryResult = Apollo.QueryResult<SessionsQuery, SessionsQueryVariables>;
+export const StudentsDocument = gql`
+    query Students {
+  students {
+    id
+    username
+    email
+    gender
+    address
+    registrationNumber
+    contactNumber
+    oneTimePassword
+    session {
+      id
+      name
+    }
+    department {
+      id
+      name
+      departmentCode
+    }
+  }
+}
+    `;
+
+/**
+ * __useStudentsQuery__
+ *
+ * To run a query within a React component, call `useStudentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStudentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStudentsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useStudentsQuery(baseOptions?: Apollo.QueryHookOptions<StudentsQuery, StudentsQueryVariables>) {
+        return Apollo.useQuery<StudentsQuery, StudentsQueryVariables>(StudentsDocument, baseOptions);
+      }
+export function useStudentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StudentsQuery, StudentsQueryVariables>) {
+          return Apollo.useLazyQuery<StudentsQuery, StudentsQueryVariables>(StudentsDocument, baseOptions);
+        }
+export type StudentsQueryHookResult = ReturnType<typeof useStudentsQuery>;
+export type StudentsLazyQueryHookResult = ReturnType<typeof useStudentsLazyQuery>;
+export type StudentsQueryResult = Apollo.QueryResult<StudentsQuery, StudentsQueryVariables>;
+export const SessionDocument = gql`
+    query Session($sessionId: Int!) {
+  session(sessionId: $sessionId) {
+    id
+    name
+    startTime
+    endTime
+    semester {
+      id
+      number
+    }
+  }
+}
+    `;
+
+/**
+ * __useSessionQuery__
+ *
+ * To run a query within a React component, call `useSessionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSessionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSessionQuery({
+ *   variables: {
+ *      sessionId: // value for 'sessionId'
+ *   },
+ * });
+ */
+export function useSessionQuery(baseOptions: Apollo.QueryHookOptions<SessionQuery, SessionQueryVariables>) {
+        return Apollo.useQuery<SessionQuery, SessionQueryVariables>(SessionDocument, baseOptions);
+      }
+export function useSessionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SessionQuery, SessionQueryVariables>) {
+          return Apollo.useLazyQuery<SessionQuery, SessionQueryVariables>(SessionDocument, baseOptions);
+        }
+export type SessionQueryHookResult = ReturnType<typeof useSessionQuery>;
+export type SessionLazyQueryHookResult = ReturnType<typeof useSessionLazyQuery>;
+export type SessionQueryResult = Apollo.QueryResult<SessionQuery, SessionQueryVariables>;

@@ -4,5 +4,16 @@ query Semesters {
     number
     startTime
     endTime
+    department {
+      id
+      name
+      departmentCode
+    }
+    session {
+      id
+      name
+      startTime
+      endTime
+    }
   }
 }

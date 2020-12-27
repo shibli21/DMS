@@ -1,0 +1,21 @@
+query Students {
+  students {
+    id
+    username
+    email
+    gender
+    address
+    registrationNumber
+    contactNumber
+    oneTimePassword
+    session {
+      id
+      name
+    }
+    department {
+      id
+      name
+      departmentCode
+    }
+  }
+}
