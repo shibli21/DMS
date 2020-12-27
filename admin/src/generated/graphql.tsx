@@ -270,6 +270,7 @@ export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
   classSchedules: Array<ClassSchedule>;
+  classScheduleByAll: Array<ClassSchedule>;
   courses: Array<Course>;
   coursesByDeptSemester: Array<Course>;
   courseAssignToFaculties: Array<CourseAssignToFaculty>;
@@ -281,6 +282,14 @@ export type Query = {
   session: Session;
   sessions: Array<Session>;
   students: Array<Student>;
+};
+
+
+export type QueryClassScheduleByAllArgs = {
+  semesterId: Scalars['Int'];
+  sessionId: Scalars['Int'];
+  courseCode: Scalars['String'];
+  departmentCode: Scalars['String'];
 };
 
 
@@ -586,6 +595,26 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 export type LogoutMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'logout'>
+);
+
+export type ClassScheduleByAllQueryVariables = Exact<{
+  semesterId: Scalars['Int'];
+  sessionId: Scalars['Int'];
+  courseCode: Scalars['String'];
+  departmentCode: Scalars['String'];
+}>;
+
+
+export type ClassScheduleByAllQuery = (
+  { __typename?: 'Query' }
+  & { classScheduleByAll: Array<(
+    { __typename?: 'ClassSchedule' }
+    & Pick<ClassSchedule, 'id' | 'startTime' | 'endTime' | 'day'>
+    & { faculty: (
+      { __typename?: 'Faculty' }
+      & Pick<Faculty, 'username' | 'designation'>
+    ) }
+  )> }
 );
 
 export type CoursesByDeptSemesterQueryVariables = Exact<{
@@ -1140,6 +1169,54 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const ClassScheduleByAllDocument = gql`
+    query ClassScheduleByAll($semesterId: Int!, $sessionId: Int!, $courseCode: String!, $departmentCode: String!) {
+  classScheduleByAll(
+    semesterId: $semesterId
+    sessionId: $sessionId
+    courseCode: $courseCode
+    departmentCode: $departmentCode
+  ) {
+    id
+    startTime
+    endTime
+    day
+    faculty {
+      username
+      designation
+    }
+  }
+}
+    `;
+
+/**
+ * __useClassScheduleByAllQuery__
+ *
+ * To run a query within a React component, call `useClassScheduleByAllQuery` and pass it any options that fit your needs.
+ * When your component renders, `useClassScheduleByAllQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useClassScheduleByAllQuery({
+ *   variables: {
+ *      semesterId: // value for 'semesterId'
+ *      sessionId: // value for 'sessionId'
+ *      courseCode: // value for 'courseCode'
+ *      departmentCode: // value for 'departmentCode'
+ *   },
+ * });
+ */
+export function useClassScheduleByAllQuery(baseOptions: Apollo.QueryHookOptions<ClassScheduleByAllQuery, ClassScheduleByAllQueryVariables>) {
+        return Apollo.useQuery<ClassScheduleByAllQuery, ClassScheduleByAllQueryVariables>(ClassScheduleByAllDocument, baseOptions);
+      }
+export function useClassScheduleByAllLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ClassScheduleByAllQuery, ClassScheduleByAllQueryVariables>) {
+          return Apollo.useLazyQuery<ClassScheduleByAllQuery, ClassScheduleByAllQueryVariables>(ClassScheduleByAllDocument, baseOptions);
+        }
+export type ClassScheduleByAllQueryHookResult = ReturnType<typeof useClassScheduleByAllQuery>;
+export type ClassScheduleByAllLazyQueryHookResult = ReturnType<typeof useClassScheduleByAllLazyQuery>;
+export type ClassScheduleByAllQueryResult = Apollo.QueryResult<ClassScheduleByAllQuery, ClassScheduleByAllQueryVariables>;
 export const CoursesByDeptSemesterDocument = gql`
     query CoursesByDeptSemester($departmentCode: String!, $semesterId: Int!) {
   coursesByDeptSemester(semesterId: $semesterId, code: $departmentCode) {

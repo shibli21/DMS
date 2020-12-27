@@ -1,0 +1,22 @@
+query ClassScheduleByAll(
+  $semesterId: Int!
+  $sessionId: Int!
+  $courseCode: String!
+  $departmentCode: String!
+) {
+  classScheduleByAll(
+    semesterId: $semesterId
+    sessionId: $sessionId
+    courseCode: $courseCode
+    departmentCode: $departmentCode
+  ) {
+    id
+    startTime
+    endTime
+    day
+    faculty {
+      username
+      designation
+    }
+  }
+}

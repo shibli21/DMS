@@ -1,6 +1,7 @@
 import {
   Arg,
   Field,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -31,7 +32,46 @@ class ClassScheduleResponse {
 export class ClassScheduleResolver {
   @Query(() => [ClassSchedule])
   classSchedules(): Promise<ClassSchedule[]> {
-    return ClassSchedule.find();
+    return ClassSchedule.find({
+      relations: ["department", "session", "semester", "faculty", "course"],
+    });
+  }
+
+  @Query(() => [ClassSchedule])
+  async classScheduleByAll(
+    @Arg("departmentCode") departmentCode: string,
+    @Arg("courseCode") courseCode: string,
+    @Arg("sessionId", () => Int) sessionId: number,
+    @Arg("semesterId", () => Int) semesterId: number
+  ): Promise<ClassSchedule[]> {
+    return ClassSchedule.find({
+      relations: ["department", "session", "semester", "faculty", "course"],
+      order: {
+        day: "ASC",
+      },
+      where: {
+        department: await Department.findOne({
+          where: {
+            departmentCode: departmentCode,
+          },
+        }),
+        course: await Course.findOne({
+          where: {
+            code: courseCode,
+          },
+        }),
+        session: await Session.findOne({
+          where: {
+            id: sessionId,
+          },
+        }),
+        semester: await Semester.findOne({
+          where: {
+            id: semesterId,
+          },
+        }),
+      },
+    });
   }
 
   @UseMiddleware(isAdmin)

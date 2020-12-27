@@ -29,6 +29,9 @@ export class SemesterResolver {
   @Query(() => [Semester])
   semesters(): Promise<Semester[]> {
     return Semester.find({
+      order: {
+        session: "DESC",
+      },
       relations: ["department", "session"],
     });
   }
