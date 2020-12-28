@@ -6,6 +6,7 @@ import {
   Arg,
   Ctx,
   Field,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -179,5 +180,15 @@ export class StudentResolver {
     });
 
     return { student };
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAdmin)
+  async deleteStudent(@Arg("id", () => Int) id: number): Promise<boolean> {
+    await Student.delete({
+      id: id,
+    });
+
+    return true;
   }
 }

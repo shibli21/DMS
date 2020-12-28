@@ -53,7 +53,9 @@ export class Student extends BaseEntity {
   @Field()
   contactNumber: number;
 
-  @ManyToOne(() => Department)
+  @ManyToOne(() => Department, {
+    cascade: true,
+  })
   @Field(() => Department)
   department: Department;
 
