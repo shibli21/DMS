@@ -59,43 +59,50 @@ export class SemesterResolver {
   async addSemester(
     @Arg("input") input: AddSemesterInputType
   ): Promise<SemesterResponse> {
+    let errors = [];
+    if (!input.number) {
+      errors.push({
+        field: "number",
+        message: "Number can't be empty!",
+      });
+    }
+    if (!input.startTime) {
+      errors.push({
+        field: "startTime",
+        message: "Start time can't be empty!",
+      });
+    }
+    if (!input.endTime) {
+      errors.push({
+        field: "endTime",
+        message: "End time can't be empty!",
+      });
+    }
     const department = await Department.findOne({
       where: { departmentCode: input.departmentCode },
     });
     if (!department) {
-      return {
-        errors: [
-          {
-            field: "departmentCode",
-            message: "Department doesn't exists!",
-          },
-        ],
-      };
+      errors.push({
+        field: "departmentCode",
+        message: "Department doesn't exists!",
+      });
     }
 
     if (input.number > 9 || input.number === 0) {
-      return {
-        errors: [
-          {
-            field: "number",
-            message: "Semester number invalid",
-          },
-        ],
-      };
+      errors.push({
+        field: "number",
+        message: "Semester number invalid",
+      });
     }
     const session = await Session.findOne({
       where: { id: input.sessionId },
     });
 
     if (!session) {
-      return {
-        errors: [
-          {
-            field: "session",
-            message: "Session doesn't exists!",
-          },
-        ],
-      };
+      errors.push({
+        field: "sessionId",
+        message: "Session doesn't exists!",
+      });
     }
 
     const semesterExists = await Semester.findOne({
@@ -106,16 +113,15 @@ export class SemesterResolver {
     });
 
     if (semesterExists) {
-      return {
-        errors: [
-          {
-            field: "number",
-            message: "Semester already exists!",
-          },
-        ],
-      };
+      errors.push({
+        field: "semesterExists",
+        message: "Semester already exists!",
+      });
     }
 
+    if (errors.length > 0) {
+      return { errors };
+    }
     const semester = await Semester.create({
       number: input.number,
       department: department,

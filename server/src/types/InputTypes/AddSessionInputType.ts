@@ -2,10 +2,10 @@ import { Field, InputType } from "type-graphql";
 
 @InputType()
 export class AddSessionInputType {
-  @Field()
+  @Field({ nullable: true })
   name!: string;
 
-  @Field()
+  @Field({ nullable: true })
   startTime!: string;
 
   @Field({ nullable: true })

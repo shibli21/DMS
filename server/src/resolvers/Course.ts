@@ -87,23 +87,15 @@ export class CourseResolver {
       });
     }
 
-    if (errors.length > 0) {
-      return { errors };
-    }
-
     const department = await Department.findOne({
       where: { departmentCode: input.departmentCode },
     });
 
     if (!department) {
-      return {
-        errors: [
-          {
-            field: "departmentCode",
-            message: "Department doesn't exists!",
-          },
-        ],
-      };
+      errors.push({
+        field: "departmentCode",
+        message: "Department doesn't exists!",
+      });
     }
 
     const semester = await Semester.findOne({
@@ -112,14 +104,14 @@ export class CourseResolver {
     });
 
     if (!semester) {
-      return {
-        errors: [
-          {
-            field: "semester",
-            message: "Semester doesn't exists!",
-          },
-        ],
-      };
+      errors.push({
+        field: "semesterId",
+        message: "Semester doesn't exists!",
+      });
+    }
+
+    if (errors.length > 0) {
+      return { errors };
     }
 
     let course;

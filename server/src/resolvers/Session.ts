@@ -48,6 +48,28 @@ export class SessionResolver {
   async addSession(
     @Arg("input") input: AddSessionInputType
   ): Promise<SessionResponse> {
+    let errors = [];
+    if (!input.startTime) {
+      errors.push({
+        field: "startTime",
+        message: "Start time can't be empty",
+      });
+    }
+    if (!input.endTime) {
+      errors.push({
+        field: "endTime",
+        message: "End time time can't be empty",
+      });
+    }
+    if (!input.name) {
+      errors.push({
+        field: "name",
+        message: "Name can't be empty",
+      });
+    }
+    if (errors.length > 0) {
+      return { errors };
+    }
     const session = await Session.create({
       startTime: input.startTime,
       name: input.name,
