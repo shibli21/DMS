@@ -4,14 +4,15 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
   Select,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
+import { InputField } from "../components/InputField";
 import {
   useAddCourseMutation,
   useDepartmentsQuery,
@@ -83,55 +84,44 @@ const AddCourse = (props: Props) => {
   return (
     <Flex justify="center" align="center">
       <FormLayout>
+        <Text textAlign="center" fontSize="xl" fontWeight="400" mb={6}>
+          Add Course
+        </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4}>
-            <FormControl id="name" isInvalid={errors.name}>
-              <FormLabel htmlFor="name">Course Name</FormLabel>
-              <Input
-                type="text"
-                name="name"
-                defaultValue=""
-                ref={register}
-                placeholder="course name"
-              />
-              <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl id="code" isInvalid={errors.code}>
-              <FormLabel htmlFor="code">Course code</FormLabel>
-              <Input
-                type="text"
-                name="code"
-                defaultValue=""
-                ref={register}
-                placeholder="course code"
-              />
-              <FormErrorMessage>{errors?.code?.message}</FormErrorMessage>
-            </FormControl>
+            <InputField
+              ref={register}
+              label="Course Name"
+              name="name"
+              placeholder="course name"
+              type="text"
+              error={errors.name}
+            />
+            <InputField
+              ref={register}
+              label="Course code"
+              name="code"
+              placeholder="course code"
+              type="text"
+              error={errors.code}
+            />
 
-            <FormControl id="credit" isInvalid={errors.credit}>
-              <FormLabel htmlFor="credit">Course credit</FormLabel>
-              <Input
-                type="number"
-                name="credit"
-                defaultValue={undefined}
-                ref={register}
-                placeholder="course credit"
-              />
-              <FormErrorMessage>{errors?.credit?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl id="description" isInvalid={errors.description}>
-              <FormLabel htmlFor="description">Description</FormLabel>
-              <Input
-                type="text"
-                name="description"
-                defaultValue=""
-                ref={register}
-                placeholder="course description"
-              />
-              <FormErrorMessage>
-                {errors?.description?.message}
-              </FormErrorMessage>
-            </FormControl>
+            <InputField
+              ref={register}
+              label="Course credit"
+              name="credit"
+              placeholder="course credit"
+              type="number"
+              error={errors.credit}
+            />
+            <InputField
+              ref={register}
+              label="Description"
+              name="description"
+              placeholder="description"
+              type="text"
+              error={errors.description}
+            />
             <FormControl id="departmentCode" isInvalid={errors.departmentCode}>
               <FormLabel htmlFor="departmentCode">Department</FormLabel>
               <Controller

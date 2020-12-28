@@ -1,18 +1,10 @@
-import {
-  Button,
-  Center,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  Stack,
-} from "@chakra-ui/react";
+import { Button, Center, Flex, Stack, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
+import { InputField } from "../components/InputField";
 import { MeDocument, useAdminRegisterMutation } from "../generated/graphql";
 
 interface Props {}
@@ -45,62 +37,49 @@ const register = (props: Props) => {
         });
       });
     } else if (response.data?.registerAdmin.admin) {
-      if (typeof router.query.next === "string") {
-        router.push(router.query.next);
-      } else {
-        router.push("/");
-      }
+      router.push("/");
     }
   };
   return (
     <Flex justify="center" align="center">
       <FormLayout>
+        <Text textAlign="center" fontSize="xl" fontWeight="400" mb={6}>
+          Admin Register
+        </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4}>
-            <FormControl id="email" isInvalid={errors.email}>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <Input
-                type="email"
-                name="email"
-                defaultValue=""
-                ref={register}
-                placeholder="Email"
-              />
-              <FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl id="username" isInvalid={errors.username}>
-              <FormLabel htmlFor="username">Name</FormLabel>
-              <Input
-                type="text"
-                name="username"
-                defaultValue=""
-                ref={register}
-                placeholder="username"
-              />
-              <FormErrorMessage>{errors?.username?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl id="token" isInvalid={errors.token}>
-              <FormLabel htmlFor="token">Token</FormLabel>
-              <Input
-                type="token"
-                name="token"
-                defaultValue=""
-                ref={register}
-                placeholder="token"
-              />
-              <FormErrorMessage>{errors?.token?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl id="password" isInvalid={errors.password}>
-              <FormLabel htmlFor="password">Password</FormLabel>
-              <Input
-                type="password"
-                name="password"
-                defaultValue=""
-                ref={register}
-                placeholder="password"
-              />
-              <FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
-            </FormControl>
+            <InputField
+              ref={register}
+              label="Email"
+              name="email"
+              placeholder="email"
+              type="email"
+              error={errors.email}
+            />
+            <InputField
+              ref={register}
+              label="Name"
+              name="username"
+              placeholder="username"
+              type="text"
+              error={errors.username}
+            />
+            <InputField
+              ref={register}
+              label="token"
+              name="token"
+              placeholder="token"
+              type="password"
+              error={errors.token}
+            />
+            <InputField
+              ref={register}
+              label="Password"
+              name="password"
+              placeholder="password"
+              type="password"
+              error={errors.password}
+            />
             <Button
               w="100%"
               type="submit"
@@ -110,7 +89,9 @@ const register = (props: Props) => {
               Register
             </Button>
             <Center>
-              <Link href="/admin-login">Already have a account? Sign in</Link>
+              <Link href="/admin-login">
+                Already have a admin account? Sign in
+              </Link>
             </Center>
           </Stack>
         </form>

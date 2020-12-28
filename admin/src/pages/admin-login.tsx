@@ -1,18 +1,10 @@
-import {
-  Button,
-  Center,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  Stack,
-} from "@chakra-ui/react";
+import { Button, Center, Flex, Stack, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
+import { InputField } from "../components/InputField";
 import { MeDocument, useAdminLoginMutation } from "../generated/graphql";
 
 interface Props {}
@@ -34,8 +26,6 @@ const login = (props: Props) => {
       ],
     });
 
-    console.log(response);
-
     if (response.data?.adminLogin.errors) {
       response.data?.adminLogin.errors.map((err) => {
         setError(err.field, {
@@ -44,41 +34,35 @@ const login = (props: Props) => {
         });
       });
     } else if (response.data?.adminLogin.admin) {
-      if (typeof router.query.next === "string") {
-        router.push(router.query.next);
-      } else {
-        router.push("/");
-      }
+      router.push("/");
     }
   };
 
   return (
     <Flex justify="center" align="center">
       <FormLayout>
+        <Text textAlign="center" fontSize="xl" fontWeight="400" mb={6}>
+          Admin Login
+        </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4}>
-            <FormControl id="email" isInvalid={errors.email}>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <Input
-                type="email"
-                name="email"
-                defaultValue=""
-                ref={register}
-                placeholder="Email"
-              />
-              <FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl id="password" isInvalid={errors.password}>
-              <FormLabel htmlFor="password">Password</FormLabel>
-              <Input
-                type="password"
-                name="password"
-                defaultValue=""
-                ref={register}
-                placeholder="password"
-              />
-              <FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
-            </FormControl>
+            <InputField
+              ref={register}
+              label="Email"
+              name="email"
+              placeholder="email"
+              type="email"
+              error={errors.email}
+            />
+            <InputField
+              ref={register}
+              label="Password"
+              name="password"
+              placeholder="password"
+              type="password"
+              error={errors.password}
+            />
+
             <Button
               w="100%"
               type="submit"
@@ -88,7 +72,9 @@ const login = (props: Props) => {
               Login
             </Button>
             <Center>
-              <Link href="/admin-register">Don't have a account? Sign up</Link>
+              <Link href="/admin-register">
+                Don't have a admin account? Sign up
+              </Link>
             </Center>
           </Stack>
         </form>

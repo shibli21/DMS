@@ -1,32 +1,25 @@
 import {
-  Box,
   Button,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
   Radio,
   RadioGroup,
-  Select,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
-import {
-  useAddFacultyMutation,
-  useDepartmentsQuery,
-  useSessionsQuery,
-} from "../generated/graphql";
+import { InputField } from "../components/InputField";
+import { useAddFacultyMutation } from "../generated/graphql";
 
 interface Props {}
 
 const AddFaculty = (props: Props) => {
   const [addStudent, { loading }] = useAddFacultyMutation();
-  const { data } = useSessionsQuery();
-  const { data: departmentsData } = useDepartmentsQuery();
   const router = useRouter();
   const { register, handleSubmit, control, setError, errors } = useForm();
   const onSubmit = async (data) => {
@@ -51,79 +44,57 @@ const AddFaculty = (props: Props) => {
         });
       });
     } else if (response.data?.addFaculty.faculty) {
-      if (typeof router.query.next === "string") {
-        router.push(router.query.next);
-      } else {
-        router.push("/");
-      }
+      router.push("/faculties");
     }
   };
   return (
     <Flex justify="center" align="center">
       <FormLayout>
+        <Text textAlign="center" fontSize="xl" fontWeight="400" mb={6}>
+          Add Faculty
+        </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4}>
-            <FormControl id="email" isInvalid={errors.email}>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <Input
-                type="email"
-                name="email"
-                defaultValue=""
-                ref={register}
-                placeholder="email"
-              />
-              <FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl id="username" isInvalid={errors.username}>
-              <FormLabel htmlFor="username">Name</FormLabel>
-              <Input
-                type="username"
-                name="username"
-                defaultValue=""
-                ref={register}
-                placeholder="name"
-              />
-              <FormErrorMessage>{errors?.username?.message}</FormErrorMessage>
-            </FormControl>
-
-            <FormControl id="designation" isInvalid={errors.designation}>
-              <FormLabel htmlFor="designation">Designation</FormLabel>
-              <Input
-                type="designation"
-                name="designation"
-                defaultValue=""
-                ref={register}
-                placeholder="designation"
-              />
-              <FormErrorMessage>
-                {errors?.designation?.message}
-              </FormErrorMessage>
-            </FormControl>
-
-            <FormControl id="contactNumber" isInvalid={errors.contactNumber}>
-              <FormLabel htmlFor="contactNumber">Contact Number</FormLabel>
-              <Input
-                type="number"
-                name="contactNumber"
-                defaultValue={undefined}
-                ref={register}
-                placeholder="contact number"
-              />
-              <FormErrorMessage>
-                {errors?.contactNumber?.message}
-              </FormErrorMessage>
-            </FormControl>
-            <FormControl id="address" isInvalid={errors.address}>
-              <FormLabel htmlFor="address">Address</FormLabel>
-              <Input
-                type="text"
-                name="address"
-                defaultValue=""
-                ref={register}
-                placeholder="address"
-              />
-              <FormErrorMessage>{errors?.address?.message}</FormErrorMessage>
-            </FormControl>
+            <InputField
+              ref={register}
+              label="email"
+              name="email"
+              placeholder="email"
+              type="text"
+              error={errors.email}
+            />
+            <InputField
+              ref={register}
+              label="Name"
+              name="username"
+              placeholder="username"
+              type="text"
+              error={errors.username}
+            />
+            <InputField
+              ref={register}
+              label="Designation"
+              name="designation"
+              placeholder="designation"
+              type="text"
+              error={errors.designation}
+            />
+            <InputField
+              ref={register}
+              label="Contact Number"
+              name="contactNumber"
+              placeholder="contactNumber"
+              type="text"
+              error={errors.contactNumber}
+            />
+            <InputField
+              ref={register}
+              label="Address"
+              name="address"
+              placeholder="address"
+              type="text"
+              error={errors.address}
+            />
             <FormControl id="gender" isInvalid={errors.gender}>
               <FormLabel htmlFor="gender">Gender</FormLabel>
               <Controller
@@ -141,7 +112,6 @@ const AddFaculty = (props: Props) => {
               />
               <FormErrorMessage>{errors?.gender?.message}</FormErrorMessage>
             </FormControl>
-
             <Button
               w="100%"
               type="submit"

@@ -1,16 +1,9 @@
-import {
-  Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  Stack,
-} from "@chakra-ui/react";
+import { Button, Flex, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
+import { InputField } from "../components/InputField";
 import { useAddSessionMutation } from "../generated/graphql";
 
 interface Props {}
@@ -37,52 +30,41 @@ const AddSession = (props: Props) => {
         });
       });
     } else if (response.data?.addSession.session) {
-      if (typeof router.query.next === "string") {
-        router.push(router.query.next);
-      } else {
-        router.push("/");
-      }
+      router.push("/sessions");
     }
   };
   return (
     <Flex justify="center" align="center">
       <FormLayout>
+        <Text textAlign="center" fontSize="xl" fontWeight="400" mb={6}>
+          Add Session
+        </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4}>
-            <FormControl id="name" isInvalid={errors.name}>
-              <FormLabel htmlFor="name">Session Name</FormLabel>
-              <Input
-                type="text"
-                name="name"
-                defaultValue=""
-                ref={register}
-                placeholder="name"
-              />
-              <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl id="startTime" isInvalid={errors.startTime}>
-              <FormLabel htmlFor="startTime">Start time</FormLabel>
-              <Input
-                type="date"
-                name="startTime"
-                defaultValue=""
-                ref={register}
-                placeholder="startTime"
-              />
-              <FormErrorMessage>{errors?.startTime?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl id="endTime" isInvalid={errors.endTime}>
-              <FormLabel htmlFor="endTime">End time</FormLabel>
-              <Input
-                type="date"
-                name="endTime"
-                defaultValue=""
-                ref={register}
-                placeholder="endTime"
-              />
-              <FormErrorMessage>{errors?.endTime?.message}</FormErrorMessage>
-            </FormControl>
-
+            <InputField
+              type="text"
+              name="name"
+              error={errors.name}
+              label="Session Name"
+              ref={register}
+              placeholder="name"
+            />
+            <InputField
+              ref={register}
+              label="Start Time"
+              name="startTime"
+              placeholder="startTime"
+              type="date"
+              error={errors.startTime}
+            />
+            <InputField
+              ref={register}
+              label="End Time"
+              name="endTime"
+              placeholder="endTime"
+              type="date"
+              error={errors.endTime}
+            />
             <Button
               w="100%"
               type="submit"

@@ -1,18 +1,19 @@
 import {
-  Box,
   Button,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
   Select,
   Stack,
+  Text,
+  useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
+import { InputField } from "../components/InputField";
 import {
   useAddSemesterMutation,
   useDepartmentsQuery,
@@ -27,11 +28,12 @@ const AddSession = (props: Props) => {
   const { data: departmentsData } = useDepartmentsQuery();
   const router = useRouter();
   const { register, handleSubmit, control, setError, errors } = useForm();
+  const toast = useToast();
   const onSubmit = async (data) => {
     const response = await addSemester({
       variables: {
         input: {
-          sessionId: parseInt(data.session),
+          sessionId: parseInt(data.sessionId),
           departmentCode: data.departmentCode,
           startTime: data.startTime,
           endTime: data.endTime,
@@ -39,41 +41,52 @@ const AddSession = (props: Props) => {
         },
       },
     });
-    console.log(response);
 
     if (response.data?.addSemester.errors) {
       response.data?.addSemester.errors.map((err) => {
-        setError(err.field, {
-          type: "manual",
-          message: err.message,
-        });
+        if (err.field === "semesterExists") {
+          toast({
+            position: "bottom-right",
+            description: err.message,
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        } else {
+          setError(err.field, {
+            type: "manual",
+            message: err.message,
+          });
+        }
       });
     } else if (response.data?.addSemester.semester) {
-      if (typeof router.query.next === "string") {
-        router.push(router.query.next);
-      } else {
-        router.push("/");
-      }
+      toast({
+        position: "bottom-right",
+        description: "Semester successful added",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
     }
   };
   return (
     <Flex justify="center" align="center">
       <FormLayout>
+        <Text textAlign="center" fontSize="xl" fontWeight="400" mb={6}>
+          Add Semester
+        </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4}>
-            <FormControl id="number" isInvalid={errors.number}>
-              <FormLabel htmlFor="number">Semester Number</FormLabel>
-              <Input
-                type="number"
-                name="number"
-                defaultValue={undefined}
-                ref={register}
-                placeholder="semester number"
-              />
-              <FormErrorMessage>{errors?.number?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl id="session" isInvalid={errors.session}>
-              <FormLabel htmlFor="session">Session</FormLabel>
+            <InputField
+              ref={register}
+              label="Semester Number"
+              name="number"
+              placeholder="number"
+              type="number"
+              error={errors.number}
+            />
+            <FormControl id="sessionId" isInvalid={errors.sessionId}>
+              <FormLabel htmlFor="sessionId">Session</FormLabel>
               <Controller
                 as={
                   <Select placeholder="Select option">
@@ -85,10 +98,10 @@ const AddSession = (props: Props) => {
                   </Select>
                 }
                 control={control}
-                name="session"
+                name="sessionId"
                 defaultValue={0}
               />
-              <FormErrorMessage>{errors?.session?.message}</FormErrorMessage>
+              <FormErrorMessage>{errors?.sessionId?.message}</FormErrorMessage>
             </FormControl>
             <FormControl id="departmentCode" isInvalid={errors.departmentCode}>
               <FormLabel htmlFor="departmentCode">Department</FormLabel>
@@ -110,28 +123,22 @@ const AddSession = (props: Props) => {
                 {errors?.departmentCode?.message}
               </FormErrorMessage>
             </FormControl>
-            <FormControl id="startTime" isInvalid={errors.startTime}>
-              <FormLabel htmlFor="startTime">Start time</FormLabel>
-              <Input
-                type="date"
-                name="startTime"
-                defaultValue=""
-                ref={register}
-                placeholder="startTime"
-              />
-              <FormErrorMessage>{errors?.startTime?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl id="endTime" isInvalid={errors.endTime}>
-              <FormLabel htmlFor="endTime">End time</FormLabel>
-              <Input
-                type="date"
-                name="endTime"
-                defaultValue=""
-                ref={register}
-                placeholder="endTime"
-              />
-              <FormErrorMessage>{errors?.endTime?.message}</FormErrorMessage>
-            </FormControl>
+            <InputField
+              ref={register}
+              label="Start Time"
+              name="startTime"
+              placeholder="startTime"
+              type="date"
+              error={errors.startTime}
+            />
+            <InputField
+              ref={register}
+              label="End Time"
+              name="endTime"
+              placeholder="endTime"
+              type="date"
+              error={errors.endTime}
+            />
 
             <Button
               w="100%"

@@ -1,17 +1,9 @@
-import {
-  Box,
-  Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  Stack,
-} from "@chakra-ui/react";
+import { Button, Flex, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
+import { InputField } from "../components/InputField";
 import { useAddDepartmentMutation } from "../generated/graphql";
 
 interface Props {}
@@ -35,40 +27,33 @@ const AddDepartment = (props: Props) => {
         });
       });
     } else if (response.data?.addDepartment.department) {
-      if (typeof router.query.next === "string") {
-        router.push(router.query.next);
-      } else {
-        router.push("/");
-      }
+      router.push("/departments");
     }
   };
   return (
     <Flex justify="center" align="center">
       <FormLayout>
+        <Text textAlign="center" fontSize="xl" fontWeight="400" mb={6}>
+          Add Department
+        </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4}>
-            <FormControl id="name" isInvalid={errors.name}>
-              <FormLabel htmlFor="name">Name</FormLabel>
-              <Input
-                type="text"
-                name="name"
-                defaultValue=""
-                ref={register}
-                placeholder="name"
-              />
-              <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl id="code" isInvalid={errors.code}>
-              <FormLabel htmlFor="code">Department Code</FormLabel>
-              <Input
-                type="text"
-                name="code"
-                defaultValue=""
-                ref={register}
-                placeholder="code"
-              />
-              <FormErrorMessage>{errors?.code?.message}</FormErrorMessage>
-            </FormControl>
+            <InputField
+              ref={register}
+              label="Name"
+              name="name"
+              placeholder="name"
+              type="text"
+              error={errors.name}
+            />
+            <InputField
+              ref={register}
+              label="Department Code"
+              name="code"
+              placeholder="code"
+              type="text"
+              error={errors.code}
+            />
             <Button
               w="100%"
               type="submit"

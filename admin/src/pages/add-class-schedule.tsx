@@ -5,14 +5,15 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
-  Input,
   Select,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
+import { InputField } from "../components/InputField";
 import {
   useAddClassScheduleMutation,
   useCoursesByDeptSemesterQuery,
@@ -28,6 +29,7 @@ const AddClassSchedule = (props: Props) => {
   const [code, setCode] = useState();
   const [sessionId, setSessionId] = useState();
   const [semesterId, setSemesterId] = useState();
+  const [sessionName, setSessionName] = useState("");
   const [assignClass, { loading }] = useAddClassScheduleMutation();
   const { data: semesters } = useSemestersByDepartmentAndSessionQuery({
     variables: {
@@ -66,6 +68,11 @@ const AddClassSchedule = (props: Props) => {
     name: "sessionId",
     defaultValue: undefined,
   });
+  const courseCode = useWatch({
+    control,
+    name: "courseCode",
+    defaultValue: undefined,
+  });
 
   useEffect(() => {
     setCode(dCode);
@@ -97,16 +104,17 @@ const AddClassSchedule = (props: Props) => {
         });
       });
     } else if (response.data?.addClassSchedule.classSchedule) {
-      if (typeof router.query.next === "string") {
-        router.push(router.query.next);
-      } else {
-        router.push("/");
-      }
+      router.push(
+        `/class-schedule/${dCode}/${sessionId}/${semesterId}}/${courseCode}?sessionName=${sessionName}`
+      );
     }
   };
   return (
     <Flex justify="center" align="center">
       <FormLayout w="800px">
+        <Text textAlign="center" fontSize="xl" fontWeight="400" mb={6}>
+          Add Class Schedule
+        </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4}>
             <FormControl id="facultyId" isInvalid={errors.facultyId}>
@@ -233,32 +241,23 @@ const AddClassSchedule = (props: Props) => {
                   <FormErrorMessage>{errors?.day?.message}</FormErrorMessage>
                 </FormControl>
 
-                <FormControl id="startTime" isInvalid={errors.startTime}>
-                  <FormLabel htmlFor="startTime">End time</FormLabel>
-                  <Input
-                    type="time"
-                    name={`classes[${index}].startTime`}
-                    defaultValue=""
-                    ref={register()}
-                    placeholder="startTime"
-                  />
-                  <FormErrorMessage>
-                    {errors?.startTime?.message}
-                  </FormErrorMessage>
-                </FormControl>
-                <FormControl id="endTime" isInvalid={errors.endTime}>
-                  <FormLabel htmlFor="endTime">End time</FormLabel>
-                  <Input
-                    type="time"
-                    name={`classes[${index}].endTime`}
-                    defaultValue=""
-                    ref={register()}
-                    placeholder="endTime"
-                  />
-                  <FormErrorMessage>
-                    {errors?.endTime?.message}
-                  </FormErrorMessage>
-                </FormControl>
+                <InputField
+                  ref={register()}
+                  label="Start Time"
+                  name={`classes[${index}].startTime`}
+                  placeholder="startTime"
+                  type="time"
+                  error={errors.startTime}
+                />
+                <InputField
+                  ref={register()}
+                  label="End Time"
+                  name={`classes[${index}].endTime`}
+                  placeholder="endTime"
+                  type="time"
+                  error={errors.endTime}
+                />
+
                 <Button
                   w="140px"
                   type="button"
