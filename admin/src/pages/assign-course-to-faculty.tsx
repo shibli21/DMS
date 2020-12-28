@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Flex,
   FormControl,
@@ -7,6 +6,8 @@ import {
   FormLabel,
   Select,
   Stack,
+  Text,
+  useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -66,7 +67,7 @@ const AssignCourseToFaculty = (props: Props) => {
     setSessionId(session);
     setSemesterId(semester);
   }, [semester, session, dCode]);
-
+  const toast = useToast();
   const onSubmit = async (data) => {
     const response = await assignFaculty({
       variables: {
@@ -82,22 +83,37 @@ const AssignCourseToFaculty = (props: Props) => {
 
     if (response.data?.assignCourseToFaculty.errors) {
       response.data?.assignCourseToFaculty.errors.map((err) => {
-        setError(err.field, {
-          type: "manual",
-          message: err.message,
-        });
+        if (err.field === "courseAssignToFacultyExists") {
+          toast({
+            position: "bottom-right",
+            description: err.message,
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        } else {
+          setError(err.field, {
+            type: "manual",
+            message: err.message,
+          });
+        }
       });
     } else if (response.data?.assignCourseToFaculty.courseAssignToFaculty) {
-      if (typeof router.query.next === "string") {
-        router.push(router.query.next);
-      } else {
-        router.push("/");
-      }
+      toast({
+        position: "bottom-right",
+        description: "Assign Successful",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
     }
   };
   return (
     <Flex justify="center" align="center">
       <FormLayout>
+        <Text textAlign="center" fontSize="xl" fontWeight="400" mb={6}>
+          Assign Course To Faculty
+        </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4}>
             <FormControl id="facultyId" isInvalid={errors.facultyId}>
@@ -138,7 +154,7 @@ const AssignCourseToFaculty = (props: Props) => {
                 {errors?.departmentCode?.message}
               </FormErrorMessage>
             </FormControl>
-            <FormControl id="sessionId" isInvalid={errors.session}>
+            <FormControl id="sessionId" isInvalid={errors.sessionId}>
               <FormLabel htmlFor="sessionId">Session</FormLabel>
               <Controller
                 as={
@@ -154,7 +170,7 @@ const AssignCourseToFaculty = (props: Props) => {
                 name="sessionId"
                 defaultValue={0}
               />
-              <FormErrorMessage>{errors?.session?.message}</FormErrorMessage>
+              <FormErrorMessage>{errors?.sessionId?.message}</FormErrorMessage>
             </FormControl>
 
             {dCode && session && (

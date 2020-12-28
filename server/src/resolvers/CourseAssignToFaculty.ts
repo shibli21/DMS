@@ -157,6 +157,26 @@ export class CourseAssignToFacultyResolver {
       };
     }
 
+    const courseAssignToFacultyExists = await CourseAssignToFaculty.findOne({
+      where: {
+        faculty: faculty,
+        course: course,
+        department: department,
+        semester: semester,
+        session: session,
+      },
+    });
+
+    if (courseAssignToFacultyExists) {
+      return {
+        errors: [
+          {
+            field: "courseAssignToFacultyExists",
+            message: "Already assigned",
+          },
+        ],
+      };
+    }
     let courseAssignToFaculty;
     try {
       const c = await getConnection()
