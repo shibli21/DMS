@@ -20,12 +20,12 @@ import { Session } from "./../entities/Session";
 import { AddClassScheduleInputType } from "./../types/InputTypes/AddClassScheduleInputType";
 
 @ObjectType()
-class ClassScheduleResponse {
+class AddClassScheduleResponse {
   @Field(() => [FieldError], { nullable: true })
   errors?: FieldError[];
 
-  @Field(() => ClassSchedule, { nullable: true })
-  classSchedule?: ClassSchedule;
+  @Field(() => Boolean, { nullable: true })
+  classSchedule?: boolean;
 }
 
 @Resolver()
@@ -75,23 +75,20 @@ export class ClassScheduleResolver {
   }
 
   @UseMiddleware(isAdmin)
-  @Mutation(() => ClassScheduleResponse)
+  @Mutation(() => AddClassScheduleResponse)
   async addClassSchedule(
     @Arg("input") input: AddClassScheduleInputType
-  ): Promise<ClassScheduleResponse> {
+  ): Promise<AddClassScheduleResponse> {
+    const errors = [];
     const department = await Department.findOne({
       where: { departmentCode: input.departmentCode },
     });
 
     if (!department) {
-      return {
-        errors: [
-          {
-            field: "departmentCode",
-            message: "Department doesn't exists!",
-          },
-        ],
-      };
+      errors.push({
+        field: "departmentCode",
+        message: "Department doesn't exists!",
+      });
     }
 
     const course = await Course.findOne({
@@ -101,14 +98,10 @@ export class ClassScheduleResolver {
     });
 
     if (!course) {
-      return {
-        errors: [
-          {
-            field: "courseCode",
-            message: "Course doesn't exists!",
-          },
-        ],
-      };
+      errors.push({
+        field: "courseCode",
+        message: "Course doesn't exists!",
+      });
     }
 
     const semester = await Semester.findOne({
@@ -117,14 +110,10 @@ export class ClassScheduleResolver {
     });
 
     if (!semester) {
-      return {
-        errors: [
-          {
-            field: "semester",
-            message: "Semester doesn't exists!",
-          },
-        ],
-      };
+      errors.push({
+        field: "semester",
+        message: "Semester doesn't exists!",
+      });
     }
 
     const session = await Session.findOne({
@@ -132,14 +121,10 @@ export class ClassScheduleResolver {
     });
 
     if (!session) {
-      return {
-        errors: [
-          {
-            field: "session",
-            message: "Session doesn't exists!",
-          },
-        ],
-      };
+      errors.push({
+        field: "sessionId",
+        message: "Session doesn't exists!",
+      });
     }
 
     const faculty = await Faculty.findOne({
@@ -149,48 +134,46 @@ export class ClassScheduleResolver {
     });
 
     if (!faculty) {
-      return {
-        errors: [
-          {
-            field: "faculty",
-            message: "Faculty doesn't exists!",
-          },
-        ],
-      };
+      errors.push({
+        field: "facultyId",
+        message: "Faculty doesn't exists!",
+      });
     }
+    if (!input.classes) {
+      errors.push({
+        field: "classes",
+        message: "No class",
+      });
+    }
+    if (errors.length > 0) {
+      return { errors };
+    }
+
     let classSchedule;
     try {
-      const c = await getConnection()
+      await getConnection()
         .createQueryBuilder()
         .insert()
         .into(ClassSchedule)
-        .values({
-          department: department,
-          semester: semester,
-          course: course,
-          session: session,
-          day: input.day,
-          startTime: input.startTime,
-          endTime: input.endTime,
-          faculty: faculty,
-        })
+        .values(
+          input.classes.map((cls, _) => ({
+            department: department,
+            semester: semester,
+            course: course,
+            session: session,
+            faculty: faculty,
+            day: cls.day,
+            startTime: cls.startTime,
+            endTime: cls.endTime,
+          }))
+        )
+        .returning("*")
         .execute();
-
-      classSchedule = await ClassSchedule.findOne({
-        where: { id: c.raw[0].id },
-      });
+      classSchedule = true;
     } catch (error) {
-      if (error.code === "23505") {
-        return {
-          errors: [
-            {
-              field: "code",
-              message: "ClassSchedule code already exists!",
-            },
-          ],
-        };
-      }
+      console.log(error);
     }
+
     return { classSchedule };
   }
 }

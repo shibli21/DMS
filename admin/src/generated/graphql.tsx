@@ -130,10 +130,10 @@ export type AdminResponse = {
   admin?: Maybe<Admin>;
 };
 
-export type ClassScheduleResponse = {
-  __typename?: 'ClassScheduleResponse';
+export type AddClassScheduleResponse = {
+  __typename?: 'AddClassScheduleResponse';
   errors?: Maybe<Array<FieldError>>;
-  classSchedule?: Maybe<ClassSchedule>;
+  classSchedule?: Maybe<Scalars['Boolean']>;
 };
 
 export type CourseResponse = {
@@ -193,14 +193,18 @@ export type RegisterAdminInputType = {
 };
 
 export type AddClassScheduleInputType = {
-  startTime: Scalars['String'];
-  endTime: Scalars['String'];
-  day: Scalars['Float'];
+  classes: Array<Classes>;
   sessionId: Scalars['Float'];
   semesterId: Scalars['Float'];
   courseCode: Scalars['String'];
   departmentCode: Scalars['String'];
   facultyId: Scalars['Float'];
+};
+
+export type Classes = {
+  startTime: Scalars['String'];
+  endTime: Scalars['String'];
+  day: Scalars['Float'];
 };
 
 export type AddCourseInputType = {
@@ -313,7 +317,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   registerAdmin: AdminResponse;
   adminLogin: AdminResponse;
-  addClassSchedule: ClassScheduleResponse;
+  addClassSchedule: AddClassScheduleResponse;
   addCourse: CourseResponse;
   assignCourseToFaculty: CourseAssignToFacultyResponse;
   addDepartment: DepartmentResponse;
@@ -401,6 +405,23 @@ export type MutationStudentLoginArgs = {
   password: Scalars['String'];
   email: Scalars['String'];
 };
+
+export type AddClassScheduleMutationVariables = Exact<{
+  input: AddClassScheduleInputType;
+}>;
+
+
+export type AddClassScheduleMutation = (
+  { __typename?: 'Mutation' }
+  & { addClassSchedule: (
+    { __typename?: 'AddClassScheduleResponse' }
+    & Pick<AddClassScheduleResponse, 'classSchedule'>
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>> }
+  ) }
+);
 
 export type AddCourseMutationVariables = Exact<{
   input: AddCourseInputType;
@@ -752,6 +773,42 @@ export type SessionQuery = (
 );
 
 
+export const AddClassScheduleDocument = gql`
+    mutation AddClassSchedule($input: AddClassScheduleInputType!) {
+  addClassSchedule(input: $input) {
+    errors {
+      field
+      message
+    }
+    classSchedule
+  }
+}
+    `;
+export type AddClassScheduleMutationFn = Apollo.MutationFunction<AddClassScheduleMutation, AddClassScheduleMutationVariables>;
+
+/**
+ * __useAddClassScheduleMutation__
+ *
+ * To run a mutation, you first call `useAddClassScheduleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddClassScheduleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addClassScheduleMutation, { data, loading, error }] = useAddClassScheduleMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddClassScheduleMutation(baseOptions?: Apollo.MutationHookOptions<AddClassScheduleMutation, AddClassScheduleMutationVariables>) {
+        return Apollo.useMutation<AddClassScheduleMutation, AddClassScheduleMutationVariables>(AddClassScheduleDocument, baseOptions);
+      }
+export type AddClassScheduleMutationHookResult = ReturnType<typeof useAddClassScheduleMutation>;
+export type AddClassScheduleMutationResult = Apollo.MutationResult<AddClassScheduleMutation>;
+export type AddClassScheduleMutationOptions = Apollo.BaseMutationOptions<AddClassScheduleMutation, AddClassScheduleMutationVariables>;
 export const AddCourseDocument = gql`
     mutation AddCourse($input: AddCourseInputType!) {
   addCourse(input: $input) {

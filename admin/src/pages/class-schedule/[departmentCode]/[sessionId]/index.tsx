@@ -65,7 +65,7 @@ const index = () => {
         {data.semestersByDepartmentAndSession.map((s) => (
           <GridItem cursor="pointer" bg="blue.200">
             <Link
-              href={`/class-schedule/${departmentCode}/${sessionId}/${s.id}?sessionName=${sessionName}`}
+              href={`/class-schedule/${departmentCode}/${sessionId}/${s.number}?sessionName=${sessionName}`}
               key={s.id}
             >
               <Text p={4}>{getSemesterName(s.number)}</Text>

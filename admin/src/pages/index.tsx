@@ -48,6 +48,11 @@ export default function Home() {
                 <Text>Assign course to faculty</Text>
               </SideBarItem>
             </Link>
+            <Link href="/add-class-schedule">
+              <SideBarItem>
+                <Text>Add class schedule</Text>
+              </SideBarItem>
+            </Link>
           </Stack>
         </GridItem>
         <GridItem colSpan={5} bg="gray.50">

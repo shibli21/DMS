@@ -2,6 +2,26 @@ import { Field, InputType } from "type-graphql";
 
 @InputType()
 export class AddClassScheduleInputType {
+  @Field(() => [Classes], { nullable: true })
+  classes!: Classes[];
+
+  @Field({ nullable: true })
+  sessionId!: number;
+
+  @Field({ nullable: true })
+  semesterId!: number;
+
+  @Field({ nullable: true })
+  courseCode!: string;
+
+  @Field({ nullable: true })
+  departmentCode!: string;
+
+  @Field({ nullable: true })
+  facultyId!: number;
+}
+@InputType()
+class Classes {
   @Field()
   startTime!: string;
 
@@ -9,20 +29,5 @@ export class AddClassScheduleInputType {
   endTime!: string;
 
   @Field()
-  day!: number;
-
-  @Field()
-  sessionId!: number;
-
-  @Field()
-  semesterId!: number;
-
-  @Field()
-  courseCode!: string;
-
-  @Field()
-  departmentCode!: string;
-
-  @Field()
-  facultyId!: number;
+  day!: string;
 }

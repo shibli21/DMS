@@ -1,0 +1,9 @@
+mutation AddClassSchedule($input: AddClassScheduleInputType!) {
+  addClassSchedule(input: $input) {
+    errors {
+      field
+      message
+    }
+    classSchedule
+  }
+}

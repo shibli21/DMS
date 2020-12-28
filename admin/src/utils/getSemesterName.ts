@@ -14,7 +14,7 @@ export const getSemesterName = (number: number) => {
       return "6th";
     case 7:
       return "7th";
-    case 7:
+    case 8:
       return "8th";
 
     default:

@@ -29,7 +29,7 @@ export class ClassSchedule extends BaseEntity {
 
   @Column()
   @Field()
-  day!: number;
+  day!: string;
 
   @ManyToOne(() => Session)
   @Field(() => Session)
