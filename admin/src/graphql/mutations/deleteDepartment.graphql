@@ -1,0 +1,3 @@
+mutation DeleteDepartment($code: String!) {
+  deleteDepartment(code: $code)
+}

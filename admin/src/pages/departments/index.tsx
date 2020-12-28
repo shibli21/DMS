@@ -1,7 +1,12 @@
 import {
   Box,
+  Button,
   Flex,
   HStack,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
   Table,
   Tbody,
   Td,
@@ -9,18 +14,27 @@ import {
   Th,
   Thead,
   Tr,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import { useDepartmentsQuery } from "../../generated/graphql";
+import {
+  DepartmentsDocument,
+  useDeleteDepartmentMutation,
+  useDepartmentsQuery,
+} from "../../generated/graphql";
 
 interface Props {}
 
 const Departments = (props: Props) => {
+  const [departmentCode, setDepartmentCode] = useState("");
   const { data, loading } = useDepartmentsQuery();
+  const [deleteDepartment] = useDeleteDepartmentMutation();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
 
   if (loading) {
     return <LoadingSpinner />;
@@ -51,13 +65,15 @@ const Departments = (props: Props) => {
                 </Td>
                 <Td>
                   <HStack>
-                    <Link href="#">
-                      <Box
-                        cursor="pointer"
-                        as={FaTrash}
-                        _hover={{ color: "red.500" }}
-                      />
-                    </Link>
+                    <Box
+                      onClick={() => {
+                        setDepartmentCode(d.departmentCode);
+                        onOpen();
+                      }}
+                      cursor="pointer"
+                      as={FaTrash}
+                      _hover={{ color: "red.500" }}
+                    />
                     <Link href={`/departments/edit/${d.departmentCode}`}>
                       <Box
                         cursor="pointer"
@@ -72,6 +88,47 @@ const Departments = (props: Props) => {
           </Tbody>
         </Table>
       </Box>
+
+      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalBody p={4}>
+            <Flex justify="space-between" align="center">
+              <Text>Do you want to delete ?</Text>
+              <HStack>
+                <Button onClick={onClose} colorScheme="green">
+                  No
+                </Button>
+                <Button
+                  onClick={() => {
+                    onClose();
+                    deleteDepartment({
+                      variables: {
+                        code: departmentCode,
+                      },
+                      refetchQueries: [
+                        {
+                          query: DepartmentsDocument,
+                        },
+                      ],
+                    });
+                    toast({
+                      position: "bottom-right",
+                      description: "Department delete successful",
+                      status: "error",
+                      duration: 9000,
+                      isClosable: true,
+                    });
+                  }}
+                  colorScheme="red"
+                >
+                  Yes
+                </Button>
+              </HStack>
+            </Flex>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

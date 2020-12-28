@@ -36,7 +36,9 @@ export class Course extends BaseEntity {
   @Field()
   description!: string;
 
-  @ManyToOne(() => Department, (department) => department.courses)
+  @ManyToOne(() => Department, (department) => department.courses, {
+    onDelete: "CASCADE",
+  })
   @Field(() => Department)
   department!: Department;
 

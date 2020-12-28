@@ -94,7 +94,7 @@ export type ClassSchedule = {
   id: Scalars['Float'];
   startTime: Scalars['String'];
   endTime: Scalars['String'];
-  day: Scalars['Float'];
+  day: Scalars['String'];
   session: Session;
   semester: Semester;
   course: Course;
@@ -193,18 +193,18 @@ export type RegisterAdminInputType = {
 };
 
 export type AddClassScheduleInputType = {
-  classes: Array<Classes>;
-  sessionId: Scalars['Float'];
-  semesterId: Scalars['Float'];
-  courseCode: Scalars['String'];
-  departmentCode: Scalars['String'];
-  facultyId: Scalars['Float'];
+  classes?: Maybe<Array<Classes>>;
+  sessionId?: Maybe<Scalars['Float']>;
+  semesterId?: Maybe<Scalars['Float']>;
+  courseCode?: Maybe<Scalars['String']>;
+  departmentCode?: Maybe<Scalars['String']>;
+  facultyId?: Maybe<Scalars['Float']>;
 };
 
 export type Classes = {
   startTime: Scalars['String'];
   endTime: Scalars['String'];
-  day: Scalars['Float'];
+  day: Scalars['String'];
 };
 
 export type AddCourseInputType = {
@@ -240,16 +240,16 @@ export type RegisterFacultyInputType = {
 };
 
 export type AddSemesterInputType = {
-  number: Scalars['Float'];
-  startTime: Scalars['String'];
+  number?: Maybe<Scalars['Float']>;
+  startTime?: Maybe<Scalars['String']>;
   endTime?: Maybe<Scalars['String']>;
-  sessionId: Scalars['Float'];
-  departmentCode: Scalars['String'];
+  sessionId?: Maybe<Scalars['Float']>;
+  departmentCode?: Maybe<Scalars['String']>;
 };
 
 export type AddSessionInputType = {
-  name: Scalars['String'];
-  startTime: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  startTime?: Maybe<Scalars['String']>;
   endTime?: Maybe<Scalars['String']>;
 };
 
@@ -321,6 +321,7 @@ export type Mutation = {
   addCourse: CourseResponse;
   assignCourseToFaculty: CourseAssignToFacultyResponse;
   addDepartment: DepartmentResponse;
+  deleteDepartment: Scalars['Boolean'];
   addFaculty: FacultyResponse;
   registerFaculty: FacultyResponse;
   facultyLogin: FacultyResponse;
@@ -362,6 +363,11 @@ export type MutationAssignCourseToFacultyArgs = {
 export type MutationAddDepartmentArgs = {
   code: Scalars['String'];
   name: Scalars['String'];
+};
+
+
+export type MutationDeleteDepartmentArgs = {
+  code: Scalars['String'];
 };
 
 
@@ -608,6 +614,16 @@ export type AssignCourseToFacultyMutation = (
       ) }
     )> }
   ) }
+);
+
+export type DeleteDepartmentMutationVariables = Exact<{
+  code: Scalars['String'];
+}>;
+
+
+export type DeleteDepartmentMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteDepartment'>
 );
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
@@ -1197,6 +1213,36 @@ export function useAssignCourseToFacultyMutation(baseOptions?: Apollo.MutationHo
 export type AssignCourseToFacultyMutationHookResult = ReturnType<typeof useAssignCourseToFacultyMutation>;
 export type AssignCourseToFacultyMutationResult = Apollo.MutationResult<AssignCourseToFacultyMutation>;
 export type AssignCourseToFacultyMutationOptions = Apollo.BaseMutationOptions<AssignCourseToFacultyMutation, AssignCourseToFacultyMutationVariables>;
+export const DeleteDepartmentDocument = gql`
+    mutation DeleteDepartment($code: String!) {
+  deleteDepartment(code: $code)
+}
+    `;
+export type DeleteDepartmentMutationFn = Apollo.MutationFunction<DeleteDepartmentMutation, DeleteDepartmentMutationVariables>;
+
+/**
+ * __useDeleteDepartmentMutation__
+ *
+ * To run a mutation, you first call `useDeleteDepartmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteDepartmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteDepartmentMutation, { data, loading, error }] = useDeleteDepartmentMutation({
+ *   variables: {
+ *      code: // value for 'code'
+ *   },
+ * });
+ */
+export function useDeleteDepartmentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteDepartmentMutation, DeleteDepartmentMutationVariables>) {
+        return Apollo.useMutation<DeleteDepartmentMutation, DeleteDepartmentMutationVariables>(DeleteDepartmentDocument, baseOptions);
+      }
+export type DeleteDepartmentMutationHookResult = ReturnType<typeof useDeleteDepartmentMutation>;
+export type DeleteDepartmentMutationResult = Apollo.MutationResult<DeleteDepartmentMutation>;
+export type DeleteDepartmentMutationOptions = Apollo.BaseMutationOptions<DeleteDepartmentMutation, DeleteDepartmentMutationVariables>;
 export const LogoutDocument = gql`
     mutation Logout {
   logout

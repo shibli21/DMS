@@ -81,4 +81,14 @@ export class DepartmentResolver {
     }
     return { department };
   }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAdmin)
+  async deleteDepartment(@Arg("code") code: string): Promise<boolean> {
+    await Department.delete({
+      departmentCode: code,
+    });
+
+    return true;
+  }
 }
