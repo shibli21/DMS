@@ -328,6 +328,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   addSemester: SemesterResponse;
   addSession: SessionResponse;
+  deleteSession: Scalars['Boolean'];
   addStudent: StudentResponse;
   registerStudent: StudentResponse;
   studentLogin: StudentResponse;
@@ -395,6 +396,11 @@ export type MutationAddSemesterArgs = {
 
 export type MutationAddSessionArgs = {
   input: AddSessionInputType;
+};
+
+
+export type MutationDeleteSessionArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -620,6 +626,16 @@ export type AssignCourseToFacultyMutation = (
       ) }
     )> }
   ) }
+);
+
+export type DeleteSessionMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteSessionMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteSession'>
 );
 
 export type DeleteStudentMutationVariables = Exact<{
@@ -1229,6 +1245,36 @@ export function useAssignCourseToFacultyMutation(baseOptions?: Apollo.MutationHo
 export type AssignCourseToFacultyMutationHookResult = ReturnType<typeof useAssignCourseToFacultyMutation>;
 export type AssignCourseToFacultyMutationResult = Apollo.MutationResult<AssignCourseToFacultyMutation>;
 export type AssignCourseToFacultyMutationOptions = Apollo.BaseMutationOptions<AssignCourseToFacultyMutation, AssignCourseToFacultyMutationVariables>;
+export const DeleteSessionDocument = gql`
+    mutation DeleteSession($id: Int!) {
+  deleteSession(id: $id)
+}
+    `;
+export type DeleteSessionMutationFn = Apollo.MutationFunction<DeleteSessionMutation, DeleteSessionMutationVariables>;
+
+/**
+ * __useDeleteSessionMutation__
+ *
+ * To run a mutation, you first call `useDeleteSessionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteSessionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteSessionMutation, { data, loading, error }] = useDeleteSessionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteSessionMutation(baseOptions?: Apollo.MutationHookOptions<DeleteSessionMutation, DeleteSessionMutationVariables>) {
+        return Apollo.useMutation<DeleteSessionMutation, DeleteSessionMutationVariables>(DeleteSessionDocument, baseOptions);
+      }
+export type DeleteSessionMutationHookResult = ReturnType<typeof useDeleteSessionMutation>;
+export type DeleteSessionMutationResult = Apollo.MutationResult<DeleteSessionMutation>;
+export type DeleteSessionMutationOptions = Apollo.BaseMutationOptions<DeleteSessionMutation, DeleteSessionMutationVariables>;
 export const DeleteStudentDocument = gql`
     mutation DeleteStudent($id: Int!) {
   deleteStudent(id: $id)

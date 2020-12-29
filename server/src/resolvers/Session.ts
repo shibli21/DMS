@@ -1,13 +1,4 @@
-import {
-  Arg,
-  Field,
-  Int,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-  UseMiddleware,
-} from "type-graphql";
+import { Arg, Field, Int, Mutation, ObjectType, Query, Resolver, UseMiddleware } from "type-graphql";
 import { isAdmin } from "../middleware/isAdmin";
 import { FieldError } from "../types/ObjectTypes/FieldErrorType";
 import { Session } from "./../entities/Session";
@@ -45,9 +36,7 @@ export class SessionResolver {
 
   @UseMiddleware(isAdmin)
   @Mutation(() => SessionResponse)
-  async addSession(
-    @Arg("input") input: AddSessionInputType
-  ): Promise<SessionResponse> {
+  async addSession(@Arg("input") input: AddSessionInputType): Promise<SessionResponse> {
     let errors = [];
     if (!input.startTime) {
       errors.push({
@@ -77,5 +66,15 @@ export class SessionResolver {
     }).save();
 
     return { session };
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAdmin)
+  async deleteSession(@Arg("id", () => Int) id: number): Promise<boolean> {
+    await Session.delete({
+      id: id,
+    });
+
+    return true;
   }
 }
