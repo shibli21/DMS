@@ -17,9 +17,9 @@ import { AddFacultyInputType } from "../types/InputTypes/addFacultyInputType";
 import { FieldError } from "../types/ObjectTypes/FieldErrorType";
 import { generateRandomString } from "../utils/generateRandomString";
 import { validateAddFaculty } from "../utils/validateAddFaculty";
-import { Faculty } from "./../entities/Faculty";
-import { RegisterFacultyInputType } from "./../types/InputTypes/RegisterFacultyInputType";
-import { MyContext } from "./../types/MyContext";
+import { Faculty } from "../entities/Faculty";
+import { RegisterFacultyInputType } from "../types/InputTypes/RegisterFacultyInputType";
+import { MyContext } from "../types/MyContext";
 
 @ObjectType()
 class FacultyResponse {

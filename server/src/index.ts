@@ -1,3 +1,22 @@
+import { StudentResolver } from "./resolvers/Student";
+import { SessionResolver } from "./resolvers/Session";
+import { SemesterResolver } from "./resolvers/Semester";
+import { MeResolver } from "./resolvers/Me";
+import { FacultyResolver } from "./resolvers/Faculty";
+import { DepartmentResolver } from "./resolvers/Department";
+import { CourseAssignToFacultyResolver } from "./resolvers/CourseAssignToFaculty";
+import { CourseResolver } from "./resolvers/Course";
+import { ClassScheduleResolver } from "./resolvers/ClassSchedule";
+import { AdminResolver } from "./resolvers/Admin";
+import { Student } from "./entities/Student";
+import { Session } from "./entities/Session";
+import { Semester } from "./entities/Semester";
+import { Faculty } from "./entities/Faculty";
+import { Department } from "./entities/Department";
+import { CourseAssignToFaculty } from "./entities/CourseAssignToFaculty";
+import { Course } from "./entities/Course";
+import { ClassSchedule } from "./entities/ClassSchedule";
+import { Admin } from "./entities/Admin";
 import { ApolloServer } from "apollo-server-express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -21,7 +40,17 @@ const main = async () => {
     database: "dms",
     synchronize: true,
     logging: true,
-    entities: ["src/entities/*.ts"],
+    entities: [
+      Admin,
+      ClassSchedule,
+      Course,
+      CourseAssignToFaculty,
+      Department,
+      Faculty,
+      Semester,
+      Session,
+      Student,
+    ],
   });
 
   const app = express();
@@ -43,7 +72,18 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [__dirname + "/resolvers/*.ts"],
+      resolvers: [
+        AdminResolver,
+        ClassScheduleResolver,
+        CourseResolver,
+        CourseAssignToFacultyResolver,
+        DepartmentResolver,
+        FacultyResolver,
+        MeResolver,
+        SemesterResolver,
+        SessionResolver,
+        StudentResolver,
+      ],
       validate: false,
     }),
     context: ({ req, res }): MyContext => ({
