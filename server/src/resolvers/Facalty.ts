@@ -4,6 +4,7 @@ import {
   Arg,
   Ctx,
   Field,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -167,5 +168,15 @@ export class FacultyResolver {
     });
 
     return { faculty };
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAdmin)
+  async deleteFaculty(@Arg("id", () => Int) id: number): Promise<boolean> {
+    await Faculty.delete({
+      id: id,
+    });
+
+    return true;
   }
 }
