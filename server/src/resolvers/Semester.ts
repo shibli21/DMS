@@ -132,4 +132,13 @@ export class SemesterResolver {
 
     return { semester };
   }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAdmin)
+  async deleteSemester(@Arg("id", () => Int) id: number): Promise<boolean> {
+    await Semester.delete({
+      id: id,
+    });
+    return true;
+  }
 }
