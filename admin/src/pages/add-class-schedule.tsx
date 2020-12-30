@@ -181,7 +181,7 @@ const AddClassSchedule = (props: Props) => {
                   as={
                     <Select placeholder="Select option">
                       {semesters?.semestersByDepartmentAndSession?.map((s) => (
-                        <option value={s.number} key={s.id}>
+                        <option value={s.id} key={s.id}>
                           {s.number}
                         </option>
                       ))}

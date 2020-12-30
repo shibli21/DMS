@@ -83,12 +83,12 @@ const NavBar = (props: ChakraProps) => {
             color="gray.100"
             _hover={{ bg: "gray.100", color: "gray.900" }}
           >
-            <Link href="/admin-register">Sign up</Link>
+            <Link href="/register">Sign up</Link>
           </Button>
         </NavItem>
         <NavItem>
           <Button size="sm" variant="solid" colorScheme="purple">
-            <Link href="/admin-login">Sign in</Link>
+            <Link href="/login">Sign in</Link>
           </Button>
         </NavItem>
       </>

@@ -28,6 +28,7 @@ export type Query = {
   coursesByDeptSemester: Array<Course>;
   classSchedules: Array<ClassSchedule>;
   classScheduleByAll: Array<ClassSchedule>;
+  studentClassSchedule: Array<ClassSchedule>;
   hello: Scalars['String'];
 };
 
@@ -436,6 +437,52 @@ export type RegisterAdminInputType = {
   token: Scalars['String'];
 };
 
+export type StudentLoginMutationVariables = Exact<{
+  password: Scalars['String'];
+  email: Scalars['String'];
+}>;
+
+
+export type StudentLoginMutation = (
+  { __typename?: 'Mutation' }
+  & { studentLogin: (
+    { __typename?: 'StudentResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>>, student?: Maybe<(
+      { __typename?: 'Student' }
+      & Pick<Student, 'id' | 'username' | 'email'>
+    )> }
+  ) }
+);
+
+export type RegisterStudentMutationVariables = Exact<{
+  input: RegisterStudentInputType;
+}>;
+
+
+export type RegisterStudentMutation = (
+  { __typename?: 'Mutation' }
+  & { registerStudent: (
+    { __typename?: 'StudentResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>>, student?: Maybe<(
+      { __typename?: 'Student' }
+      & Pick<Student, 'id' | 'username' | 'email' | 'registrationNumber' | 'oneTimePassword' | 'gender' | 'address' | 'contactNumber'>
+      & { session: (
+        { __typename?: 'Session' }
+        & Pick<Session, 'id' | 'name' | 'startTime' | 'endTime'>
+      ), department: (
+        { __typename?: 'Department' }
+        & Pick<Department, 'id' | 'name' | 'departmentCode'>
+      ) }
+    )> }
+  ) }
+);
+
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -465,6 +512,103 @@ export type MeQuery = (
 );
 
 
+export const StudentLoginDocument = gql`
+    mutation StudentLogin($password: String!, $email: String!) {
+  studentLogin(password: $password, email: $email) {
+    errors {
+      field
+      message
+    }
+    student {
+      id
+      username
+      email
+    }
+  }
+}
+    `;
+export type StudentLoginMutationFn = Apollo.MutationFunction<StudentLoginMutation, StudentLoginMutationVariables>;
+
+/**
+ * __useStudentLoginMutation__
+ *
+ * To run a mutation, you first call `useStudentLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStudentLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [studentLoginMutation, { data, loading, error }] = useStudentLoginMutation({
+ *   variables: {
+ *      password: // value for 'password'
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useStudentLoginMutation(baseOptions?: Apollo.MutationHookOptions<StudentLoginMutation, StudentLoginMutationVariables>) {
+        return Apollo.useMutation<StudentLoginMutation, StudentLoginMutationVariables>(StudentLoginDocument, baseOptions);
+      }
+export type StudentLoginMutationHookResult = ReturnType<typeof useStudentLoginMutation>;
+export type StudentLoginMutationResult = Apollo.MutationResult<StudentLoginMutation>;
+export type StudentLoginMutationOptions = Apollo.BaseMutationOptions<StudentLoginMutation, StudentLoginMutationVariables>;
+export const RegisterStudentDocument = gql`
+    mutation RegisterStudent($input: RegisterStudentInputType!) {
+  registerStudent(input: $input) {
+    errors {
+      field
+      message
+    }
+    student {
+      id
+      username
+      email
+      registrationNumber
+      session {
+        id
+        name
+        startTime
+        endTime
+      }
+      oneTimePassword
+      gender
+      address
+      contactNumber
+      department {
+        id
+        name
+        departmentCode
+      }
+    }
+  }
+}
+    `;
+export type RegisterStudentMutationFn = Apollo.MutationFunction<RegisterStudentMutation, RegisterStudentMutationVariables>;
+
+/**
+ * __useRegisterStudentMutation__
+ *
+ * To run a mutation, you first call `useRegisterStudentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterStudentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerStudentMutation, { data, loading, error }] = useRegisterStudentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useRegisterStudentMutation(baseOptions?: Apollo.MutationHookOptions<RegisterStudentMutation, RegisterStudentMutationVariables>) {
+        return Apollo.useMutation<RegisterStudentMutation, RegisterStudentMutationVariables>(RegisterStudentDocument, baseOptions);
+      }
+export type RegisterStudentMutationHookResult = ReturnType<typeof useRegisterStudentMutation>;
+export type RegisterStudentMutationResult = Apollo.MutationResult<RegisterStudentMutation>;
+export type RegisterStudentMutationOptions = Apollo.BaseMutationOptions<RegisterStudentMutation, RegisterStudentMutationVariables>;
 export const LogoutDocument = gql`
     mutation Logout {
   logout
