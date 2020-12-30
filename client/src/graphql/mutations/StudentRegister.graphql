@@ -1,0 +1,29 @@
+mutation RegisterStudent($input: RegisterStudentInputType!) {
+  registerStudent(input: $input) {
+    errors {
+      field
+      message
+    }
+    student {
+      id
+      username
+      email
+      registrationNumber
+      session {
+        id
+        name
+        startTime
+        endTime
+      }
+      oneTimePassword
+      gender
+      address
+      contactNumber
+      department {
+        id
+        name
+        departmentCode
+      }
+    }
+  }
+}

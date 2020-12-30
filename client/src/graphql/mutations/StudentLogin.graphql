@@ -1,0 +1,13 @@
+mutation StudentLogin($password: String!, $email: String!) {
+  studentLogin(password: $password, email: $email) {
+    errors {
+      field
+      message
+    }
+    student {
+      id
+      username
+      email
+    }
+  }
+}
