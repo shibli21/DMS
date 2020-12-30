@@ -32,10 +32,30 @@ const NavBar = (props: ChakraProps) => {
 
   let NavLinks: ReactJSXElement;
 
-  if (data?.me?.admin?.id) {
+  if (data?.me?.student?.id) {
     NavLinks = (
       <>
-        <NavItem>{data?.me?.admin?.username}</NavItem>
+        <NavItem>{data?.me?.student?.username}</NavItem>
+        <NavItem>
+          <Button
+            size="sm"
+            variant="solid"
+            colorScheme="purple"
+            onClick={() =>
+              logout({
+                refetchQueries: [{ query: MeDocument }],
+              })
+            }
+          >
+            Logout
+          </Button>
+        </NavItem>
+      </>
+    );
+  } else if (data?.me?.faculty?.id) {
+    NavLinks = (
+      <>
+        <NavItem>{data?.me?.faculty?.username}</NavItem>
         <NavItem>
           <Button
             size="sm"
@@ -107,14 +127,14 @@ const NavBar = (props: ChakraProps) => {
               onClose={onClose}
             >
               <DrawerOverlay>
-                <DrawerContent>
+                <DrawerContent bg="gray.800" alignItems="center">
                   <DrawerCloseButton m=".25rem">
                     <Box>
-                      <RiCloseFill size="25px" />
+                      <RiCloseFill size="25px" color="white" />
                     </Box>
                   </DrawerCloseButton>
-                  <DrawerBody pt="90px">
-                    <Stack>{NavLinks}</Stack>
+                  <DrawerBody pt="90px" alignItems="center">
+                    {NavLinks}
                   </DrawerBody>
                   <DrawerFooter></DrawerFooter>
                 </DrawerContent>
