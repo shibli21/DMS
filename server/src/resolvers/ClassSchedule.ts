@@ -1,5 +1,8 @@
+import { MyContext } from "./../types/MyContext";
+import { Student } from "./../entities/Student";
 import {
   Arg,
+  Ctx,
   Field,
   Int,
   Mutation,
@@ -17,6 +20,7 @@ import { Department } from "./../entities/Department";
 import { Faculty } from "./../entities/Faculty";
 import { Semester } from "./../entities/Semester";
 import { Session } from "./../entities/Session";
+import { isStudent } from "./../middleware/isStudent";
 import { AddClassScheduleInputType } from "./../types/InputTypes/AddClassScheduleInputType";
 
 @ObjectType()
@@ -175,5 +179,55 @@ export class ClassScheduleResolver {
     }
 
     return { classSchedule };
+  }
+
+  @UseMiddleware(isStudent)
+  @Query(() => [ClassSchedule])
+  async studentClassSchedule(
+    @Ctx() { req }: MyContext
+  ): Promise<ClassSchedule[]> {
+    const student = await Student.findOneOrFail({
+      where: {
+        id: req.studentId,
+      },
+      relations: ["department", "session"],
+    });
+
+    const classSchedule = await getConnection()
+      .getRepository(ClassSchedule)
+      .createQueryBuilder("cs")
+      .leftJoinAndSelect("cs.semester", "semester")
+      .leftJoinAndSelect("cs.course", "course")
+      .leftJoinAndSelect("cs.department", "department")
+      .leftJoinAndSelect("cs.faculty", "faculty")
+      .leftJoinAndSelect("cs.session", "session")
+      .where(`"department"."departmentCode" = :code`, {
+        code: student.department.departmentCode,
+      })
+      .andWhere(`"session"."id" =:id`, {
+        id: student.session.id,
+      })
+
+      .getMany();
+
+    // const classSchedule = ClassSchedule.find({
+    //   relations: ["department", "session", "semester", "faculty", "course"],
+    //   order: {
+    //     day: "ASC",
+    //   },
+    //   where: {
+    //     department: await Department.findOne({
+    //       where: {
+    //         departmentCode: student.department.departmentCode,
+    //       },
+    //     }),
+    //     session: await Session.findOne({
+    //       where: {
+    //         id: student.session.id,
+    //       },
+    //     }),
+    //   },
+    // });
+    return classSchedule;
   }
 }
