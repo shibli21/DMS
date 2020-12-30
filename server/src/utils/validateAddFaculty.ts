@@ -1,5 +1,5 @@
 import { Faculty } from "./../entities/Faculty";
-import { AddFacultyInputType } from "../types/InputTypes/addFacultyInputType";
+import { AddFacultyInputType } from "./../types/InputTypes/AddFacultyInputType";
 
 export const validateAddFaculty = async (input: AddFacultyInputType) => {
   let errors = [];

@@ -12,14 +12,14 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
+import { Faculty } from "../entities/Faculty";
 import { isAdmin } from "../middleware/isAdmin";
-import { AddFacultyInputType } from "../types/InputTypes/addFacultyInputType";
+import { RegisterFacultyInputType } from "../types/InputTypes/RegisterFacultyInputType";
+import { MyContext } from "../types/MyContext";
 import { FieldError } from "../types/ObjectTypes/FieldErrorType";
 import { generateRandomString } from "../utils/generateRandomString";
 import { validateAddFaculty } from "../utils/validateAddFaculty";
-import { Faculty } from "../entities/Faculty";
-import { RegisterFacultyInputType } from "../types/InputTypes/RegisterFacultyInputType";
-import { MyContext } from "../types/MyContext";
+import { AddFacultyInputType } from "./../types/InputTypes/AddFacultyInputType";
 
 @ObjectType()
 class FacultyResponse {
