@@ -1,5 +1,3 @@
-import { MyContext } from "./../types/MyContext";
-import { Student } from "./../entities/Student";
 import {
   Arg,
   Ctx,
@@ -20,8 +18,10 @@ import { Department } from "./../entities/Department";
 import { Faculty } from "./../entities/Faculty";
 import { Semester } from "./../entities/Semester";
 import { Session } from "./../entities/Session";
+import { Student } from "./../entities/Student";
 import { isStudent } from "./../middleware/isStudent";
 import { AddClassScheduleInputType } from "./../types/InputTypes/AddClassScheduleInputType";
+import { MyContext } from "./../types/MyContext";
 
 @ObjectType()
 class AddClassScheduleResponse {
@@ -210,24 +210,40 @@ export class ClassScheduleResolver {
 
       .getMany();
 
-    // const classSchedule = ClassSchedule.find({
-    //   relations: ["department", "session", "semester", "faculty", "course"],
-    //   order: {
-    //     day: "ASC",
-    //   },
-    //   where: {
-    //     department: await Department.findOne({
-    //       where: {
-    //         departmentCode: student.department.departmentCode,
-    //       },
-    //     }),
-    //     session: await Session.findOne({
-    //       where: {
-    //         id: student.session.id,
-    //       },
-    //     }),
-    //   },
-    // });
+    return classSchedule;
+  }
+
+  @Query(() => [ClassSchedule])
+  async todaysClassSchedule(
+    @Ctx() { req }: MyContext
+  ): Promise<ClassSchedule[]> {
+    const student = await Student.findOneOrFail({
+      where: {
+        id: req.studentId,
+      },
+      relations: ["department", "session"],
+    });
+
+    const classSchedule = ClassSchedule.find({
+      relations: ["department", "session", "semester", "faculty", "course"],
+      order: {
+        startTime: "ASC",
+      },
+      where: {
+        department: await Department.findOne({
+          where: {
+            departmentCode: student.department.departmentCode,
+          },
+        }),
+        session: await Session.findOne({
+          where: {
+            id: student.session.id,
+          },
+        }),
+        day: 5,
+      },
+    });
+
     return classSchedule;
   }
 }
