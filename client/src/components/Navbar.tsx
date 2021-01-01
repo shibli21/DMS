@@ -96,7 +96,14 @@ const NavBar = (props: ChakraProps) => {
   }
 
   return (
-    <Box top={0} position="sticky" as="header" zIndex={100} bg="gray.900">
+    <Box
+      top={0}
+      position="sticky"
+      as="header"
+      zIndex={100}
+      bg="gray.900"
+      mb={10}
+    >
       <Flex
         as="nav"
         align="center"

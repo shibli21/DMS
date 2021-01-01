@@ -29,6 +29,7 @@ export type Query = {
   classSchedules: Array<ClassSchedule>;
   classScheduleByAll: Array<ClassSchedule>;
   studentClassSchedule: Array<ClassSchedule>;
+  todaysClassSchedule: Array<ClassSchedule>;
   hello: Scalars['String'];
 };
 
@@ -511,6 +512,27 @@ export type MeQuery = (
   )> }
 );
 
+export type TodaysClassScheduleQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TodaysClassScheduleQuery = (
+  { __typename?: 'Query' }
+  & { todaysClassSchedule: Array<(
+    { __typename?: 'ClassSchedule' }
+    & Pick<ClassSchedule, 'id' | 'startTime' | 'endTime' | 'day'>
+    & { course: (
+      { __typename?: 'Course' }
+      & Pick<Course, 'name'>
+    ), semester: (
+      { __typename?: 'Semester' }
+      & Pick<Semester, 'number' | 'id'>
+    ), faculty: (
+      { __typename?: 'Faculty' }
+      & Pick<Faculty, 'id' | 'username' | 'designation'>
+    ) }
+  )> }
+);
+
 
 export const StudentLoginDocument = gql`
     mutation StudentLogin($password: String!, $email: String!) {
@@ -694,3 +716,50 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const TodaysClassScheduleDocument = gql`
+    query TodaysClassSchedule {
+  todaysClassSchedule {
+    id
+    startTime
+    endTime
+    day
+    course {
+      name
+    }
+    semester {
+      number
+      id
+    }
+    faculty {
+      id
+      username
+      designation
+    }
+  }
+}
+    `;
+
+/**
+ * __useTodaysClassScheduleQuery__
+ *
+ * To run a query within a React component, call `useTodaysClassScheduleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTodaysClassScheduleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTodaysClassScheduleQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTodaysClassScheduleQuery(baseOptions?: Apollo.QueryHookOptions<TodaysClassScheduleQuery, TodaysClassScheduleQueryVariables>) {
+        return Apollo.useQuery<TodaysClassScheduleQuery, TodaysClassScheduleQueryVariables>(TodaysClassScheduleDocument, baseOptions);
+      }
+export function useTodaysClassScheduleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TodaysClassScheduleQuery, TodaysClassScheduleQueryVariables>) {
+          return Apollo.useLazyQuery<TodaysClassScheduleQuery, TodaysClassScheduleQueryVariables>(TodaysClassScheduleDocument, baseOptions);
+        }
+export type TodaysClassScheduleQueryHookResult = ReturnType<typeof useTodaysClassScheduleQuery>;
+export type TodaysClassScheduleLazyQueryHookResult = ReturnType<typeof useTodaysClassScheduleLazyQuery>;
+export type TodaysClassScheduleQueryResult = Apollo.QueryResult<TodaysClassScheduleQuery, TodaysClassScheduleQueryVariables>;
