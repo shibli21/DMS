@@ -1,9 +1,14 @@
-import { Box, Container } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import Head from "next/head";
+import TodaySchedule from "../components/TodaySchedule";
 
 export default function Home() {
   return (
     <>
-      <Box>HOME PAGE</Box>
+      <Head>
+        <title>Home</title>
+      </Head>
+      <TodaySchedule />
     </>
   );
 }

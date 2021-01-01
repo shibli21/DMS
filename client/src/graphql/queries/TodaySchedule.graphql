@@ -1,0 +1,20 @@
+query TodaysClassSchedule {
+  todaysClassSchedule {
+    id
+    startTime
+    endTime
+    day
+    course {
+      name
+    }
+    semester {
+      number
+      id
+    }
+    faculty {
+      id
+      username
+      designation
+    }
+  }
+}
