@@ -492,6 +492,27 @@ export type LogoutMutation = (
   & Pick<Mutation, 'logout'>
 );
 
+export type StudentClassScheduleQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StudentClassScheduleQuery = (
+  { __typename?: 'Query' }
+  & { studentClassSchedule: Array<(
+    { __typename?: 'ClassSchedule' }
+    & Pick<ClassSchedule, 'id' | 'startTime' | 'endTime' | 'day'>
+    & { course: (
+      { __typename?: 'Course' }
+      & Pick<Course, 'name'>
+    ), semester: (
+      { __typename?: 'Semester' }
+      & Pick<Semester, 'number' | 'id'>
+    ), faculty: (
+      { __typename?: 'Faculty' }
+      & Pick<Faculty, 'username' | 'designation'>
+    ) }
+  )> }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -660,6 +681,52 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const StudentClassScheduleDocument = gql`
+    query StudentClassSchedule {
+  studentClassSchedule {
+    id
+    startTime
+    endTime
+    day
+    course {
+      name
+    }
+    semester {
+      number
+      id
+    }
+    faculty {
+      username
+      designation
+    }
+  }
+}
+    `;
+
+/**
+ * __useStudentClassScheduleQuery__
+ *
+ * To run a query within a React component, call `useStudentClassScheduleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStudentClassScheduleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStudentClassScheduleQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useStudentClassScheduleQuery(baseOptions?: Apollo.QueryHookOptions<StudentClassScheduleQuery, StudentClassScheduleQueryVariables>) {
+        return Apollo.useQuery<StudentClassScheduleQuery, StudentClassScheduleQueryVariables>(StudentClassScheduleDocument, baseOptions);
+      }
+export function useStudentClassScheduleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StudentClassScheduleQuery, StudentClassScheduleQueryVariables>) {
+          return Apollo.useLazyQuery<StudentClassScheduleQuery, StudentClassScheduleQueryVariables>(StudentClassScheduleDocument, baseOptions);
+        }
+export type StudentClassScheduleQueryHookResult = ReturnType<typeof useStudentClassScheduleQuery>;
+export type StudentClassScheduleLazyQueryHookResult = ReturnType<typeof useStudentClassScheduleLazyQuery>;
+export type StudentClassScheduleQueryResult = Apollo.QueryResult<StudentClassScheduleQuery, StudentClassScheduleQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

@@ -1,5 +1,7 @@
-import { Box, Flex, Grid, Text } from "@chakra-ui/react";
+import { Box, Flex, Grid, HStack, Text } from "@chakra-ui/react";
+import Link from "next/link";
 import React from "react";
+import { FaArrowRight } from "react-icons/fa";
 import { useTodaysClassScheduleQuery } from "../generated/graphql";
 
 interface Props {}
@@ -40,6 +42,12 @@ const TodaySchedule = (props: Props) => {
           </Box>
         ))}
       </Grid>
+      <Link href="/class-schedule">
+        <HStack mt={6} cursor="pointer" _hover={{ color: "red.400" }}>
+          <Text fontSize="lg">View all</Text>
+          <FaArrowRight />
+        </HStack>
+      </Link>
     </>
   );
 };
