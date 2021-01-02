@@ -1,0 +1,19 @@
+query StudentClassSchedule {
+  studentClassSchedule {
+    id
+    startTime
+    endTime
+    day
+    course {
+      name
+    }
+    semester {
+      number
+      id
+    }
+    faculty {
+      username
+      designation
+    }
+  }
+}

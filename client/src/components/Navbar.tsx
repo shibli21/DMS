@@ -9,7 +9,6 @@ import {
   DrawerFooter,
   DrawerOverlay,
   Flex,
-  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -35,7 +34,14 @@ const NavBar = (props: ChakraProps) => {
   if (data?.me?.student?.id) {
     NavLinks = (
       <>
-        <NavItem>{data?.me?.student?.username}</NavItem>
+        <NavItem>
+          <Link href="/class-schedule">class schedule</Link>
+        </NavItem>
+        <NavItem>
+          <Link href={`/profile/${data?.me?.student?.id}`}>
+            {data?.me?.student?.username}
+          </Link>
+        </NavItem>
         <NavItem>
           <Button
             size="sm"
@@ -55,6 +61,9 @@ const NavBar = (props: ChakraProps) => {
   } else if (data?.me?.faculty?.id) {
     NavLinks = (
       <>
+        <NavItem>
+          <Link href="/class-schedule">class schedule</Link>
+        </NavItem>
         <NavItem>{data?.me?.faculty?.username}</NavItem>
         <NavItem>
           <Button
