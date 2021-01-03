@@ -52,6 +52,7 @@ export default function Faculties() {
               <Th>Designation</Th>
               <Th>Name</Th>
               <Th>Email</Th>
+              <Th>Token</Th>
               <Th></Th>
             </Tr>
           </Thead>
@@ -63,6 +64,7 @@ export default function Faculties() {
                 </Td>
                 <Td>{s.username}</Td>
                 <Td>{s.email}</Td>
+                <Td>{s.oneTimePassword}</Td>
                 <Td>
                   <HStack>
                     <Box
