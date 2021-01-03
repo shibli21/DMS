@@ -19,7 +19,6 @@ import { Faculty } from "./../entities/Faculty";
 import { Semester } from "./../entities/Semester";
 import { Session } from "./../entities/Session";
 import { Student } from "./../entities/Student";
-import { isStudent } from "./../middleware/isStudent";
 import { AddClassScheduleInputType } from "./../types/InputTypes/AddClassScheduleInputType";
 import { MyContext } from "./../types/MyContext";
 
@@ -181,69 +180,118 @@ export class ClassScheduleResolver {
     return { classSchedule };
   }
 
-  @UseMiddleware(isStudent)
   @Query(() => [ClassSchedule])
-  async studentClassSchedule(
+  async studentOrFacultyClassSchedule(
     @Ctx() { req }: MyContext
   ): Promise<ClassSchedule[]> {
-    const student = await Student.findOneOrFail({
-      where: {
-        id: req.studentId,
-      },
-      relations: ["department", "session"],
-    });
+    if (req.studentId) {
+      const student = await Student.findOneOrFail({
+        where: {
+          id: req.studentId,
+        },
+        relations: ["department", "session"],
+      });
 
-    const classSchedule = await getConnection()
-      .getRepository(ClassSchedule)
-      .createQueryBuilder("cs")
-      .leftJoinAndSelect("cs.semester", "semester")
-      .leftJoinAndSelect("cs.course", "course")
-      .leftJoinAndSelect("cs.department", "department")
-      .leftJoinAndSelect("cs.faculty", "faculty")
-      .leftJoinAndSelect("cs.session", "session")
-      .where(`"department"."departmentCode" = :code`, {
-        code: student.department.departmentCode,
-      })
-      .andWhere(`"session"."id" =:id`, {
-        id: student.session.id,
-      })
+      const classSchedule = await getConnection()
+        .getRepository(ClassSchedule)
+        .createQueryBuilder("cs")
+        .leftJoinAndSelect("cs.semester", "semester")
+        .leftJoinAndSelect("cs.course", "course")
+        .leftJoinAndSelect("cs.department", "department")
+        .leftJoinAndSelect("cs.faculty", "faculty")
+        .leftJoinAndSelect("cs.session", "session")
+        .where(`"department"."departmentCode" = :code`, {
+          code: student.department.departmentCode,
+        })
+        .andWhere(`"session"."id" =:id`, {
+          id: student.session.id,
+        })
 
-      .getMany();
+        .getMany();
 
-    return classSchedule;
+      return classSchedule;
+    } else {
+      const faculty = await Faculty.findOneOrFail({
+        where: {
+          id: req.facultyId,
+        },
+      });
+
+      const classSchedule = await getConnection()
+        .getRepository(ClassSchedule)
+        .createQueryBuilder("cs")
+        .leftJoinAndSelect("cs.semester", "semester")
+        .leftJoinAndSelect("cs.course", "course")
+        .leftJoinAndSelect("cs.department", "department")
+        .leftJoinAndSelect("cs.faculty", "faculty")
+        .leftJoinAndSelect("cs.session", "session")
+        .andWhere(`"faculty"."id" =:id`, {
+          id: faculty.id,
+        })
+
+        .getMany();
+
+      return classSchedule;
+    }
   }
 
   @Query(() => [ClassSchedule])
   async todaysClassSchedule(
     @Ctx() { req }: MyContext
   ): Promise<ClassSchedule[]> {
-    const student = await Student.findOneOrFail({
-      where: {
-        id: req.studentId,
-      },
-      relations: ["department", "session"],
-    });
+    if (req.studentId) {
+      const student = await Student.findOneOrFail({
+        where: {
+          id: req.studentId,
+        },
+        relations: ["department", "session"],
+      });
 
-    const classSchedule = ClassSchedule.find({
-      relations: ["department", "session", "semester", "faculty", "course"],
-      order: {
-        startTime: "ASC",
-      },
-      where: {
-        department: await Department.findOne({
-          where: {
-            departmentCode: student.department.departmentCode,
-          },
-        }),
-        session: await Session.findOne({
-          where: {
-            id: student.session.id,
-          },
-        }),
-        day: 5,
-      },
-    });
+      const classSchedule = ClassSchedule.find({
+        relations: ["department", "session", "semester", "faculty", "course"],
+        order: {
+          startTime: "ASC",
+        },
+        where: {
+          department: await Department.findOne({
+            where: {
+              departmentCode: student.department.departmentCode,
+            },
+          }),
+          session: await Session.findOne({
+            where: {
+              id: student.session.id,
+            },
+          }),
+          day: 5,
+        },
+      });
 
-    return classSchedule;
+      return classSchedule;
+    } else {
+      const faculty = await Faculty.findOneOrFail({
+        where: {
+          id: req.facultyId,
+        },
+      });
+
+      const classSchedule = ClassSchedule.find({
+        relations: ["department", "session", "semester", "faculty", "course"],
+        order: {
+          startTime: "ASC",
+        },
+        where: {
+          faculty: await Faculty.findOne({
+            where: {
+              id: faculty.id,
+            },
+          }),
+
+          day: 5,
+        },
+      });
+
+      return classSchedule;
+    }
   }
 }
