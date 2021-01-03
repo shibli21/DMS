@@ -34,7 +34,7 @@ class FacultyResponse {
 export class FacultyResolver {
   @Query(() => [Faculty])
   faculties(): Promise<Faculty[]> {
-    return Faculty.find();
+    return Faculty.find({ relations: ["assignedTo"] });
   }
 
   @UseMiddleware(isAdmin)

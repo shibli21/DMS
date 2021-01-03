@@ -24,6 +24,7 @@ export type Query = {
   faculties: Array<Faculty>;
   departments: Array<Department>;
   courseAssignToFaculties: Array<CourseAssignToFaculty>;
+  courseAssignToFaculty: Array<CourseAssignToFaculty>;
   courses: Array<Course>;
   coursesByDeptSemester: Array<Course>;
   classSchedules: Array<ClassSchedule>;
@@ -552,6 +553,30 @@ export type StudentOrFacultyClassScheduleQuery = (
   )> }
 );
 
+export type CourseAssignToFacultyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CourseAssignToFacultyQuery = (
+  { __typename?: 'Query' }
+  & { courseAssignToFaculty: Array<(
+    { __typename?: 'CourseAssignToFaculty' }
+    & Pick<CourseAssignToFaculty, 'id'>
+    & { course: (
+      { __typename?: 'Course' }
+      & Pick<Course, 'id' | 'name' | 'code' | 'credit' | 'description'>
+    ), semester: (
+      { __typename?: 'Semester' }
+      & Pick<Semester, 'id' | 'number'>
+    ), session: (
+      { __typename?: 'Session' }
+      & Pick<Session, 'id' | 'name'>
+    ), department: (
+      { __typename?: 'Department' }
+      & Pick<Department, 'name' | 'departmentCode'>
+    ) }
+  )> }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -855,6 +880,57 @@ export function useStudentOrFacultyClassScheduleLazyQuery(baseOptions?: Apollo.L
 export type StudentOrFacultyClassScheduleQueryHookResult = ReturnType<typeof useStudentOrFacultyClassScheduleQuery>;
 export type StudentOrFacultyClassScheduleLazyQueryHookResult = ReturnType<typeof useStudentOrFacultyClassScheduleLazyQuery>;
 export type StudentOrFacultyClassScheduleQueryResult = Apollo.QueryResult<StudentOrFacultyClassScheduleQuery, StudentOrFacultyClassScheduleQueryVariables>;
+export const CourseAssignToFacultyDocument = gql`
+    query CourseAssignToFaculty {
+  courseAssignToFaculty {
+    id
+    course {
+      id
+      name
+      code
+      credit
+      description
+    }
+    semester {
+      id
+      number
+    }
+    session {
+      id
+      name
+    }
+    department {
+      name
+      departmentCode
+    }
+  }
+}
+    `;
+
+/**
+ * __useCourseAssignToFacultyQuery__
+ *
+ * To run a query within a React component, call `useCourseAssignToFacultyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCourseAssignToFacultyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCourseAssignToFacultyQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCourseAssignToFacultyQuery(baseOptions?: Apollo.QueryHookOptions<CourseAssignToFacultyQuery, CourseAssignToFacultyQueryVariables>) {
+        return Apollo.useQuery<CourseAssignToFacultyQuery, CourseAssignToFacultyQueryVariables>(CourseAssignToFacultyDocument, baseOptions);
+      }
+export function useCourseAssignToFacultyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CourseAssignToFacultyQuery, CourseAssignToFacultyQueryVariables>) {
+          return Apollo.useLazyQuery<CourseAssignToFacultyQuery, CourseAssignToFacultyQueryVariables>(CourseAssignToFacultyDocument, baseOptions);
+        }
+export type CourseAssignToFacultyQueryHookResult = ReturnType<typeof useCourseAssignToFacultyQuery>;
+export type CourseAssignToFacultyLazyQueryHookResult = ReturnType<typeof useCourseAssignToFacultyLazyQuery>;
+export type CourseAssignToFacultyQueryResult = Apollo.QueryResult<CourseAssignToFacultyQuery, CourseAssignToFacultyQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
