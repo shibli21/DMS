@@ -65,7 +65,11 @@ const NavBar = (props: ChakraProps) => {
         <NavItem>
           <Link href="/class-schedule">class schedule</Link>
         </NavItem>
-        <NavItem>{data?.me?.faculty?.username}</NavItem>
+        <NavItem>
+          <Link href={`/profile/${data?.me?.faculty?.id}`}>
+            {data?.me?.faculty?.username}
+          </Link>
+        </NavItem>
         <NavItem>
           <Button
             size="sm"

@@ -1,0 +1,17 @@
+mutation FacultyLogin($password: String!, $email: String!) {
+  facultyLogin(password: $password, email: $email) {
+    errors {
+      field
+      message
+    }
+    faculty {
+      id
+      username
+      designation
+      email
+      gender
+      address
+      contactNumber
+    }
+  }
+}
