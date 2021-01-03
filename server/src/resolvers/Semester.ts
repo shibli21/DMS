@@ -109,6 +109,7 @@ export class SemesterResolver {
       where: {
         department: department,
         number: input.number,
+        session: session,
       },
     });
 

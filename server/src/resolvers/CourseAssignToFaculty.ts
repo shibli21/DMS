@@ -1,5 +1,8 @@
+import { isFaculty } from "./../middleware/isFcaulty";
+import { MyContext } from "./../types/MyContext";
 import {
   Arg,
+  Ctx,
   Field,
   Mutation,
   ObjectType,
@@ -33,6 +36,22 @@ export class CourseAssignToFacultyResolver {
   courseAssignToFaculties(): Promise<CourseAssignToFaculty[]> {
     return CourseAssignToFaculty.find({
       relations: ["department", "faculty", "course"],
+    });
+  }
+
+  @UseMiddleware(isFaculty)
+  @Query(() => [CourseAssignToFaculty])
+  async courseAssignToFaculty(
+    @Ctx() { req }: MyContext
+  ): Promise<CourseAssignToFaculty[]> {
+    return CourseAssignToFaculty.find({
+      where: {
+        faculty: await Faculty.findOne(req.facultyId),
+      },
+      relations: ["department", "faculty", "course", "semester", "session"],
+      order: {
+        id: "DESC",
+      },
     });
   }
 
