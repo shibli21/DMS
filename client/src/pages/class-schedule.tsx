@@ -30,7 +30,7 @@ const ClassSchedule = (props: Props) => {
     }, {});
   };
 
-  const gbyS = groupBySemester(data.studentClassSchedule, "number");
+  const gbyS = groupBySemester(data.studentOrFacultyClassSchedule, "number");
 
   return (
     <>
