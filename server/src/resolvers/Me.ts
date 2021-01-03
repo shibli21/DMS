@@ -30,7 +30,7 @@ export class MeResolver {
     if (req.studentId) {
       return { student: await Student.findOne(req.studentId) };
     } else if (req.facultyId) {
-      return { admin: await Faculty.findOne(req.facultyId) };
+      return { faculty: await Faculty.findOne(req.facultyId) };
     } else if (req.adminId) {
       return { admin: await Admin.findOne(req.adminId) };
     } else {

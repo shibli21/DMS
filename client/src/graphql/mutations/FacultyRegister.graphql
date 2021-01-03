@@ -1,0 +1,17 @@
+mutation RegisterFaculty($input: RegisterFacultyInputType!) {
+  registerFaculty(input: $input) {
+    errors {
+      field
+      message
+    }
+    faculty {
+      id
+      username
+      designation
+      email
+      gender
+      address
+      contactNumber
+    }
+  }
+}

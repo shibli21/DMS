@@ -1,11 +1,12 @@
 query Faculties {
   faculties {
     id
+    email
     username
     designation
-    email
     gender
     address
     contactNumber
+    oneTimePassword
   }
 }

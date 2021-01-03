@@ -1,42 +1,101 @@
-import { Button, Center, Flex, Stack, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  Flex,
+  FormControl,
+  FormLabel,
+  Select,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
 import { InputField } from "../components/InputField";
-import { MeDocument, useRegisterStudentMutation } from "../generated/graphql";
+import {
+  MeDocument,
+  useRegisterFacultyMutation,
+  useRegisterStudentMutation,
+} from "../generated/graphql";
 
 interface Props {}
 
 const register = (props: Props) => {
-  const [registerUser, { loading }] = useRegisterStudentMutation();
+  const [registerAs, setRegisterAs] = useState<number>();
+
+  const [
+    registerStudent,
+    { loading: studentLoading },
+  ] = useRegisterStudentMutation();
+  const [
+    registerFaculty,
+    { loading: facultyLoading },
+  ] = useRegisterFacultyMutation();
   const router = useRouter();
-  const { register, handleSubmit, setError, errors } = useForm();
+  const { register, control, handleSubmit, setError, errors } = useForm();
+  const loginCode = useWatch({
+    control,
+    name: "registerAs",
+    defaultValue: 1,
+  });
+
+  useEffect(() => {
+    setRegisterAs(loginCode);
+  }, [loginCode]);
+
   const onSubmit = async (data) => {
-    const response = await registerUser({
-      variables: {
-        input: {
-          token: data.token,
-          email: data.email,
-          password: data.password,
+    if (registerAs === 1) {
+      const response = await registerStudent({
+        variables: {
+          input: {
+            token: data.token,
+            email: data.email,
+            password: data.password,
+          },
         },
-      },
-      refetchQueries: [
-        {
-          query: MeDocument,
-        },
-      ],
-    });
-    if (response.data?.registerStudent.errors) {
-      response.data?.registerStudent.errors.map((err) => {
-        setError(err.field, {
-          type: "manual",
-          message: err.message,
-        });
+        refetchQueries: [
+          {
+            query: MeDocument,
+          },
+        ],
       });
-    } else if (response.data?.registerStudent.student) {
-      router.push("/");
+      if (response.data?.registerStudent.errors) {
+        response.data?.registerStudent.errors.map((err) => {
+          setError(err.field, {
+            type: "manual",
+            message: err.message,
+          });
+        });
+      } else if (response.data?.registerStudent.student) {
+        router.push("/");
+      }
+    } else {
+      const response = await registerFaculty({
+        variables: {
+          input: {
+            token: data.token,
+            email: data.email,
+            password: data.password,
+          },
+        },
+        refetchQueries: [
+          {
+            query: MeDocument,
+          },
+        ],
+      });
+      if (response.data?.registerFaculty.errors) {
+        response.data?.registerFaculty.errors.map((err) => {
+          setError(err.field, {
+            type: "manual",
+            message: err.message,
+          });
+        });
+      } else if (response.data?.registerFaculty.faculty) {
+        router.push("/");
+      }
     }
   };
   return (
@@ -47,6 +106,20 @@ const register = (props: Props) => {
         </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4}>
+            <FormControl id="registerAs" isInvalid={errors.registerAs}>
+              <FormLabel htmlFor="registerAs">Login as</FormLabel>
+              <Controller
+                as={
+                  <Select>
+                    <option value={1}>Student</option>
+                    <option value={2}>Faculty</option>
+                  </Select>
+                }
+                control={control}
+                name="registerAs"
+                defaultValue={1}
+              />
+            </FormControl>
             <InputField
               ref={register}
               label="Email"
@@ -75,7 +148,7 @@ const register = (props: Props) => {
             <Button
               w="100%"
               type="submit"
-              isLoading={loading}
+              isLoading={facultyLoading || studentLoading}
               colorScheme="purple"
             >
               Register

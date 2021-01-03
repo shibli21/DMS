@@ -438,6 +438,45 @@ export type RegisterAdminInputType = {
   token: Scalars['String'];
 };
 
+export type FacultyLoginMutationVariables = Exact<{
+  password: Scalars['String'];
+  email: Scalars['String'];
+}>;
+
+
+export type FacultyLoginMutation = (
+  { __typename?: 'Mutation' }
+  & { facultyLogin: (
+    { __typename?: 'FacultyResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>>, faculty?: Maybe<(
+      { __typename?: 'Faculty' }
+      & Pick<Faculty, 'id' | 'username' | 'designation' | 'email' | 'gender' | 'address' | 'contactNumber'>
+    )> }
+  ) }
+);
+
+export type RegisterFacultyMutationVariables = Exact<{
+  input: RegisterFacultyInputType;
+}>;
+
+
+export type RegisterFacultyMutation = (
+  { __typename?: 'Mutation' }
+  & { registerFaculty: (
+    { __typename?: 'FacultyResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>>, faculty?: Maybe<(
+      { __typename?: 'Faculty' }
+      & Pick<Faculty, 'id' | 'username' | 'designation' | 'email' | 'gender' | 'address' | 'contactNumber'>
+    )> }
+  ) }
+);
+
 export type StudentLoginMutationVariables = Exact<{
   password: Scalars['String'];
   email: Scalars['String'];
@@ -555,6 +594,95 @@ export type TodaysClassScheduleQuery = (
 );
 
 
+export const FacultyLoginDocument = gql`
+    mutation FacultyLogin($password: String!, $email: String!) {
+  facultyLogin(password: $password, email: $email) {
+    errors {
+      field
+      message
+    }
+    faculty {
+      id
+      username
+      designation
+      email
+      gender
+      address
+      contactNumber
+    }
+  }
+}
+    `;
+export type FacultyLoginMutationFn = Apollo.MutationFunction<FacultyLoginMutation, FacultyLoginMutationVariables>;
+
+/**
+ * __useFacultyLoginMutation__
+ *
+ * To run a mutation, you first call `useFacultyLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFacultyLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [facultyLoginMutation, { data, loading, error }] = useFacultyLoginMutation({
+ *   variables: {
+ *      password: // value for 'password'
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useFacultyLoginMutation(baseOptions?: Apollo.MutationHookOptions<FacultyLoginMutation, FacultyLoginMutationVariables>) {
+        return Apollo.useMutation<FacultyLoginMutation, FacultyLoginMutationVariables>(FacultyLoginDocument, baseOptions);
+      }
+export type FacultyLoginMutationHookResult = ReturnType<typeof useFacultyLoginMutation>;
+export type FacultyLoginMutationResult = Apollo.MutationResult<FacultyLoginMutation>;
+export type FacultyLoginMutationOptions = Apollo.BaseMutationOptions<FacultyLoginMutation, FacultyLoginMutationVariables>;
+export const RegisterFacultyDocument = gql`
+    mutation RegisterFaculty($input: RegisterFacultyInputType!) {
+  registerFaculty(input: $input) {
+    errors {
+      field
+      message
+    }
+    faculty {
+      id
+      username
+      designation
+      email
+      gender
+      address
+      contactNumber
+    }
+  }
+}
+    `;
+export type RegisterFacultyMutationFn = Apollo.MutationFunction<RegisterFacultyMutation, RegisterFacultyMutationVariables>;
+
+/**
+ * __useRegisterFacultyMutation__
+ *
+ * To run a mutation, you first call `useRegisterFacultyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterFacultyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerFacultyMutation, { data, loading, error }] = useRegisterFacultyMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useRegisterFacultyMutation(baseOptions?: Apollo.MutationHookOptions<RegisterFacultyMutation, RegisterFacultyMutationVariables>) {
+        return Apollo.useMutation<RegisterFacultyMutation, RegisterFacultyMutationVariables>(RegisterFacultyDocument, baseOptions);
+      }
+export type RegisterFacultyMutationHookResult = ReturnType<typeof useRegisterFacultyMutation>;
+export type RegisterFacultyMutationResult = Apollo.MutationResult<RegisterFacultyMutation>;
+export type RegisterFacultyMutationOptions = Apollo.BaseMutationOptions<RegisterFacultyMutation, RegisterFacultyMutationVariables>;
 export const StudentLoginDocument = gql`
     mutation StudentLogin($password: String!, $email: String!) {
   studentLogin(password: $password, email: $email) {
