@@ -1,8 +1,31 @@
-import { Alert, Box, Button, Flex, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Table, Tbody, Td, Text, Th, Thead, Tr, useDisclosure, useToast } from "@chakra-ui/react";
+import {
+  Alert,
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { StudentsDocument, useDeleteStudentMutation, useStudentsQuery } from "../../generated/graphql";
+import {
+  StudentsDocument,
+  useDeleteStudentMutation,
+  useStudentsQuery,
+} from "../../generated/graphql";
 
 export default function Students() {
   const [studentId, setStudentId] = useState<number>();
@@ -31,6 +54,7 @@ export default function Students() {
               <Th>Name</Th>
               <Th>Department</Th>
               <Th>Session</Th>
+              <Th>Token</Th>
               <Th></Th>
             </Tr>
           </Thead>
@@ -43,6 +67,7 @@ export default function Students() {
                 <Td>{s.username}</Td>
                 <Td>{s.department.name}</Td>
                 <Td>{s.session.name}</Td>
+                <Td>{s.oneTimePassword}</Td>
                 <Td>
                   <HStack>
                     <Box
@@ -55,7 +80,11 @@ export default function Students() {
                       _hover={{ color: "red.500" }}
                     />
                     <Link href={`/students/edit/${s.id}`}>
-                      <Box cursor="pointer" as={FaEdit} _hover={{ color: "blue.500" }} />
+                      <Box
+                        cursor="pointer"
+                        as={FaEdit}
+                        _hover={{ color: "blue.500" }}
+                      />
                     </Link>
                   </HStack>
                 </Td>

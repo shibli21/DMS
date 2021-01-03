@@ -26,12 +26,13 @@ import NavItem from "./NavItem";
 
 const NavBar = (props: ChakraProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { data } = useMeQuery();
+  const { data, loading } = useMeQuery();
   const [logout] = useLogoutMutation();
 
   let NavLinks: ReactJSXElement;
 
-  if (data?.me?.student?.id) {
+  if (loading) {
+  } else if (data?.me?.student?.id) {
     NavLinks = (
       <>
         <NavItem>
