@@ -1,13 +1,13 @@
 import { Box, HStack, Text } from "@chakra-ui/react";
 import React from "react";
-import { useStudentClassScheduleQuery } from "../generated/graphql";
+import { useStudentOrFacultyClassScheduleQuery } from "../generated/graphql";
 import { getDayName } from "../utils/getDayName";
 import { getSemesterName } from "../utils/getSemesterName";
 
 interface Props {}
 
 const ClassSchedule = (props: Props) => {
-  const { data } = useStudentClassScheduleQuery();
+  const { data } = useStudentOrFacultyClassScheduleQuery();
 
   if (!data) {
     return <Box>No Schedule</Box>;

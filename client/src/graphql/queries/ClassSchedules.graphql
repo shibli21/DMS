@@ -1,5 +1,5 @@
-query StudentClassSchedule {
-  studentClassSchedule {
+query StudentOrFacultyClassSchedule {
+  studentOrFacultyClassSchedule {
     id
     startTime
     endTime
