@@ -1,3 +1,5 @@
+import { NoticeResolver } from "./resolvers/Notice";
+import { Notice } from "./entities/Notice";
 import { StudentResolver } from "./resolvers/Student";
 import { SessionResolver } from "./resolvers/Session";
 import { SemesterResolver } from "./resolvers/Semester";
@@ -50,6 +52,7 @@ const main = async () => {
       Semester,
       Session,
       Student,
+      Notice,
     ],
   });
 
@@ -88,6 +91,7 @@ const main = async () => {
         SemesterResolver,
         SessionResolver,
         StudentResolver,
+        NoticeResolver,
       ],
       validate: false,
     }),
