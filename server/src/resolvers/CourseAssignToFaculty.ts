@@ -1,4 +1,4 @@
-import { isFaculty } from "./../middleware/isFcaulty";
+import { isFaculty } from "../middleware/isFaculty";
 import { MyContext } from "./../types/MyContext";
 import {
   Arg,

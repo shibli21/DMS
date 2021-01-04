@@ -18,7 +18,7 @@ const CoursesAssignToFaculty = (props: Props) => {
       <Box>
         {data?.courseAssignToFaculty?.map((c) => (
           <Link
-            href={`/my-courses/${c.course.name}?sessionId=${c.session.id}&departmentCode=${c.department.departmentCode}&semesterId=${c.semester.id}`}
+            href={`/my-courses/${c.course.code}?sessionId=${c.session.id}&departmentCode=${c.department.departmentCode}&semesterId=${c.semester.id}`}
           >
             <Box
               w="450px"
