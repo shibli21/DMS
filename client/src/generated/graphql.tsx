@@ -15,6 +15,8 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
+  notices: Array<Notice>;
+  courseNotice: Array<Notice>;
   students: Array<Student>;
   session: Session;
   sessions: Array<Session>;
@@ -32,6 +34,11 @@ export type Query = {
   studentOrFacultyClassSchedule: Array<ClassSchedule>;
   todaysClassSchedule: Array<ClassSchedule>;
   hello: Scalars['String'];
+};
+
+
+export type QueryCourseNoticeArgs = {
+  input: CourseNoticeInputType;
 };
 
 
@@ -59,48 +66,16 @@ export type QueryClassScheduleByAllArgs = {
   departmentCode: Scalars['String'];
 };
 
-export type Student = {
-  __typename?: 'Student';
+export type Notice = {
+  __typename?: 'Notice';
   id: Scalars['Float'];
-  username: Scalars['String'];
-  email: Scalars['String'];
-  registrationNumber: Scalars['Float'];
+  title: Scalars['String'];
+  description: Scalars['String'];
+  course: Course;
   session: Session;
-  oneTimePassword?: Maybe<Scalars['String']>;
-  gender: Scalars['String'];
-  address: Scalars['String'];
-  contactNumber: Scalars['Float'];
+  semester: Semester;
   department: Department;
   createdAt: Scalars['String'];
-  updatedAt: Scalars['String'];
-};
-
-export type Session = {
-  __typename?: 'Session';
-  id: Scalars['Float'];
-  name: Scalars['String'];
-  startTime: Scalars['String'];
-  endTime?: Maybe<Scalars['String']>;
-  semester: Array<Semester>;
-};
-
-export type Semester = {
-  __typename?: 'Semester';
-  id: Scalars['Float'];
-  number: Scalars['Float'];
-  startTime: Scalars['String'];
-  endTime?: Maybe<Scalars['String']>;
-  session: Session;
-  department: Department;
-  course: Array<Course>;
-};
-
-export type Department = {
-  __typename?: 'Department';
-  id: Scalars['Float'];
-  name: Scalars['String'];
-  departmentCode: Scalars['String'];
-  courses: Array<Course>;
 };
 
 export type Course = {
@@ -115,6 +90,34 @@ export type Course = {
   assignedFaculty: Array<CourseAssignToFaculty>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+};
+
+export type Department = {
+  __typename?: 'Department';
+  id: Scalars['Float'];
+  name: Scalars['String'];
+  departmentCode: Scalars['String'];
+  courses: Array<Course>;
+};
+
+export type Semester = {
+  __typename?: 'Semester';
+  id: Scalars['Float'];
+  number: Scalars['Float'];
+  startTime: Scalars['String'];
+  endTime?: Maybe<Scalars['String']>;
+  session: Session;
+  department: Department;
+  course: Array<Course>;
+};
+
+export type Session = {
+  __typename?: 'Session';
+  id: Scalars['Float'];
+  name: Scalars['String'];
+  startTime: Scalars['String'];
+  endTime?: Maybe<Scalars['String']>;
+  semester: Array<Semester>;
 };
 
 export type CourseAssignToFaculty = {
@@ -138,6 +141,30 @@ export type Faculty = {
   address: Scalars['String'];
   contactNumber: Scalars['Float'];
   assignedTo: Array<CourseAssignToFaculty>;
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
+export type CourseNoticeInputType = {
+  sessionId?: Maybe<Scalars['Float']>;
+  semesterId?: Maybe<Scalars['Float']>;
+  courseCode?: Maybe<Scalars['String']>;
+  departmentCode?: Maybe<Scalars['String']>;
+  facultyId?: Maybe<Scalars['Float']>;
+};
+
+export type Student = {
+  __typename?: 'Student';
+  id: Scalars['Float'];
+  username: Scalars['String'];
+  email: Scalars['String'];
+  registrationNumber: Scalars['Float'];
+  session: Session;
+  oneTimePassword?: Maybe<Scalars['String']>;
+  gender: Scalars['String'];
+  address: Scalars['String'];
+  contactNumber: Scalars['Float'];
+  department: Department;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -173,6 +200,7 @@ export type ClassSchedule = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  publishNotice: NoticeResponse;
   addStudent: StudentResponse;
   registerStudent: StudentResponse;
   studentLogin: StudentResponse;
@@ -193,6 +221,11 @@ export type Mutation = {
   addClassSchedule: AddClassScheduleResponse;
   registerAdmin: AdminResponse;
   adminLogin: AdminResponse;
+};
+
+
+export type MutationPublishNoticeArgs = {
+  input: AddNoticeInputType;
 };
 
 
@@ -294,16 +327,32 @@ export type MutationAdminLoginArgs = {
   email: Scalars['String'];
 };
 
-export type StudentResponse = {
-  __typename?: 'StudentResponse';
+export type NoticeResponse = {
+  __typename?: 'NoticeResponse';
   errors?: Maybe<Array<FieldError>>;
-  student?: Maybe<Student>;
+  notice?: Maybe<Notice>;
 };
 
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
   message: Scalars['String'];
+};
+
+export type AddNoticeInputType = {
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  sessionId?: Maybe<Scalars['Float']>;
+  semesterId?: Maybe<Scalars['Float']>;
+  courseCode?: Maybe<Scalars['String']>;
+  departmentCode?: Maybe<Scalars['String']>;
+  facultyId?: Maybe<Scalars['Float']>;
+};
+
+export type StudentResponse = {
+  __typename?: 'StudentResponse';
+  errors?: Maybe<Array<FieldError>>;
+  student?: Maybe<Student>;
 };
 
 export type AddStudentInputType = {
@@ -478,6 +527,25 @@ export type RegisterFacultyMutation = (
   ) }
 );
 
+export type PublishNoticeMutationVariables = Exact<{
+  input: AddNoticeInputType;
+}>;
+
+
+export type PublishNoticeMutation = (
+  { __typename?: 'Mutation' }
+  & { publishNotice: (
+    { __typename?: 'NoticeResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>>, notice?: Maybe<(
+      { __typename?: 'Notice' }
+      & Pick<Notice, 'id' | 'description'>
+    )> }
+  ) }
+);
+
 export type StudentLoginMutationVariables = Exact<{
   password: Scalars['String'];
   email: Scalars['String'];
@@ -574,6 +642,19 @@ export type CourseAssignToFacultyQuery = (
       { __typename?: 'Department' }
       & Pick<Department, 'name' | 'departmentCode'>
     ) }
+  )> }
+);
+
+export type CourseNoticesQueryVariables = Exact<{
+  input: CourseNoticeInputType;
+}>;
+
+
+export type CourseNoticesQuery = (
+  { __typename?: 'Query' }
+  & { courseNotice: Array<(
+    { __typename?: 'Notice' }
+    & Pick<Notice, 'id' | 'title' | 'description' | 'createdAt'>
   )> }
 );
 
@@ -708,6 +789,45 @@ export function useRegisterFacultyMutation(baseOptions?: Apollo.MutationHookOpti
 export type RegisterFacultyMutationHookResult = ReturnType<typeof useRegisterFacultyMutation>;
 export type RegisterFacultyMutationResult = Apollo.MutationResult<RegisterFacultyMutation>;
 export type RegisterFacultyMutationOptions = Apollo.BaseMutationOptions<RegisterFacultyMutation, RegisterFacultyMutationVariables>;
+export const PublishNoticeDocument = gql`
+    mutation PublishNotice($input: AddNoticeInputType!) {
+  publishNotice(input: $input) {
+    errors {
+      field
+      message
+    }
+    notice {
+      id
+      description
+    }
+  }
+}
+    `;
+export type PublishNoticeMutationFn = Apollo.MutationFunction<PublishNoticeMutation, PublishNoticeMutationVariables>;
+
+/**
+ * __usePublishNoticeMutation__
+ *
+ * To run a mutation, you first call `usePublishNoticeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePublishNoticeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [publishNoticeMutation, { data, loading, error }] = usePublishNoticeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePublishNoticeMutation(baseOptions?: Apollo.MutationHookOptions<PublishNoticeMutation, PublishNoticeMutationVariables>) {
+        return Apollo.useMutation<PublishNoticeMutation, PublishNoticeMutationVariables>(PublishNoticeDocument, baseOptions);
+      }
+export type PublishNoticeMutationHookResult = ReturnType<typeof usePublishNoticeMutation>;
+export type PublishNoticeMutationResult = Apollo.MutationResult<PublishNoticeMutation>;
+export type PublishNoticeMutationOptions = Apollo.BaseMutationOptions<PublishNoticeMutation, PublishNoticeMutationVariables>;
 export const StudentLoginDocument = gql`
     mutation StudentLogin($password: String!, $email: String!) {
   studentLogin(password: $password, email: $email) {
@@ -931,6 +1051,42 @@ export function useCourseAssignToFacultyLazyQuery(baseOptions?: Apollo.LazyQuery
 export type CourseAssignToFacultyQueryHookResult = ReturnType<typeof useCourseAssignToFacultyQuery>;
 export type CourseAssignToFacultyLazyQueryHookResult = ReturnType<typeof useCourseAssignToFacultyLazyQuery>;
 export type CourseAssignToFacultyQueryResult = Apollo.QueryResult<CourseAssignToFacultyQuery, CourseAssignToFacultyQueryVariables>;
+export const CourseNoticesDocument = gql`
+    query CourseNotices($input: CourseNoticeInputType!) {
+  courseNotice(input: $input) {
+    id
+    title
+    description
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useCourseNoticesQuery__
+ *
+ * To run a query within a React component, call `useCourseNoticesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCourseNoticesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCourseNoticesQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCourseNoticesQuery(baseOptions: Apollo.QueryHookOptions<CourseNoticesQuery, CourseNoticesQueryVariables>) {
+        return Apollo.useQuery<CourseNoticesQuery, CourseNoticesQueryVariables>(CourseNoticesDocument, baseOptions);
+      }
+export function useCourseNoticesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CourseNoticesQuery, CourseNoticesQueryVariables>) {
+          return Apollo.useLazyQuery<CourseNoticesQuery, CourseNoticesQueryVariables>(CourseNoticesDocument, baseOptions);
+        }
+export type CourseNoticesQueryHookResult = ReturnType<typeof useCourseNoticesQuery>;
+export type CourseNoticesLazyQueryHookResult = ReturnType<typeof useCourseNoticesLazyQuery>;
+export type CourseNoticesQueryResult = Apollo.QueryResult<CourseNoticesQuery, CourseNoticesQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

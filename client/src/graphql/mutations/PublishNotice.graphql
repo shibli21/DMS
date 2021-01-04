@@ -1,0 +1,12 @@
+mutation PublishNotice($input: AddNoticeInputType!) {
+  publishNotice(input: $input) {
+    errors {
+      field
+      message
+    }
+    notice {
+      id
+      description
+    }
+  }
+}

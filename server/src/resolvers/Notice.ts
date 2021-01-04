@@ -7,13 +7,14 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
+import { isFaculty } from "../middleware/isFaculty";
 import { Course } from "./../entities/Course";
 import { Department } from "./../entities/Department";
 import { Notice } from "./../entities/Notice";
 import { Semester } from "./../entities/Semester";
 import { Session } from "./../entities/Session";
-import { isFaculty } from "../middleware/isFaculty";
 import { AddNoticeInputType } from "./../types/InputTypes/AddNoticeInputType";
+import { CourseNoticeInputType } from "./../types/InputTypes/CourseNoticeInputType";
 import { FieldError } from "./../types/ObjectTypes/FieldErrorType";
 
 @ObjectType()
@@ -36,10 +37,13 @@ export class NoticeResolver {
 
   @Query(() => [Notice])
   async courseNotice(
-    @Arg("input") input: AddNoticeInputType
+    @Arg("input") input: CourseNoticeInputType
   ): Promise<Notice[]> {
     return Notice.find({
       relations: ["department", "session", "semester", "course"],
+      order: {
+        createdAt: "DESC",
+      },
       where: {
         department: await Department.findOne({
           where: {
@@ -71,6 +75,20 @@ export class NoticeResolver {
     @Arg("input") input: AddNoticeInputType
   ): Promise<NoticeResponse> {
     let errors = [];
+
+    if (!input.title) {
+      errors.push({
+        field: "title",
+        message: "Title can't be empty",
+      });
+    }
+
+    if (!input.description) {
+      errors.push({
+        field: "description",
+        message: "Description can't be empty",
+      });
+    }
 
     const department = await Department.findOne({
       where: { departmentCode: input.departmentCode },
