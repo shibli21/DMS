@@ -29,7 +29,7 @@ const NavBar = (props: ChakraProps) => {
   const { data, loading } = useMeQuery();
   const [logout] = useLogoutMutation();
 
-  let NavLinks: ReactJSXElement;
+  let NavLinks: ReactJSXElement = null;
 
   if (loading) {
   } else if (data?.me?.student?.id) {
@@ -119,12 +119,15 @@ const NavBar = (props: ChakraProps) => {
       mb={10}
     >
       <Flex
+        h="60px"
         as="nav"
         align="center"
         justify="space-between"
-        padding="1rem"
-        maxW="7xl"
+        wrap="wrap"
+        px={"1rem"}
         mx="auto"
+        maxW="7xl"
+        {...props}
       >
         <Box>
           <NextLink href="/">

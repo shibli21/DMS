@@ -658,6 +658,26 @@ export type CourseNoticesQuery = (
   )> }
 );
 
+export type ClassScheduleByAllQueryVariables = Exact<{
+  semesterId: Scalars['Int'];
+  sessionId: Scalars['Int'];
+  courseCode: Scalars['String'];
+  departmentCode: Scalars['String'];
+}>;
+
+
+export type ClassScheduleByAllQuery = (
+  { __typename?: 'Query' }
+  & { classScheduleByAll: Array<(
+    { __typename?: 'ClassSchedule' }
+    & Pick<ClassSchedule, 'id' | 'startTime' | 'endTime' | 'day'>
+    & { faculty: (
+      { __typename?: 'Faculty' }
+      & Pick<Faculty, 'username' | 'designation'>
+    ) }
+  )> }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1087,6 +1107,54 @@ export function useCourseNoticesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type CourseNoticesQueryHookResult = ReturnType<typeof useCourseNoticesQuery>;
 export type CourseNoticesLazyQueryHookResult = ReturnType<typeof useCourseNoticesLazyQuery>;
 export type CourseNoticesQueryResult = Apollo.QueryResult<CourseNoticesQuery, CourseNoticesQueryVariables>;
+export const ClassScheduleByAllDocument = gql`
+    query ClassScheduleByAll($semesterId: Int!, $sessionId: Int!, $courseCode: String!, $departmentCode: String!) {
+  classScheduleByAll(
+    semesterId: $semesterId
+    sessionId: $sessionId
+    courseCode: $courseCode
+    departmentCode: $departmentCode
+  ) {
+    id
+    startTime
+    endTime
+    day
+    faculty {
+      username
+      designation
+    }
+  }
+}
+    `;
+
+/**
+ * __useClassScheduleByAllQuery__
+ *
+ * To run a query within a React component, call `useClassScheduleByAllQuery` and pass it any options that fit your needs.
+ * When your component renders, `useClassScheduleByAllQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useClassScheduleByAllQuery({
+ *   variables: {
+ *      semesterId: // value for 'semesterId'
+ *      sessionId: // value for 'sessionId'
+ *      courseCode: // value for 'courseCode'
+ *      departmentCode: // value for 'departmentCode'
+ *   },
+ * });
+ */
+export function useClassScheduleByAllQuery(baseOptions: Apollo.QueryHookOptions<ClassScheduleByAllQuery, ClassScheduleByAllQueryVariables>) {
+        return Apollo.useQuery<ClassScheduleByAllQuery, ClassScheduleByAllQueryVariables>(ClassScheduleByAllDocument, baseOptions);
+      }
+export function useClassScheduleByAllLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ClassScheduleByAllQuery, ClassScheduleByAllQueryVariables>) {
+          return Apollo.useLazyQuery<ClassScheduleByAllQuery, ClassScheduleByAllQueryVariables>(ClassScheduleByAllDocument, baseOptions);
+        }
+export type ClassScheduleByAllQueryHookResult = ReturnType<typeof useClassScheduleByAllQuery>;
+export type ClassScheduleByAllLazyQueryHookResult = ReturnType<typeof useClassScheduleByAllLazyQuery>;
+export type ClassScheduleByAllQueryResult = Apollo.QueryResult<ClassScheduleByAllQuery, ClassScheduleByAllQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

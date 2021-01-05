@@ -1,6 +1,19 @@
 import { extendTheme } from "@chakra-ui/react";
 
 const theme = extendTheme({
+  components: {
+    Table: {
+      baseStyle: {
+        td: {
+          border: "1px solid #eee",
+        },
+        th: {
+          border: "1px solid #eee",
+          fontWeight: "700",
+        },
+      },
+    },
+  },
   styles: {
     global: (props) => ({
       "html, body": {

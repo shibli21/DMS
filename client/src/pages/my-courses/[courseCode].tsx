@@ -3,8 +3,12 @@ import {
   AccordionButton,
   AccordionItem,
   AccordionPanel,
+  Alert,
+  AlertIcon,
+  AlertTitle,
   Box,
   Button,
+  Container,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -16,26 +20,40 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
+  Table,
+  Tbody,
+  Td,
   Text,
   Textarea,
+  Th,
+  Thead,
+  Tr,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { InputField } from "../../components/InputField";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import {
   CourseNoticesDocument,
+  useClassScheduleByAllQuery,
   useCourseNoticesQuery,
+  useMeQuery,
   usePublishNoticeMutation,
 } from "../../generated/graphql";
+import { getDayName } from "../../utils/getDayName";
 interface Props {}
 
 const MyCourse = (props: Props) => {
+  const { data: me, loading: meLoading } = useMeQuery();
+
   const router = useRouter();
   const toast = useToast();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { register, handleSubmit, control, setError, errors } = useForm();
   const dCode =
@@ -68,8 +86,19 @@ const MyCourse = (props: Props) => {
       },
     },
   });
+  const {
+    data: classSchedule,
+    loading: classScheduleLoading,
+  } = useClassScheduleByAllQuery({
+    variables: {
+      departmentCode: encodeURIComponent(dCode),
+      semesterId: semId,
+      courseCode: encodeURIComponent(cCode),
+      sessionId: sesId,
+    },
+  });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: { title: string; description: string }) => {
     const res = await publishNotice({
       variables: {
         input: {
@@ -114,20 +143,77 @@ const MyCourse = (props: Props) => {
     }
   };
 
+  if (meLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (!me?.me)
+    return (
+      <Container>
+        <Alert status="error">
+          <AlertIcon />
+          <AlertTitle mr={2}>
+            Access Denied !!! Please sign in to access
+          </AlertTitle>
+        </Alert>
+      </Container>
+    );
+
   return (
     <>
+      <Head>
+        <title>{router.query.courseCode}</title>
+      </Head>
+      <Text my={6} textAlign="center" fontSize="3xl">
+        Class schedule
+      </Text>
+
+      <Table mb={20}>
+        <Thead>
+          <Tr>
+            <Th>Day</Th>
+            <Th>Start Time</Th>
+            <Th>End Time</Th>
+            <Th>Faculty</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {classSchedule?.classScheduleByAll.map((d) => (
+            <Tr>
+              <Td>
+                <Text>{getDayName(d.day)}</Text>
+              </Td>
+              <Td>
+                {DateTime.fromISO(d.startTime).toLocaleString(
+                  DateTime.TIME_SIMPLE
+                )}
+              </Td>
+              <Td>
+                {DateTime.fromISO(d.endTime).toLocaleString(
+                  DateTime.TIME_SIMPLE
+                )}
+              </Td>
+              <Td>{d.faculty.username}</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
       <HStack justify="space-between">
         <Text fontWeight="bold" fontSize="3xl" mb={6}>
           Notice
         </Text>
-        <Button
-          onClick={() => {
-            onOpen();
-          }}
-          colorScheme="purple"
-        >
-          Publish notice
-        </Button>
+        {me?.me?.faculty === null ? (
+          ""
+        ) : (
+          <Button
+            onClick={() => {
+              onOpen();
+            }}
+            colorScheme="purple"
+          >
+            Publish notice
+          </Button>
+        )}
       </HStack>
       {data?.courseNotice?.length > 0 ? (
         <Accordion allowToggle>
@@ -136,6 +222,7 @@ const MyCourse = (props: Props) => {
               <Box>
                 <HStack as={AccordionButton} justify="space-between">
                   <Box
+                    textAlign="left"
                     textTransform="capitalize"
                     fontWeight="600"
                     fontSize="lg"
