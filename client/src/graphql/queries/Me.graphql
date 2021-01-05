@@ -9,6 +9,12 @@ query Me {
       gender
       address
       contactNumber
+      department {
+        name
+      }
+      session {
+        name
+      }
     }
     admin {
       id

@@ -58,9 +58,9 @@ export class FacultyResolver {
         .values({
           username: input.username,
           email: emailToLower,
-          address: input.username,
+          address: input.address,
           designation: input.designation,
-          gender: input.username,
+          gender: input.gender,
           contactNumber: input.contactNumber,
           oneTimePassword: generateRandomString(7),
         })
