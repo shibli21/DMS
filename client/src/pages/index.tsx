@@ -11,7 +11,7 @@ export default function Home() {
     return null;
   }
 
-  if (!me?.me) {
+  if (!me?.me.faculty && !me?.me.student) {
     router.push("/login");
   }
 

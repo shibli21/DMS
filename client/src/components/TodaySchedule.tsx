@@ -18,8 +18,23 @@ const TodaySchedule = (props: Props) => {
       </Box>
     );
   }
-  if (!data) {
-    return <Box>No class today</Box>;
+  if (data?.todaysClassSchedule?.length !== 0) {
+    return (
+      <>
+        <Text fontWeight="bold" fontSize="3xl" mb={6}>
+          Today Schedule
+        </Text>
+        <Box
+          bgGradient="linear(to bottom right,purple.400,purple.600)"
+          p={4}
+          color="white"
+          borderRadius="2xl"
+          maxW="400px"
+        >
+          No class today
+        </Box>
+      </>
+    );
   }
 
   return (

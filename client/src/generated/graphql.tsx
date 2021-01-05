@@ -15,47 +15,25 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
-  notices: Array<Notice>;
-  courseNotice: Array<Notice>;
-  students: Array<Student>;
-  session: Session;
-  sessions: Array<Session>;
-  semesters: Array<Semester>;
-  semestersByDepartmentAndSession: Array<Semester>;
-  me?: Maybe<MeResponse>;
-  faculties: Array<Faculty>;
-  departments: Array<Department>;
-  courseAssignToFaculties: Array<CourseAssignToFaculty>;
-  courseAssignToFaculty: Array<CourseAssignToFaculty>;
-  courses: Array<Course>;
-  coursesByDeptSemester: Array<Course>;
+  hello: Scalars['String'];
   classSchedules: Array<ClassSchedule>;
   classScheduleByAll: Array<ClassSchedule>;
   studentOrFacultyClassSchedule: Array<ClassSchedule>;
   todaysClassSchedule: Array<ClassSchedule>;
-  hello: Scalars['String'];
-};
-
-
-export type QueryCourseNoticeArgs = {
-  input: CourseNoticeInputType;
-};
-
-
-export type QuerySessionArgs = {
-  sessionId: Scalars['Int'];
-};
-
-
-export type QuerySemestersByDepartmentAndSessionArgs = {
-  sessionId: Scalars['Int'];
-  code: Scalars['String'];
-};
-
-
-export type QueryCoursesByDeptSemesterArgs = {
-  semesterId: Scalars['Int'];
-  code: Scalars['String'];
+  courses: Array<Course>;
+  coursesByDeptSemester: Array<Course>;
+  courseAssignToFaculties: Array<CourseAssignToFaculty>;
+  courseAssignToFaculty: Array<CourseAssignToFaculty>;
+  departments: Array<Department>;
+  faculties: Array<Faculty>;
+  me?: Maybe<MeResponse>;
+  notices: Array<Notice>;
+  courseNotice: Array<Notice>;
+  semesters: Array<Semester>;
+  semestersByDepartmentAndSession: Array<Semester>;
+  session: Session;
+  sessions: Array<Session>;
+  students: Array<Student>;
 };
 
 
@@ -66,16 +44,67 @@ export type QueryClassScheduleByAllArgs = {
   departmentCode: Scalars['String'];
 };
 
-export type Notice = {
-  __typename?: 'Notice';
+
+export type QueryCoursesByDeptSemesterArgs = {
+  semesterId: Scalars['Int'];
+  code: Scalars['String'];
+};
+
+
+export type QueryCourseNoticeArgs = {
+  input: CourseNoticeInputType;
+};
+
+
+export type QuerySemestersByDepartmentAndSessionArgs = {
+  sessionId: Scalars['Int'];
+  code: Scalars['String'];
+};
+
+
+export type QuerySessionArgs = {
+  sessionId: Scalars['Int'];
+};
+
+export type ClassSchedule = {
+  __typename?: 'ClassSchedule';
   id: Scalars['Float'];
-  title: Scalars['String'];
-  description: Scalars['String'];
-  course: Course;
+  startTime: Scalars['String'];
+  endTime: Scalars['String'];
+  day: Scalars['String'];
   session: Session;
   semester: Semester;
+  course: Course;
   department: Department;
-  createdAt: Scalars['String'];
+  faculty: Faculty;
+};
+
+export type Session = {
+  __typename?: 'Session';
+  id: Scalars['Float'];
+  name: Scalars['String'];
+  startTime: Scalars['String'];
+  endTime?: Maybe<Scalars['String']>;
+  semester: Array<Semester>;
+};
+
+export type Semester = {
+  __typename?: 'Semester';
+  id: Scalars['Float'];
+  number: Scalars['Float'];
+  startTime: Scalars['String'];
+  endTime?: Maybe<Scalars['String']>;
+  session: Session;
+  department: Department;
+  course: Array<Course>;
+};
+
+export type Department = {
+  __typename?: 'Department';
+  id: Scalars['Float'];
+  name: Scalars['String'];
+  departmentCode: Scalars['String'];
+  courses: Array<Course>;
 };
 
 export type Course = {
@@ -90,34 +119,6 @@ export type Course = {
   assignedFaculty: Array<CourseAssignToFaculty>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
-};
-
-export type Department = {
-  __typename?: 'Department';
-  id: Scalars['Float'];
-  name: Scalars['String'];
-  departmentCode: Scalars['String'];
-  courses: Array<Course>;
-};
-
-export type Semester = {
-  __typename?: 'Semester';
-  id: Scalars['Float'];
-  number: Scalars['Float'];
-  startTime: Scalars['String'];
-  endTime?: Maybe<Scalars['String']>;
-  session: Session;
-  department: Department;
-  course: Array<Course>;
-};
-
-export type Session = {
-  __typename?: 'Session';
-  id: Scalars['Float'];
-  name: Scalars['String'];
-  startTime: Scalars['String'];
-  endTime?: Maybe<Scalars['String']>;
-  semester: Array<Semester>;
 };
 
 export type CourseAssignToFaculty = {
@@ -145,12 +146,11 @@ export type Faculty = {
   updatedAt: Scalars['String'];
 };
 
-export type CourseNoticeInputType = {
-  sessionId?: Maybe<Scalars['Float']>;
-  semesterId?: Maybe<Scalars['Float']>;
-  courseCode?: Maybe<Scalars['String']>;
-  departmentCode?: Maybe<Scalars['String']>;
-  facultyId?: Maybe<Scalars['Float']>;
+export type MeResponse = {
+  __typename?: 'MeResponse';
+  student?: Maybe<Student>;
+  admin?: Maybe<Admin>;
+  faculty?: Maybe<Faculty>;
 };
 
 export type Student = {
@@ -169,13 +169,6 @@ export type Student = {
   updatedAt: Scalars['String'];
 };
 
-export type MeResponse = {
-  __typename?: 'MeResponse';
-  student?: Maybe<Student>;
-  admin?: Maybe<Admin>;
-  faculty?: Maybe<Faculty>;
-};
-
 export type Admin = {
   __typename?: 'Admin';
   id: Scalars['Float'];
@@ -185,88 +178,86 @@ export type Admin = {
   updatedAt: Scalars['String'];
 };
 
-export type ClassSchedule = {
-  __typename?: 'ClassSchedule';
+export type Notice = {
+  __typename?: 'Notice';
   id: Scalars['Float'];
-  startTime: Scalars['String'];
-  endTime: Scalars['String'];
-  day: Scalars['String'];
+  title: Scalars['String'];
+  description: Scalars['String'];
+  course: Course;
   session: Session;
   semester: Semester;
-  course: Course;
   department: Department;
-  faculty: Faculty;
+  createdAt: Scalars['String'];
+};
+
+export type CourseNoticeInputType = {
+  sessionId?: Maybe<Scalars['Float']>;
+  semesterId?: Maybe<Scalars['Float']>;
+  courseCode?: Maybe<Scalars['String']>;
+  departmentCode?: Maybe<Scalars['String']>;
+  facultyId?: Maybe<Scalars['Float']>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  publishNotice: NoticeResponse;
-  addStudent: StudentResponse;
-  registerStudent: StudentResponse;
-  studentLogin: StudentResponse;
-  deleteStudent: Scalars['Boolean'];
-  addSession: SessionResponse;
-  deleteSession: Scalars['Boolean'];
-  addSemester: SemesterResponse;
-  deleteSemester: Scalars['Boolean'];
-  logout: Scalars['Boolean'];
+  registerAdmin: AdminResponse;
+  adminLogin: AdminResponse;
+  addClassSchedule: AddClassScheduleResponse;
+  addCourse: CourseResponse;
+  assignCourseToFaculty: CourseAssignToFacultyResponse;
+  addDepartment: DepartmentResponse;
+  deleteDepartment: Scalars['Boolean'];
   addFaculty: FacultyResponse;
   registerFaculty: FacultyResponse;
   facultyLogin: FacultyResponse;
   deleteFaculty: Scalars['Boolean'];
-  addDepartment: DepartmentResponse;
-  deleteDepartment: Scalars['Boolean'];
-  assignCourseToFaculty: CourseAssignToFacultyResponse;
-  addCourse: CourseResponse;
-  addClassSchedule: AddClassScheduleResponse;
-  registerAdmin: AdminResponse;
-  adminLogin: AdminResponse;
+  logout: Scalars['Boolean'];
+  publishNotice: NoticeResponse;
+  addSemester: SemesterResponse;
+  deleteSemester: Scalars['Boolean'];
+  addSession: SessionResponse;
+  deleteSession: Scalars['Boolean'];
+  addStudent: StudentResponse;
+  registerStudent: StudentResponse;
+  studentLogin: StudentResponse;
+  deleteStudent: Scalars['Boolean'];
 };
 
 
-export type MutationPublishNoticeArgs = {
-  input: AddNoticeInputType;
+export type MutationRegisterAdminArgs = {
+  input: RegisterAdminInputType;
 };
 
 
-export type MutationAddStudentArgs = {
-  input: AddStudentInputType;
-};
-
-
-export type MutationRegisterStudentArgs = {
-  input: RegisterStudentInputType;
-};
-
-
-export type MutationStudentLoginArgs = {
+export type MutationAdminLoginArgs = {
   password: Scalars['String'];
   email: Scalars['String'];
 };
 
 
-export type MutationDeleteStudentArgs = {
-  id: Scalars['Int'];
+export type MutationAddClassScheduleArgs = {
+  input: AddClassScheduleInputType;
 };
 
 
-export type MutationAddSessionArgs = {
-  input: AddSessionInputType;
+export type MutationAddCourseArgs = {
+  input: AddCourseInputType;
 };
 
 
-export type MutationDeleteSessionArgs = {
-  id: Scalars['Int'];
+export type MutationAssignCourseToFacultyArgs = {
+  input: AssignCourseToFacultyInputType;
 };
 
 
-export type MutationAddSemesterArgs = {
-  input: AddSemesterInputType;
+export type MutationAddDepartmentArgs = {
+  code: Scalars['String'];
+  name: Scalars['String'];
 };
 
 
-export type MutationDeleteSemesterArgs = {
-  id: Scalars['Int'];
+export type MutationDeleteDepartmentArgs = {
+  code: Scalars['String'];
 };
 
 
@@ -291,46 +282,55 @@ export type MutationDeleteFacultyArgs = {
 };
 
 
-export type MutationAddDepartmentArgs = {
-  code: Scalars['String'];
-  name: Scalars['String'];
+export type MutationPublishNoticeArgs = {
+  input: AddNoticeInputType;
 };
 
 
-export type MutationDeleteDepartmentArgs = {
-  code: Scalars['String'];
+export type MutationAddSemesterArgs = {
+  input: AddSemesterInputType;
 };
 
 
-export type MutationAssignCourseToFacultyArgs = {
-  input: AssignCourseToFacultyInputType;
+export type MutationDeleteSemesterArgs = {
+  id: Scalars['Int'];
 };
 
 
-export type MutationAddCourseArgs = {
-  input: AddCourseInputType;
+export type MutationAddSessionArgs = {
+  input: AddSessionInputType;
 };
 
 
-export type MutationAddClassScheduleArgs = {
-  input: AddClassScheduleInputType;
+export type MutationDeleteSessionArgs = {
+  id: Scalars['Int'];
 };
 
 
-export type MutationRegisterAdminArgs = {
-  input: RegisterAdminInputType;
+export type MutationAddStudentArgs = {
+  input: AddStudentInputType;
 };
 
 
-export type MutationAdminLoginArgs = {
+export type MutationRegisterStudentArgs = {
+  input: RegisterStudentInputType;
+};
+
+
+export type MutationStudentLoginArgs = {
   password: Scalars['String'];
   email: Scalars['String'];
 };
 
-export type NoticeResponse = {
-  __typename?: 'NoticeResponse';
+
+export type MutationDeleteStudentArgs = {
+  id: Scalars['Int'];
+};
+
+export type AdminResponse = {
+  __typename?: 'AdminResponse';
   errors?: Maybe<Array<FieldError>>;
-  notice?: Maybe<Notice>;
+  admin?: Maybe<Admin>;
 };
 
 export type FieldError = {
@@ -339,119 +339,11 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
-export type AddNoticeInputType = {
-  title?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  sessionId?: Maybe<Scalars['Float']>;
-  semesterId?: Maybe<Scalars['Float']>;
-  courseCode?: Maybe<Scalars['String']>;
-  departmentCode?: Maybe<Scalars['String']>;
-  facultyId?: Maybe<Scalars['Float']>;
-};
-
-export type StudentResponse = {
-  __typename?: 'StudentResponse';
-  errors?: Maybe<Array<FieldError>>;
-  student?: Maybe<Student>;
-};
-
-export type AddStudentInputType = {
-  email: Scalars['String'];
-  username: Scalars['String'];
-  registrationNumber?: Maybe<Scalars['Float']>;
-  sessionId: Scalars['Float'];
-  gender: Scalars['String'];
-  address: Scalars['String'];
-  contactNumber?: Maybe<Scalars['Float']>;
-  departmentCode?: Maybe<Scalars['String']>;
-};
-
-export type RegisterStudentInputType = {
+export type RegisterAdminInputType = {
   email: Scalars['String'];
   password: Scalars['String'];
-  token: Scalars['String'];
-};
-
-export type SessionResponse = {
-  __typename?: 'SessionResponse';
-  errors?: Maybe<Array<FieldError>>;
-  session?: Maybe<Session>;
-};
-
-export type AddSessionInputType = {
-  name?: Maybe<Scalars['String']>;
-  startTime?: Maybe<Scalars['String']>;
-  endTime?: Maybe<Scalars['String']>;
-};
-
-export type SemesterResponse = {
-  __typename?: 'SemesterResponse';
-  errors?: Maybe<Array<FieldError>>;
-  semester?: Maybe<Semester>;
-};
-
-export type AddSemesterInputType = {
-  number?: Maybe<Scalars['Float']>;
-  startTime?: Maybe<Scalars['String']>;
-  endTime?: Maybe<Scalars['String']>;
-  sessionId?: Maybe<Scalars['Float']>;
-  departmentCode?: Maybe<Scalars['String']>;
-};
-
-export type FacultyResponse = {
-  __typename?: 'FacultyResponse';
-  errors?: Maybe<Array<FieldError>>;
-  faculty?: Maybe<Faculty>;
-};
-
-export type AddFacultyInputType = {
-  email: Scalars['String'];
   username: Scalars['String'];
-  designation: Scalars['String'];
-  gender: Scalars['String'];
-  address: Scalars['String'];
-  contactNumber?: Maybe<Scalars['Float']>;
-};
-
-export type RegisterFacultyInputType = {
-  email: Scalars['String'];
-  password: Scalars['String'];
   token: Scalars['String'];
-};
-
-export type DepartmentResponse = {
-  __typename?: 'DepartmentResponse';
-  errors?: Maybe<Array<FieldError>>;
-  department?: Maybe<Department>;
-};
-
-export type CourseAssignToFacultyResponse = {
-  __typename?: 'CourseAssignToFacultyResponse';
-  errors?: Maybe<Array<FieldError>>;
-  courseAssignToFaculty?: Maybe<CourseAssignToFaculty>;
-};
-
-export type AssignCourseToFacultyInputType = {
-  semesterId?: Maybe<Scalars['Float']>;
-  sessionId?: Maybe<Scalars['Float']>;
-  departmentCode?: Maybe<Scalars['String']>;
-  facultyId?: Maybe<Scalars['Float']>;
-  courseCode?: Maybe<Scalars['String']>;
-};
-
-export type CourseResponse = {
-  __typename?: 'CourseResponse';
-  errors?: Maybe<Array<FieldError>>;
-  course?: Maybe<Course>;
-};
-
-export type AddCourseInputType = {
-  code: Scalars['String'];
-  name: Scalars['String'];
-  credit?: Maybe<Scalars['Float']>;
-  description: Scalars['String'];
-  semesterId?: Maybe<Scalars['Float']>;
-  departmentCode?: Maybe<Scalars['String']>;
 };
 
 export type AddClassScheduleResponse = {
@@ -475,16 +367,124 @@ export type Classes = {
   day: Scalars['String'];
 };
 
-export type AdminResponse = {
-  __typename?: 'AdminResponse';
+export type CourseResponse = {
+  __typename?: 'CourseResponse';
   errors?: Maybe<Array<FieldError>>;
-  admin?: Maybe<Admin>;
+  course?: Maybe<Course>;
 };
 
-export type RegisterAdminInputType = {
+export type AddCourseInputType = {
+  code: Scalars['String'];
+  name: Scalars['String'];
+  credit?: Maybe<Scalars['Float']>;
+  description: Scalars['String'];
+  semesterId?: Maybe<Scalars['Float']>;
+  departmentCode?: Maybe<Scalars['String']>;
+};
+
+export type CourseAssignToFacultyResponse = {
+  __typename?: 'CourseAssignToFacultyResponse';
+  errors?: Maybe<Array<FieldError>>;
+  courseAssignToFaculty?: Maybe<CourseAssignToFaculty>;
+};
+
+export type AssignCourseToFacultyInputType = {
+  semesterId?: Maybe<Scalars['Float']>;
+  sessionId?: Maybe<Scalars['Float']>;
+  departmentCode?: Maybe<Scalars['String']>;
+  facultyId?: Maybe<Scalars['Float']>;
+  courseCode?: Maybe<Scalars['String']>;
+};
+
+export type DepartmentResponse = {
+  __typename?: 'DepartmentResponse';
+  errors?: Maybe<Array<FieldError>>;
+  department?: Maybe<Department>;
+};
+
+export type FacultyResponse = {
+  __typename?: 'FacultyResponse';
+  errors?: Maybe<Array<FieldError>>;
+  faculty?: Maybe<Faculty>;
+};
+
+export type AddFacultyInputType = {
+  email: Scalars['String'];
+  username: Scalars['String'];
+  designation: Scalars['String'];
+  gender: Scalars['String'];
+  address: Scalars['String'];
+  contactNumber?: Maybe<Scalars['Float']>;
+};
+
+export type RegisterFacultyInputType = {
   email: Scalars['String'];
   password: Scalars['String'];
+  token: Scalars['String'];
+};
+
+export type NoticeResponse = {
+  __typename?: 'NoticeResponse';
+  errors?: Maybe<Array<FieldError>>;
+  notice?: Maybe<Notice>;
+};
+
+export type AddNoticeInputType = {
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  sessionId?: Maybe<Scalars['Float']>;
+  semesterId?: Maybe<Scalars['Float']>;
+  courseCode?: Maybe<Scalars['String']>;
+  departmentCode?: Maybe<Scalars['String']>;
+  facultyId?: Maybe<Scalars['Float']>;
+};
+
+export type SemesterResponse = {
+  __typename?: 'SemesterResponse';
+  errors?: Maybe<Array<FieldError>>;
+  semester?: Maybe<Semester>;
+};
+
+export type AddSemesterInputType = {
+  number?: Maybe<Scalars['Float']>;
+  startTime?: Maybe<Scalars['String']>;
+  endTime?: Maybe<Scalars['String']>;
+  sessionId?: Maybe<Scalars['Float']>;
+  departmentCode?: Maybe<Scalars['String']>;
+};
+
+export type SessionResponse = {
+  __typename?: 'SessionResponse';
+  errors?: Maybe<Array<FieldError>>;
+  session?: Maybe<Session>;
+};
+
+export type AddSessionInputType = {
+  name?: Maybe<Scalars['String']>;
+  startTime?: Maybe<Scalars['String']>;
+  endTime?: Maybe<Scalars['String']>;
+};
+
+export type StudentResponse = {
+  __typename?: 'StudentResponse';
+  errors?: Maybe<Array<FieldError>>;
+  student?: Maybe<Student>;
+};
+
+export type AddStudentInputType = {
+  email: Scalars['String'];
   username: Scalars['String'];
+  registrationNumber?: Maybe<Scalars['Float']>;
+  sessionId: Scalars['Float'];
+  gender: Scalars['String'];
+  address: Scalars['String'];
+  contactNumber?: Maybe<Scalars['Float']>;
+  departmentCode?: Maybe<Scalars['String']>;
+};
+
+export type RegisterStudentInputType = {
+  email: Scalars['String'];
+  password: Scalars['String'];
   token: Scalars['String'];
 };
 
@@ -688,6 +688,13 @@ export type MeQuery = (
     & { student?: Maybe<(
       { __typename?: 'Student' }
       & Pick<Student, 'id' | 'username' | 'email' | 'registrationNumber' | 'oneTimePassword' | 'gender' | 'address' | 'contactNumber'>
+      & { department: (
+        { __typename?: 'Department' }
+        & Pick<Department, 'name'>
+      ), session: (
+        { __typename?: 'Session' }
+        & Pick<Session, 'name'>
+      ) }
     )>, admin?: Maybe<(
       { __typename?: 'Admin' }
       & Pick<Admin, 'id' | 'username' | 'email'>
@@ -1167,6 +1174,12 @@ export const MeDocument = gql`
       gender
       address
       contactNumber
+      department {
+        name
+      }
+      session {
+        name
+      }
     }
     admin {
       id
