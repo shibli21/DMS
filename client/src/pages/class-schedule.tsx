@@ -1,4 +1,6 @@
 import { Box, HStack, Text } from "@chakra-ui/react";
+import { DateTime } from "luxon";
+import Head from "next/head";
 import React from "react";
 import { useStudentOrFacultyClassScheduleQuery } from "../generated/graphql";
 import { getDayName } from "../utils/getDayName";
@@ -13,7 +15,7 @@ const ClassSchedule = (props: Props) => {
     return <Box>No Schedule</Box>;
   }
 
-  const groupBySemester = (array, key) => {
+  const groupBySemester = (array: any[], key: string) => {
     return array.reduce((result, currentValue) => {
       (result[currentValue.semester[key]] =
         result[currentValue.semester[key]] || []).push(currentValue);
@@ -21,7 +23,7 @@ const ClassSchedule = (props: Props) => {
     }, {});
   };
 
-  const groupBy = (array, key) => {
+  const groupBy = (array: any[], key: string) => {
     return array.reduce((result, currentValue) => {
       (result[currentValue[key]] = result[currentValue[key]] || []).push(
         currentValue
@@ -34,22 +36,25 @@ const ClassSchedule = (props: Props) => {
 
   return (
     <>
+      <Head>
+        <title>Class schedule</title>
+      </Head>
       <Text textAlign="center" fontSize="4xl" mb={10}>
         Class schedule
       </Text>
       <Box>
         {Object.entries(gbyS).map(([key, value]) => (
-          <>
-            <Box
+          <Box mb={10}>
+            <Text
               fontWeight="500"
               fontSize="lg"
-              mb={2}
               fontFamily="poppins"
               flex="1"
               textAlign="left"
+              mb={4}
             >
-              {getSemesterName(parseInt(key))}
-            </Box>
+              {getSemesterName(parseInt(key))} Semester
+            </Text>
             <Box>
               {Object.entries(groupBy(gbyS[key], "day")).map(
                 ([key, value]: any) => (
@@ -58,12 +63,30 @@ const ClassSchedule = (props: Props) => {
                       {getDayName(key)}
                     </Box>
                     {value.map((v) => (
-                      <HStack align="flex-start" p={2} mb={2} bg="gray.50">
-                        <Box color="gray.700">
-                          <Box>{v.startTime.slice(0, 5)}</Box>
-                          <Box>{v.endTime.slice(0, 5)}</Box>
+                      <HStack
+                        key={v.id}
+                        align="flex-start"
+                        mb={2}
+                        bg="purple.50"
+                      >
+                        <Box
+                          color="gray.100"
+                          w="85px"
+                          p={2}
+                          bgGradient="linear(to bottom right,purple.400,purple.600)"
+                        >
+                          <Box fontFamily="poppins">
+                            {DateTime.fromISO(v.startTime).toLocaleString(
+                              DateTime.TIME_SIMPLE
+                            )}
+                          </Box>
+                          <Box fontFamily="poppins">
+                            {DateTime.fromISO(v.endTime).toLocaleString(
+                              DateTime.TIME_SIMPLE
+                            )}
+                          </Box>
                         </Box>
-                        <Box>
+                        <Box p={2}>
                           <Box fontWeight="700" textTransform="capitalize">
                             {v.course.name}
                           </Box>
@@ -78,7 +101,7 @@ const ClassSchedule = (props: Props) => {
                 )
               )}
             </Box>
-          </>
+          </Box>
         ))}
       </Box>
     </>

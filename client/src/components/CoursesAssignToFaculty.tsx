@@ -1,33 +1,35 @@
-import { Box, HStack, Text } from "@chakra-ui/react";
+import { Box, Grid, HStack, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import React from "react";
 import { useCourseAssignToFacultyQuery } from "../generated/graphql";
 import { getSemesterName } from "../utils/getSemesterName";
+import LoadingSpinner from "./LoadingSpinner";
 interface Props {}
 
 const CoursesAssignToFaculty = (props: Props) => {
   const { data, loading } = useCourseAssignToFacultyQuery();
   if (loading) {
-    <Box>loading...</Box>;
+    return (
+      <Box>
+        <LoadingSpinner />
+      </Box>
+    );
   }
   return (
     <>
       <Text fontWeight="bold" fontSize="3xl" mb={6} mt={10}>
         My Courses
       </Text>
-      <Box>
+      <Grid
+        templateColumns={["1fr ", "1fr 1fr ", "1fr 1fr 1fr", "1fr 1fr 1fr"]}
+        gap={6}
+      >
         {data?.courseAssignToFaculty?.map((c) => (
           <Link
+            key={c.id}
             href={`/my-courses/${c.course.code}?sessionId=${c.session.id}&departmentCode=${c.department.departmentCode}&semesterId=${c.semester.id}`}
           >
-            <Box
-              w="450px"
-              p={4}
-              bg="red.50"
-              my={2}
-              borderRadius="xl"
-              cursor="pointer"
-            >
+            <Box p={4} bg="purple.50" borderRadius="xl" cursor="pointer">
               <Text
                 fontSize="xl"
                 fontWeight="500"
@@ -45,7 +47,7 @@ const CoursesAssignToFaculty = (props: Props) => {
             </Box>
           </Link>
         ))}
-      </Box>
+      </Grid>
     </>
   );
 };
