@@ -28,7 +28,14 @@ export class MeResolver {
   @Query(() => MeResponse, { nullable: true })
   async me(@Ctx() { req }: MyContext): Promise<MeResponse | null> {
     if (req.studentId) {
-      return { student: await Student.findOne(req.studentId) };
+      return {
+        student: await Student.findOne({
+          where: {
+            id: req.studentId,
+          },
+          relations: ["department", "session"],
+        }),
+      };
     } else if (req.facultyId) {
       return { faculty: await Faculty.findOne(req.facultyId) };
     } else if (req.adminId) {
