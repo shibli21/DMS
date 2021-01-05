@@ -132,7 +132,10 @@ export class StudentResolver {
         .where("id = :id", { id: studentExists.id })
         .execute();
 
-      student = await Student.findOne({ where: { email: input.email } });
+      student = await Student.findOne({
+        where: { email: input.email },
+        relations: ["session"],
+      });
 
       const token = jwt.sign(
         { studentId: student?.id },
