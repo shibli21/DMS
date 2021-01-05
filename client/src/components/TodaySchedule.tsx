@@ -18,7 +18,7 @@ const TodaySchedule = (props: Props) => {
       </Box>
     );
   }
-  if (data?.todaysClassSchedule?.length !== 0) {
+  if (data?.todaysClassSchedule?.length === 0) {
     return (
       <>
         <Text fontWeight="bold" fontSize="3xl" mb={6}>

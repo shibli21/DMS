@@ -24,11 +24,9 @@ const Profile = (props: Props) => {
   if (meLoading) {
     return <LoadingSpinner />;
   }
-
-  if (!me.me.faculty && !me.me.student) {
+  if (!me?.me?.faculty && !me?.me?.student) {
     router.push("/login");
   }
-
   return (
     <>
       <Head>
