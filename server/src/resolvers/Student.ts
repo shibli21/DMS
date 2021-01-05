@@ -60,7 +60,7 @@ export class StudentResolver {
         .values({
           username: input.username,
           email: emailToLower,
-          address: input.username,
+          address: input.address,
           session: await Session.findOne({
             where: {
               id: input.sessionId,
@@ -71,7 +71,7 @@ export class StudentResolver {
               departmentCode: input.departmentCode,
             },
           }),
-          gender: input.username,
+          gender: input.gender,
           registrationNumber: input.registrationNumber,
           contactNumber: input.contactNumber,
           oneTimePassword: generateRandomString(7),
