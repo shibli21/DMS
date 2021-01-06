@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
 import { InputField } from "../components/InputField";
+import withPrivateRoute from "../components/withPrivateRoute";
 import {
   useAddClassScheduleMutation,
   useCoursesByDeptSemesterQuery,
@@ -292,4 +293,4 @@ const AddClassSchedule = (props: Props) => {
   );
 };
 
-export default AddClassSchedule;
+export default withPrivateRoute(AddClassSchedule);

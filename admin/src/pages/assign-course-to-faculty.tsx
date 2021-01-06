@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
+import withPrivateRoute from "../components/withPrivateRoute";
 import {
   useAssignCourseToFacultyMutation,
   useCoursesByDeptSemesterQuery,
@@ -232,4 +233,4 @@ const AssignCourseToFaculty = (props: Props) => {
   );
 };
 
-export default AssignCourseToFaculty;
+export default withPrivateRoute(AssignCourseToFaculty);

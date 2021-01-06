@@ -30,7 +30,7 @@ const Profile = (props: Props) => {
   return (
     <>
       <Head>
-        <title>{router.query.profileId}</title>
+        <title>{me?.me?.faculty?.username || me?.me?.student?.username}</title>
       </Head>
       <Container maxW="3xl">
         <Box w="100%" boxShadow="md" borderColor="purple.50" overflow="hidden">

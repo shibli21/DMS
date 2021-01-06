@@ -1,17 +1,19 @@
-import { Spinner } from "@chakra-ui/react";
+import { Flex, Spinner } from "@chakra-ui/react";
 import React, { ReactElement } from "react";
 
 interface Props {}
 
 function LoadingSpinner({}: Props): ReactElement {
   return (
-    <Spinner
-      thickness="4px"
-      speed="0.65s"
-      emptyColor="gray.200"
-      color="blue.500"
-      size="xl"
-    />
+    <Flex minH="200px" justify="center" align="center">
+      <Spinner
+        thickness="4px"
+        speed="0.65s"
+        emptyColor="gray.200"
+        color="purple.500"
+        size="xl"
+      />
+    </Flex>
   );
 }
 

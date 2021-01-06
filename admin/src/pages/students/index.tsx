@@ -21,13 +21,14 @@ import {
 import Link from "next/link";
 import React, { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import withPrivateRoute from "../../components/withPrivateRoute";
 import {
   StudentsDocument,
   useDeleteStudentMutation,
   useStudentsQuery,
 } from "../../generated/graphql";
 
-export default function Students() {
+function Students() {
   const [studentId, setStudentId] = useState<number>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [deleteStudent] = useDeleteStudentMutation();
@@ -60,14 +61,22 @@ export default function Students() {
           </Thead>
           <Tbody>
             {data.students.map((s) => (
-              <Tr>
+              <Tr key={s.id}>
                 <Td>
                   <Text>{s.registrationNumber}</Text>
                 </Td>
                 <Td>{s.username}</Td>
                 <Td>{s.department.name}</Td>
                 <Td>{s.session.name}</Td>
-                <Td>{s.oneTimePassword}</Td>
+                <Td>
+                  {s.oneTimePassword ? (
+                    s.oneTimePassword
+                  ) : (
+                    <Button size="sm" colorScheme="purple">
+                      Reset Topken
+                    </Button>
+                  )}
+                </Td>
                 <Td>
                   <HStack>
                     <Box
@@ -101,7 +110,7 @@ export default function Students() {
               <Text>Do you want to delete ?</Text>
               <HStack>
                 <Button onClick={onClose} colorScheme="green">
-                  No
+                  o
                 </Button>
                 <Button
                   onClick={() => {
@@ -136,3 +145,5 @@ export default function Students() {
     </>
   );
 }
+
+export default withPrivateRoute(Students);

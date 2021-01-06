@@ -17,11 +17,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FaChevronRight, FaEdit, FaTrash } from "react-icons/fa";
 import LoadingSpinner from "../../../../../../components/LoadingSpinner";
+import withPrivateRoute from "../../../../../../components/withPrivateRoute";
 import { useClassScheduleByAllQuery } from "../../../../../../generated/graphql";
 import { getDayName } from "../../../../../../utils/getDayName";
 import { getSemesterName } from "../../../../../../utils/getSemesterName";
 
-const index = () => {
+const ClassSchedule = () => {
   const router = useRouter();
 
   const semId =
@@ -143,4 +144,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default withPrivateRoute(ClassSchedule);

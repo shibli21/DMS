@@ -12,10 +12,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FaChevronRight } from "react-icons/fa";
 import LoadingSpinner from "../../../../../components/LoadingSpinner";
+import withPrivateRoute from "../../../../../components/withPrivateRoute";
 import { useCoursesByDeptSemesterQuery } from "../../../../../generated/graphql";
 import { getSemesterName } from "../../../../../utils/getSemesterName";
 
-const index = () => {
+const Courses = () => {
   const router = useRouter();
 
   const semId =
@@ -85,4 +86,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default withPrivateRoute(Courses);

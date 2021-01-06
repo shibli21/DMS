@@ -36,7 +36,7 @@ const NavBar = (props: ChakraProps) => {
     NavLinks = (
       <>
         <NavItem>
-          <Link href="/class-schedule">class schedule</Link>
+          <Link href="/class-schedule">Class Routine</Link>
         </NavItem>
         <NavItem>
           <Link href={`/profile/${data?.me?.student?.id}`}>
@@ -63,7 +63,7 @@ const NavBar = (props: ChakraProps) => {
     NavLinks = (
       <>
         <NavItem>
-          <Link href="/class-schedule">class schedule</Link>
+          <Link href="/class-schedule">Class Routine</Link>
         </NavItem>
         <NavItem>
           <Link href={`/profile/${data?.me?.faculty?.id}`}>

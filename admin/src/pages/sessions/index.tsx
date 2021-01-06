@@ -1,10 +1,34 @@
-import { Alert, Box, Button, Flex, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Table, Tbody, Td, Text, Th, Thead, Tr, useDisclosure, useToast } from "@chakra-ui/react";
+import {
+  Alert,
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { SessionsDocument, useDeleteSessionMutation, useSessionsQuery } from "../../generated/graphql";
+import withPrivateRoute from "../../components/withPrivateRoute";
+import {
+  SessionsDocument,
+  useDeleteSessionMutation,
+  useSessionsQuery,
+} from "../../generated/graphql";
 
-export default function Sessions() {
+function Sessions() {
   const { data } = useSessionsQuery();
   const [sessionId, setSessionId] = useState<number>();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -52,7 +76,11 @@ export default function Sessions() {
                       _hover={{ color: "red.500" }}
                     />
                     <Link href={`/sessions/edit/${s.id}`}>
-                      <Box cursor="pointer" as={FaEdit} _hover={{ color: "blue.500" }} />
+                      <Box
+                        cursor="pointer"
+                        as={FaEdit}
+                        _hover={{ color: "blue.500" }}
+                      />
                     </Link>
                   </HStack>
                 </Td>
@@ -104,3 +132,5 @@ export default function Sessions() {
     </>
   );
 }
+
+export default withPrivateRoute(Sessions);

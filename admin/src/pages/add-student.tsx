@@ -15,6 +15,7 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
 import { InputField } from "../components/InputField";
+import withPrivateRoute from "../components/withPrivateRoute";
 import {
   useAddStudentMutation,
   useDepartmentsQuery,
@@ -188,4 +189,4 @@ const AddStudent = (props: Props) => {
   );
 };
 
-export default AddStudent;
+export default withPrivateRoute(AddStudent);

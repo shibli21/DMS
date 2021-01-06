@@ -14,6 +14,7 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
 import { InputField } from "../components/InputField";
+import withPrivateRoute from "../components/withPrivateRoute";
 import { useAddFacultyMutation } from "../generated/graphql";
 
 interface Props {}
@@ -127,4 +128,4 @@ const AddFaculty = (props: Props) => {
   );
 };
 
-export default AddFaculty;
+export default withPrivateRoute(AddFaculty);

@@ -21,6 +21,18 @@ const theme = extendTheme({
         color: props.colorMode === "dark" ? "white" : "gray.800",
         bg: props.colorMode === "dark" ? "gray.800" : "white",
       },
+      "*": {
+        "::selection": {
+          background: "purple.400",
+          opacity: 1,
+          color: "white",
+        },
+      },
+      "table > thead > tr > *": {
+        bg: "purple.400",
+        fontSize: "1rem !important",
+        color: "white !important",
+      },
     }),
   },
 });

@@ -14,6 +14,7 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
 import { InputField } from "../components/InputField";
+import withPrivateRoute from "../components/withPrivateRoute";
 import {
   useAddSemesterMutation,
   useDepartmentsQuery,
@@ -155,4 +156,4 @@ const AddSession = (props: Props) => {
   );
 };
 
-export default AddSession;
+export default withPrivateRoute(AddSession);

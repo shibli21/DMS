@@ -1,8 +1,20 @@
 import { Box, Grid, GridItem, Stack, Text } from "@chakra-ui/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { SideBarItem } from "../components/SideBarItem";
+import { useMeQuery } from "../generated/graphql";
 
 export default function Home() {
+  const router = useRouter();
+  const { data: me, loading: meLoading } = useMeQuery();
+  if (meLoading) {
+    return null;
+  }
+
+  if (!me?.me?.admin) {
+    router.push("/admin-login");
+  }
+
   return (
     <Box mt={10}>
       <Grid
@@ -55,7 +67,7 @@ export default function Home() {
             </Link>
           </Stack>
         </GridItem>
-        <GridItem colSpan={5} bg="gray.50">
+        <GridItem colSpan={5}>
           <Stack>
             <Link href="/departments">
               <Box bg="gray.100" cursor="pointer">

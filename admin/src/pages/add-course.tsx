@@ -13,6 +13,7 @@ import React, { useEffect, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
 import { InputField } from "../components/InputField";
+import withPrivateRoute from "../components/withPrivateRoute";
 import {
   useAddCourseMutation,
   useDepartmentsQuery,
@@ -197,4 +198,4 @@ const AddCourse = (props: Props) => {
   );
 };
 
-export default AddCourse;
+export default withPrivateRoute(AddCourse);

@@ -12,6 +12,7 @@ import Link from "next/link";
 import React from "react";
 import { FaChevronRight } from "react-icons/fa";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import withPrivateRoute from "../../components/withPrivateRoute";
 import { useDepartmentsQuery } from "../../generated/graphql";
 
 interface Props {}
@@ -45,4 +46,4 @@ const Departments = (props: Props) => {
   );
 };
 
-export default Departments;
+export default withPrivateRoute(Departments);

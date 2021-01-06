@@ -21,6 +21,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import withPrivateRoute from "../../components/withPrivateRoute";
 import {
   DepartmentsDocument,
   useDeleteDepartmentMutation,
@@ -60,9 +61,7 @@ const Departments = (props: Props) => {
                 <Td>
                   <Text>{d.departmentCode}</Text>
                 </Td>
-                <Td>
-                  <Link href={`/${d.departmentCode}`}>{d.name}</Link>
-                </Td>
+                <Td>{d.name}</Td>
                 <Td>
                   <HStack>
                     <Box
@@ -133,4 +132,4 @@ const Departments = (props: Props) => {
   );
 };
 
-export default Departments;
+export default withPrivateRoute(Departments);

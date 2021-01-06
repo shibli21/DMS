@@ -12,10 +12,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FaChevronRight } from "react-icons/fa";
 import LoadingSpinner from "../../../../components/LoadingSpinner";
+import withPrivateRoute from "../../../../components/withPrivateRoute";
 import { useSemestersByDepartmentAndSessionQuery } from "../../../../generated/graphql";
 import { getSemesterName } from "../../../../utils/getSemesterName";
 
-const index = () => {
+const Semesters = () => {
   const router = useRouter();
   const sesId =
     typeof router.query.sessionId === "string"
@@ -77,4 +78,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default withPrivateRoute(Semesters);

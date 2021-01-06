@@ -76,7 +76,7 @@ const NavBar = (props: ChakraProps) => {
   }
 
   return (
-    <Box top={0} position="sticky" as="header" zIndex={100} bg="gray.900">
+    <Box top={0} position="sticky" as="header" zIndex={100} bg="gray.800">
       <Flex
         as="nav"
         align="center"
@@ -88,7 +88,7 @@ const NavBar = (props: ChakraProps) => {
         <Box>
           <NextLink href="/">
             <Text color="white" cursor="pointer">
-              Department Management System
+              DMS Admin
             </Text>
           </NextLink>
         </Box>
@@ -107,10 +107,10 @@ const NavBar = (props: ChakraProps) => {
               onClose={onClose}
             >
               <DrawerOverlay>
-                <DrawerContent>
+                <DrawerContent bg="gray.800">
                   <DrawerCloseButton m=".25rem">
                     <Box>
-                      <RiCloseFill size="25px" />
+                      <RiCloseFill size="25px" color="white" />
                     </Box>
                   </DrawerCloseButton>
                   <DrawerBody pt="90px">

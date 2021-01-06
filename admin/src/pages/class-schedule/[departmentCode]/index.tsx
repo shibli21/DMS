@@ -12,9 +12,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FaChevronRight } from "react-icons/fa";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import withPrivateRoute from "../../../components/withPrivateRoute";
 import { useSessionsQuery } from "../../../generated/graphql";
 
-const Post = () => {
+const Sessions = () => {
   const router = useRouter();
   const { departmentCode } = router.query;
   const { data, loading } = useSessionsQuery();
@@ -55,4 +56,4 @@ const Post = () => {
   );
 };
 
-export default Post;
+export default withPrivateRoute(Sessions);

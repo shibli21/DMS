@@ -21,13 +21,14 @@ import {
 import Link from "next/link";
 import React, { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import withPrivateRoute from "../../components/withPrivateRoute";
 import {
   FacultiesDocument,
   useDeleteFacultyMutation,
   useFacultiesQuery,
 } from "../../generated/graphql";
 
-export default function Faculties() {
+function Faculties() {
   const [facultyId, setFacultyId] = useState<number>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [deleteFaculty] = useDeleteFacultyMutation();
@@ -133,3 +134,5 @@ export default function Faculties() {
     </>
   );
 }
+
+export default withPrivateRoute(Faculties);

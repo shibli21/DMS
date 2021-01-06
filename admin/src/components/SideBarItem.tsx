@@ -5,9 +5,10 @@ export const SideBarItem = (props: FlexProps) => (
   <Flex
     align="center"
     justify="space-between"
-    bg="teal.300"
     p={4}
+    bg="purple.500"
     cursor="pointer"
+    color="white"
     {...props}
   >
     {props.children}

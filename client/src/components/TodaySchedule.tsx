@@ -18,11 +18,12 @@ const TodaySchedule = (props: Props) => {
       </Box>
     );
   }
+
   if (data?.todaysClassSchedule?.length === 0) {
     return (
       <>
         <Text fontWeight="bold" fontSize="3xl" mb={6}>
-          Today Schedule
+          Today Class
         </Text>
         <Box
           bgGradient="linear(to bottom right,purple.400,purple.600)"
@@ -39,14 +40,19 @@ const TodaySchedule = (props: Props) => {
 
   return (
     <>
-      <Text fontWeight="bold" fontSize="3xl" mb={6}>
-        Today Schedule
-      </Text>
+      <HStack align="center" mb={6}>
+        <Text fontWeight="bold" fontSize="3xl">
+          Today Classes
+        </Text>
+        <Text fontWeight="300" fontFamily="poppins" color="gray.500">
+          ({data?.todaysClassSchedule?.length})
+        </Text>
+      </HStack>
       <Grid
         templateColumns={["1fr ", "1fr 1fr", "1fr 1fr 1fr", "1fr 1fr 1fr 1fr"]}
         gap={6}
       >
-        {data.todaysClassSchedule.map((ts) => (
+        {data?.todaysClassSchedule?.map((ts) => (
           <Box
             key={ts.id}
             bgGradient="linear(to bottom right,purple.400,purple.600)"

@@ -20,6 +20,7 @@ import {
 import Link from "next/link";
 import React, { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import withPrivateRoute from "../../components/withPrivateRoute";
 import {
   SemestersDocument,
   useDeleteSemesterMutation,
@@ -135,4 +136,4 @@ const Semesters = (props: Props) => {
   );
 };
 
-export default Semesters;
+export default withPrivateRoute(Semesters);

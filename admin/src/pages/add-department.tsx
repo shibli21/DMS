@@ -4,6 +4,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { FormLayout } from "../components/FormLayout";
 import { InputField } from "../components/InputField";
+import withPrivateRoute from "../components/withPrivateRoute";
 import { useAddDepartmentMutation } from "../generated/graphql";
 
 interface Props {}
@@ -69,4 +70,4 @@ const AddDepartment = (props: Props) => {
   );
 };
 
-export default AddDepartment;
+export default withPrivateRoute(AddDepartment);
