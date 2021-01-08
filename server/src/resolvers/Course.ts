@@ -1,5 +1,6 @@
 import {
   Arg,
+  Ctx,
   Field,
   Int,
   Mutation,
@@ -14,7 +15,10 @@ import { FieldError } from "../types/ObjectTypes/FieldErrorType";
 import { Course } from "./../entities/Course";
 import { Department } from "./../entities/Department";
 import { Semester } from "./../entities/Semester";
+import { Student } from "./../entities/Student";
+import { isStudent } from "./../middleware/isStudent";
 import { AddCourseInputType } from "./../types/InputTypes/AddCourseInputType";
+import { MyContext } from "./../types/MyContext";
 
 @ObjectType()
 class CourseResponse {
@@ -44,6 +48,36 @@ export class CourseResolver {
         department: await Department.findOne({
           where: {
             departmentCode: code,
+          },
+        }),
+        semester: await Semester.findOne({
+          where: {
+            id: semesterId,
+          },
+        }),
+      },
+      relations: ["department", "semester"],
+    });
+  }
+
+  @UseMiddleware(isStudent)
+  @Query(() => [Course])
+  async studentCoursesBySemester(
+    @Arg("semesterId", () => Int) semesterId: number,
+    @Ctx() { req }: MyContext
+  ): Promise<Course[]> {
+    const student = await Student.findOne({
+      where: {
+        id: req.studentId,
+      },
+      relations: ["department"],
+    });
+
+    return Course.find({
+      where: {
+        department: await Department.findOne({
+          where: {
+            departmentCode: student?.department.departmentCode,
           },
         }),
         semester: await Semester.findOne({
