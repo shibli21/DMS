@@ -55,7 +55,7 @@ const MyCourse = (props: Props) => {
   const toast = useToast();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { register, handleSubmit, control, setError, errors } = useForm();
+  const { register, handleSubmit, setError, errors } = useForm();
   const dCode =
     typeof router.query.departmentCode === "string"
       ? router.query.departmentCode

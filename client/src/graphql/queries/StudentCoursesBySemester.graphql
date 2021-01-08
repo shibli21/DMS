@@ -1,0 +1,18 @@
+query StudentCoursesBySemester($input: Int!) {
+  studentCoursesBySemester(semesterId: $input) {
+    id
+    code
+    name
+    credit
+    description
+    department {
+      id
+      name
+      departmentCode
+    }
+    semester {
+      id
+      number
+    }
+  }
+}

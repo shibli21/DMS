@@ -22,6 +22,7 @@ export type Query = {
   todaysClassSchedule: Array<ClassSchedule>;
   courses: Array<Course>;
   coursesByDeptSemester: Array<Course>;
+  studentCoursesBySemester: Array<Course>;
   courseAssignToFaculties: Array<CourseAssignToFaculty>;
   courseAssignToFaculty: Array<CourseAssignToFaculty>;
   departments: Array<Department>;
@@ -48,6 +49,11 @@ export type QueryClassScheduleByAllArgs = {
 export type QueryCoursesByDeptSemesterArgs = {
   semesterId: Scalars['Int'];
   code: Scalars['String'];
+};
+
+
+export type QueryStudentCoursesBySemesterArgs = {
+  semesterId: Scalars['Int'];
 };
 
 
@@ -705,6 +711,26 @@ export type MeQuery = (
   )> }
 );
 
+export type StudentCoursesBySemesterQueryVariables = Exact<{
+  input: Scalars['Int'];
+}>;
+
+
+export type StudentCoursesBySemesterQuery = (
+  { __typename?: 'Query' }
+  & { studentCoursesBySemester: Array<(
+    { __typename?: 'Course' }
+    & Pick<Course, 'id' | 'code' | 'name' | 'credit' | 'description'>
+    & { department: (
+      { __typename?: 'Department' }
+      & Pick<Department, 'id' | 'name' | 'departmentCode'>
+    ), semester: (
+      { __typename?: 'Semester' }
+      & Pick<Semester, 'id' | 'number'>
+    ) }
+  )> }
+);
+
 export type TodaysClassScheduleQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1224,6 +1250,52 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const StudentCoursesBySemesterDocument = gql`
+    query StudentCoursesBySemester($input: Int!) {
+  studentCoursesBySemester(semesterId: $input) {
+    id
+    code
+    name
+    credit
+    description
+    department {
+      id
+      name
+      departmentCode
+    }
+    semester {
+      id
+      number
+    }
+  }
+}
+    `;
+
+/**
+ * __useStudentCoursesBySemesterQuery__
+ *
+ * To run a query within a React component, call `useStudentCoursesBySemesterQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStudentCoursesBySemesterQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStudentCoursesBySemesterQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useStudentCoursesBySemesterQuery(baseOptions: Apollo.QueryHookOptions<StudentCoursesBySemesterQuery, StudentCoursesBySemesterQueryVariables>) {
+        return Apollo.useQuery<StudentCoursesBySemesterQuery, StudentCoursesBySemesterQueryVariables>(StudentCoursesBySemesterDocument, baseOptions);
+      }
+export function useStudentCoursesBySemesterLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StudentCoursesBySemesterQuery, StudentCoursesBySemesterQueryVariables>) {
+          return Apollo.useLazyQuery<StudentCoursesBySemesterQuery, StudentCoursesBySemesterQueryVariables>(StudentCoursesBySemesterDocument, baseOptions);
+        }
+export type StudentCoursesBySemesterQueryHookResult = ReturnType<typeof useStudentCoursesBySemesterQuery>;
+export type StudentCoursesBySemesterLazyQueryHookResult = ReturnType<typeof useStudentCoursesBySemesterLazyQuery>;
+export type StudentCoursesBySemesterQueryResult = Apollo.QueryResult<StudentCoursesBySemesterQuery, StudentCoursesBySemesterQueryVariables>;
 export const TodaysClassScheduleDocument = gql`
     query TodaysClassSchedule {
   todaysClassSchedule {

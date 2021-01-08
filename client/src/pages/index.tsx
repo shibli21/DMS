@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import CoursesAssignToFaculty from "../components/CoursesAssignToFaculty";
+import StudentCourses from "../components/StudentCourses";
 import TodaySchedule from "../components/TodaySchedule";
 import { useMeQuery } from "../generated/graphql";
 
@@ -21,7 +22,7 @@ export default function Home() {
         <title>Home</title>
       </Head>
       <TodaySchedule />
-      <CoursesAssignToFaculty />
+      {me?.me?.faculty ? <CoursesAssignToFaculty /> : <StudentCourses />}
     </>
   );
 }
