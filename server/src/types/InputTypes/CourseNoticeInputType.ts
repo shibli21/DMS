@@ -16,4 +16,7 @@ export class CourseNoticeInputType {
 
   @Field({ nullable: true })
   facultyId!: number;
+
+  @Field({ nullable: true })
+  courseId!: number;
 }

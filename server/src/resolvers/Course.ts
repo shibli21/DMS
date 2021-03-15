@@ -1,14 +1,5 @@
-import {
-  Arg,
-  Ctx,
-  Field,
-  Int,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-  UseMiddleware,
-} from "type-graphql";
+import { Session } from "../entities/Session";
+import { Arg, Ctx, Field, Int, Mutation, ObjectType, Query, Resolver, UseMiddleware } from "type-graphql";
 import { getConnection } from "typeorm";
 import { isAdmin } from "../middleware/isAdmin";
 import { FieldError } from "../types/ObjectTypes/FieldErrorType";
@@ -38,6 +29,35 @@ export class CourseResolver {
     });
   }
 
+  @Query(() => Course)
+  async course(
+    @Arg("departmentCode") departmentCode: string,
+    @Arg("courseCode") courseCode: string,
+    @Arg("semesterId", () => Int) semesterId: number,
+    @Arg("sessionId", () => Int) sessionId: number
+  ): Promise<Course> {
+    return Course.findOneOrFail({
+      where: {
+        department: await Department.findOne({
+          where: {
+            departmentCode: departmentCode,
+          },
+        }),
+        session: await Session.findOne({
+          where: {
+            id: sessionId,
+          },
+        }),
+        semester: await Semester.findOne({
+          where: {
+            id: semesterId,
+          },
+        }),
+        code: courseCode,
+      },
+      relations: ["department", "semester", "session"],
+    });
+  }
   @Query(() => [Course])
   async coursesByDeptSemester(
     @Arg("code") code: string,
@@ -70,7 +90,7 @@ export class CourseResolver {
       where: {
         id: req.studentId,
       },
-      relations: ["department"],
+      relations: ["department", "session"],
     });
 
     return Course.find({
@@ -85,6 +105,47 @@ export class CourseResolver {
             id: semesterId,
           },
         }),
+        session: await Session.findOne({
+          where: {
+            id: student?.session.id,
+          },
+        }),
+      },
+      relations: ["department", "semester", "session"],
+    });
+  }
+
+  @UseMiddleware(isStudent)
+  @Query(() => [Course])
+  async studentCoursesBySemesterSession(
+    @Arg("semesterId", () => Int) semesterId: number,
+    @Arg("sessionId", () => Int) sessionId: number,
+    @Ctx() { req }: MyContext
+  ): Promise<Course[]> {
+    const student = await Student.findOne({
+      where: {
+        id: req.studentId,
+      },
+      relations: ["department"],
+    });
+
+    return Course.find({
+      where: {
+        department: await Department.findOne({
+          where: {
+            departmentCode: student?.department.departmentCode,
+          },
+        }),
+        session: await Session.findOne({
+          where: {
+            id: sessionId,
+          },
+        }),
+        semester: await Semester.findOne({
+          where: {
+            id: semesterId,
+          },
+        }),
       },
       relations: ["department", "semester"],
     });
@@ -92,9 +153,7 @@ export class CourseResolver {
 
   @UseMiddleware(isAdmin)
   @Mutation(() => CourseResponse)
-  async addCourse(
-    @Arg("input") input: AddCourseInputType
-  ): Promise<CourseResponse> {
+  async addCourse(@Arg("input") input: AddCourseInputType): Promise<CourseResponse> {
     let errors = [];
     if (!input.name) {
       errors.push({
@@ -132,6 +191,17 @@ export class CourseResolver {
       });
     }
 
+    const session = await Session.findOne({
+      where: { id: input.sessionId },
+    });
+
+    if (!session) {
+      errors.push({
+        field: "sessionId",
+        message: "Session doesn't exists!",
+      });
+    }
+
     const semester = await Semester.findOne({
       where: { department: department, id: input.semesterId },
       relations: ["department"],
@@ -157,6 +227,7 @@ export class CourseResolver {
         .values({
           name: input.name,
           department: department,
+          session: session,
           description: input.description,
           semester: semester,
           code: input.code,

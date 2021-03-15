@@ -41,6 +41,7 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 import {
   CourseNoticesDocument,
   useClassScheduleByAllQuery,
+  useCourseQuery,
   useCourseNoticesQuery,
   useMeQuery,
   usePublishNoticeMutation,
@@ -56,25 +57,13 @@ const MyCourse = (props: Props) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { register, handleSubmit, setError, errors } = useForm();
-  const dCode =
-    typeof router.query.departmentCode === "string"
-      ? router.query.departmentCode
-      : -1;
-  const cCode =
-    typeof router.query.courseCode === "string" ? router.query.courseCode : -1;
-  const semId =
-    typeof router.query.semesterId === "string"
-      ? parseInt(router.query.semesterId)
-      : -1;
-  const sesId =
-    typeof router.query.sessionId === "string"
-      ? parseInt(router.query.sessionId)
-      : -1;
+  const dCode = typeof router.query.departmentCode === "string" ? router.query.departmentCode : -1;
+  const cCode = typeof router.query.courseCode === "string" ? router.query.courseCode : -1;
+  const semId = typeof router.query.semesterId === "string" ? parseInt(router.query.semesterId) : -1;
+  const sesId = typeof router.query.sessionId === "string" ? parseInt(router.query.sessionId) : -1;
+  const courseId = typeof router.query.courseId === "string" ? parseInt(router.query.courseId) : -1;
 
-  const [
-    publishNotice,
-    { loading: publishLoading },
-  ] = usePublishNoticeMutation();
+  const [publishNotice, { loading: publishLoading }] = usePublishNoticeMutation();
 
   const { data, loading } = useCourseNoticesQuery({
     variables: {
@@ -83,18 +72,29 @@ const MyCourse = (props: Props) => {
         departmentCode: encodeURIComponent(dCode),
         semesterId: semId,
         sessionId: sesId,
+        courseId: courseId,
       },
     },
   });
-  const {
-    data: classSchedule,
-    loading: classScheduleLoading,
-  } = useClassScheduleByAllQuery({
+
+  const { data: courseData, loading: courseLoading } = useCourseQuery({
+    variables: {
+      courseCode: encodeURIComponent(cCode),
+      departmentCode: encodeURIComponent(dCode),
+      semesterId: semId,
+      sessionId: sesId,
+    },
+  });
+
+  console.log(courseData);
+
+  const { data: classSchedule, loading: classScheduleLoading } = useClassScheduleByAllQuery({
     variables: {
       departmentCode: encodeURIComponent(dCode),
       semesterId: semId,
       courseCode: encodeURIComponent(cCode),
       sessionId: sesId,
+      courseId: courseId,
     },
   });
 
@@ -152,9 +152,7 @@ const MyCourse = (props: Props) => {
       <Container>
         <Alert status="error">
           <AlertIcon />
-          <AlertTitle mr={2}>
-            Access Denied !!! Please sign in to access
-          </AlertTitle>
+          <AlertTitle mr={2}>Access Denied !!! Please sign in to access</AlertTitle>
         </Alert>
       </Container>
     );
@@ -183,16 +181,8 @@ const MyCourse = (props: Props) => {
               <Td>
                 <Text>{getDayName(d.day)}</Text>
               </Td>
-              <Td>
-                {DateTime.fromISO(d.startTime).toLocaleString(
-                  DateTime.TIME_SIMPLE
-                )}
-              </Td>
-              <Td>
-                {DateTime.fromISO(d.endTime).toLocaleString(
-                  DateTime.TIME_SIMPLE
-                )}
-              </Td>
+              <Td>{DateTime.fromISO(d.startTime).toLocaleString(DateTime.TIME_SIMPLE)}</Td>
+              <Td>{DateTime.fromISO(d.endTime).toLocaleString(DateTime.TIME_SIMPLE)}</Td>
               <Td>{d.faculty.username}</Td>
             </Tr>
           ))}
@@ -221,18 +211,11 @@ const MyCourse = (props: Props) => {
             <AccordionItem key={n.id}>
               <Box>
                 <HStack as={AccordionButton} justify="space-between">
-                  <Box
-                    textAlign="left"
-                    textTransform="capitalize"
-                    fontWeight="600"
-                    fontSize="lg"
-                  >
+                  <Box textAlign="left" textTransform="capitalize" fontWeight="600" fontSize="lg">
                     {n.title}
                   </Box>
                   <Box fontFamily="poppins">
-                    {DateTime.fromMillis(parseInt(n.createdAt)).toLocaleString(
-                      DateTime.DATE_MED
-                    )}
+                    {DateTime.fromMillis(parseInt(n.createdAt)).toLocaleString(DateTime.DATE_MED)}
                   </Box>
                 </HStack>
                 <AccordionPanel pb={4}>
@@ -262,25 +245,14 @@ const MyCourse = (props: Props) => {
                 />
                 <FormControl id="description" isInvalid={errors.description}>
                   <FormLabel htmlFor="description">Description</FormLabel>
-                  <Textarea
-                    placeholder="Here is a sample notice"
-                    ref={register}
-                    name="description"
-                  />
-                  <FormErrorMessage>
-                    {errors.description?.message}
-                  </FormErrorMessage>
+                  <Textarea placeholder="Here is a sample notice" ref={register} name="description" />
+                  <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
                 </FormControl>
               </Stack>
             </ModalBody>
 
             <ModalFooter>
-              <Button
-                colorScheme="purple"
-                mr={3}
-                type="submit"
-                isLoading={publishLoading}
-              >
+              <Button colorScheme="purple" mr={3} type="submit" isLoading={publishLoading}>
                 Publish
               </Button>
               <Button onClick={onClose}>Cancel</Button>

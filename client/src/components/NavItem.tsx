@@ -10,6 +10,7 @@ const NavItem: React.FC<NavItemProps> = ({ children }) => (
     ml={[0, 0, 6, 6]}
     mb={[4, 4, 0, 0]}
     color="gray.100"
+    fontFamily="poppins"
   >
     {children}
   </Text>

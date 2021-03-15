@@ -1,0 +1,15 @@
+query Course($sessionId: Int!, $semesterId: Int!, $departmentCode: String!, $courseCode: String!) {
+  course(sessionId: $sessionId, semesterId: $semesterId, departmentCode: $departmentCode, courseCode: $courseCode) {
+    id
+    code
+    name
+    description
+    department {
+      id
+      name
+    }
+    session {
+      id
+    }
+  }
+}

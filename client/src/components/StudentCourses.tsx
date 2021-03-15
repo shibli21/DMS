@@ -27,6 +27,8 @@ const StudentCourses = (props: Props) => {
     },
   });
 
+  console.log(data);
+
   const { control } = useForm();
 
   const semNum = useWatch({
@@ -70,25 +72,14 @@ const StudentCourses = (props: Props) => {
           </MenuList>
         </Menu>
       </Flex>
-      <Grid
-        templateColumns={["1fr ", "1fr 1fr ", "1fr 1fr 1fr", "1fr 1fr 1fr"]}
-        gap={6}
-      >
+      <Grid templateColumns={["1fr ", "1fr 1fr ", "1fr 1fr 1fr", "1fr 1fr 1fr"]} gap={6}>
         {data?.studentCoursesBySemester?.map((c) => (
           <Link
             key={c.id}
-            href={`/my-courses/${c.code}?sessionId=${1}&departmentCode=${
-              c.department.departmentCode
-            }&semesterId=${c.semester.id}`}
+            href={`/my-courses/${c.code}?sessionId=${c.session.id}?courseId=${c.id}&departmentCode=${c.department.departmentCode}&semesterId=${c.semester.id}`}
           >
             <Box p={4} bg="purple.50" borderRadius="xl" cursor="pointer">
-              <Text
-                fontSize="xl"
-                fontWeight="500"
-                textTransform="capitalize"
-                borderBottom="1px solid"
-                mb={2}
-              >
+              <Text fontSize="xl" fontWeight="500" textTransform="capitalize" borderBottom="1px solid" mb={2}>
                 {c.name}
               </Text>
               <Text>{c.department.name}</Text>

@@ -1,14 +1,4 @@
-import {
-  Arg,
-  Ctx,
-  Field,
-  Int,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-  UseMiddleware,
-} from "type-graphql";
+import { Arg, Ctx, Field, Int, Mutation, ObjectType, Query, Resolver, UseMiddleware } from "type-graphql";
 import { getConnection } from "typeorm";
 import { isAdmin } from "../middleware/isAdmin";
 import { FieldError } from "../types/ObjectTypes/FieldErrorType";
@@ -45,6 +35,7 @@ export class ClassScheduleResolver {
     @Arg("departmentCode") departmentCode: string,
     @Arg("courseCode") courseCode: string,
     @Arg("sessionId", () => Int) sessionId: number,
+    @Arg("courseId", () => Int) courseId: number,
     @Arg("semesterId", () => Int) semesterId: number
   ): Promise<ClassSchedule[]> {
     return ClassSchedule.find({
@@ -60,6 +51,7 @@ export class ClassScheduleResolver {
         }),
         course: await Course.findOne({
           where: {
+            id: courseId,
             code: courseCode,
           },
         }),
@@ -79,9 +71,7 @@ export class ClassScheduleResolver {
 
   @UseMiddleware(isAdmin)
   @Mutation(() => AddClassScheduleResponse)
-  async addClassSchedule(
-    @Arg("input") input: AddClassScheduleInputType
-  ): Promise<AddClassScheduleResponse> {
+  async addClassSchedule(@Arg("input") input: AddClassScheduleInputType): Promise<AddClassScheduleResponse> {
     const errors = [];
     const department = await Department.findOne({
       where: { departmentCode: input.departmentCode },
@@ -181,9 +171,7 @@ export class ClassScheduleResolver {
   }
 
   @Query(() => [ClassSchedule])
-  async studentOrFacultyClassSchedule(
-    @Ctx() { req }: MyContext
-  ): Promise<ClassSchedule[]> {
+  async studentOrFacultyClassSchedule(@Ctx() { req }: MyContext): Promise<ClassSchedule[]> {
     if (req.studentId) {
       const student = await Student.findOneOrFail({
         where: {
@@ -236,9 +224,7 @@ export class ClassScheduleResolver {
   }
 
   @Query(() => [ClassSchedule])
-  async todaysClassSchedule(
-    @Ctx() { req }: MyContext
-  ): Promise<ClassSchedule[]> {
+  async todaysClassSchedule(@Ctx() { req }: MyContext): Promise<ClassSchedule[]> {
     if (req.studentId) {
       const student = await Student.findOneOrFail({
         where: {

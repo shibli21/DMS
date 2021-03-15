@@ -1,5 +1,5 @@
-query StudentCoursesBySemester($input: Int!) {
-  studentCoursesBySemester(semesterId: $input) {
+query StudentCoursesBySemesterSession($semesterId: Int!, $sessionId: Int!) {
+  studentCoursesBySemesterSession(semesterId: $semesterId, sessionId: $sessionId) {
     id
     code
     name
@@ -13,9 +13,6 @@ query StudentCoursesBySemester($input: Int!) {
     semester {
       id
       number
-    }
-    session {
-      id
     }
   }
 }

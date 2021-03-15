@@ -1,12 +1,4 @@
-import {
-  Arg,
-  Field,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-  UseMiddleware,
-} from "type-graphql";
+import { Arg, Field, Mutation, ObjectType, Query, Resolver, UseMiddleware } from "type-graphql";
 import { isFaculty } from "../middleware/isFaculty";
 import { Course } from "./../entities/Course";
 import { Department } from "./../entities/Department";
@@ -36,9 +28,7 @@ export class NoticeResolver {
   }
 
   @Query(() => [Notice])
-  async courseNotice(
-    @Arg("input") input: CourseNoticeInputType
-  ): Promise<Notice[]> {
+  async courseNotice(@Arg("input") input: CourseNoticeInputType): Promise<Notice[]> {
     return Notice.find({
       relations: ["department", "session", "semester", "course"],
       order: {
@@ -53,6 +43,7 @@ export class NoticeResolver {
         course: await Course.findOne({
           where: {
             code: input.courseCode,
+            id: input.courseId,
           },
         }),
         semester: await Semester.findOne({
@@ -71,9 +62,7 @@ export class NoticeResolver {
 
   @UseMiddleware(isFaculty)
   @Mutation(() => NoticeResponse)
-  async publishNotice(
-    @Arg("input") input: AddNoticeInputType
-  ): Promise<NoticeResponse> {
+  async publishNotice(@Arg("input") input: AddNoticeInputType): Promise<NoticeResponse> {
     let errors = [];
 
     if (!input.title) {

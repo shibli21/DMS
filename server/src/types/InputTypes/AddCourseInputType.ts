@@ -19,4 +19,7 @@ export class AddCourseInputType {
 
   @Field({ nullable: true })
   departmentCode: string;
+
+  @Field({ nullable: true })
+  sessionId: number;
 }

@@ -12,6 +12,7 @@ import {
 import { CourseAssignToFaculty } from "./CourseAssignToFaculty";
 import { Department } from "./Department";
 import { Semester } from "./Semester";
+import { Session } from "./Session";
 
 @Entity()
 @ObjectType()
@@ -20,7 +21,7 @@ export class Course extends BaseEntity {
   @Field()
   id!: number;
 
-  @Column({ unique: true })
+  @Column()
   @Field()
   code!: string;
 
@@ -46,10 +47,11 @@ export class Course extends BaseEntity {
   @Field(() => Semester)
   semester!: Semester;
 
-  @OneToMany(
-    () => CourseAssignToFaculty,
-    (CourseAssignToFaculty) => CourseAssignToFaculty.course
-  )
+  @ManyToOne(() => Session, (session) => session.id)
+  @Field(() => Session)
+  session!: Session;
+
+  @OneToMany(() => CourseAssignToFaculty, (CourseAssignToFaculty) => CourseAssignToFaculty.course)
   @Field(() => [CourseAssignToFaculty])
   assignedFaculty!: CourseAssignToFaculty[];
 

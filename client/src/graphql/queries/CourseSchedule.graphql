@@ -3,12 +3,14 @@ query ClassScheduleByAll(
   $sessionId: Int!
   $courseCode: String!
   $departmentCode: String!
+  $courseId: Int!
 ) {
   classScheduleByAll(
     semesterId: $semesterId
     sessionId: $sessionId
     courseCode: $courseCode
     departmentCode: $departmentCode
+    courseId: $courseId
   ) {
     id
     startTime
