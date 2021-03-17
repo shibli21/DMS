@@ -1,16 +1,6 @@
 import { hash, verify } from "argon2";
 import jwt from "jsonwebtoken";
-import {
-  Arg,
-  Ctx,
-  Field,
-  Int,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-  UseMiddleware,
-} from "type-graphql";
+import { Arg, Ctx, Field, Int, Mutation, ObjectType, Query, Resolver, UseMiddleware } from "type-graphql";
 import { getConnection } from "typeorm";
 import { Faculty } from "../entities/Faculty";
 import { isAdmin } from "../middleware/isAdmin";
@@ -39,9 +29,7 @@ export class FacultyResolver {
 
   @UseMiddleware(isAdmin)
   @Mutation(() => FacultyResponse)
-  async addFaculty(
-    @Arg("input") input: AddFacultyInputType
-  ): Promise<FacultyResponse> {
+  async addFaculty(@Arg("input") input: AddFacultyInputType): Promise<FacultyResponse> {
     const errors = await validateAddFaculty(input);
     if (errors) {
       return { errors };
@@ -122,10 +110,7 @@ export class FacultyResolver {
 
       faculty = await Faculty.findOne({ where: { email: input.email } });
 
-      const token = jwt.sign(
-        { facultyId: faculty?.id },
-        `${process.env.JWT_SECRET}`
-      );
+      const token = jwt.sign({ facultyId: faculty?.id }, `${process.env.JWT_SECRET}`);
       res.cookie("token", token, {
         httpOnly: true,
         maxAge: 100000000,
@@ -142,7 +127,7 @@ export class FacultyResolver {
     const faculty = await Faculty.findOne({ email: email });
     if (!faculty) {
       return {
-        errors: [{ field: "email", message: "student doesn't exists" }],
+        errors: [{ field: "email", message: "faculty doesn't exists" }],
       };
     }
 
@@ -158,10 +143,7 @@ export class FacultyResolver {
         ],
       };
     }
-    const token = jwt.sign(
-      { facultyId: faculty.id },
-      `${process.env.JWT_SECRET}`
-    );
+    const token = jwt.sign({ facultyId: faculty.id }, `${process.env.JWT_SECRET}`);
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 100000000000,
@@ -178,5 +160,32 @@ export class FacultyResolver {
     });
 
     return true;
+  }
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAdmin)
+  async resetFacultyToken(@Arg("id", () => Int) id: number): Promise<boolean> {
+    let faculty;
+    try {
+      await getConnection()
+        .createQueryBuilder()
+        .update(Faculty)
+        .set({
+          password: undefined,
+          oneTimePassword: generateRandomString(7),
+        })
+        .where("id = :id", { id: id })
+        .execute();
+
+      faculty = await Faculty.findOne({
+        where: { id: id },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    if (faculty) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

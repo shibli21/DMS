@@ -25,6 +25,7 @@ import withPrivateRoute from "../../components/withPrivateRoute";
 import {
   StudentsDocument,
   useDeleteStudentMutation,
+  useResetStudentTokenMutation,
   useStudentsQuery,
 } from "../../generated/graphql";
 
@@ -34,6 +35,8 @@ function Students() {
   const [deleteStudent] = useDeleteStudentMutation();
   const { data } = useStudentsQuery();
   const toast = useToast();
+
+  const [resetToken] = useResetStudentTokenMutation();
 
   if (!data) {
     return (
@@ -72,8 +75,19 @@ function Students() {
                   {s.oneTimePassword ? (
                     s.oneTimePassword
                   ) : (
-                    <Button size="sm" colorScheme="purple">
-                      Reset Topken
+                    <Button
+                      size="sm"
+                      colorScheme="purple"
+                      onClick={() =>
+                        resetToken({
+                          variables: {
+                            registrationNumber: s.registrationNumber,
+                          },
+                          refetchQueries: [{ query: StudentsDocument }],
+                        })
+                      }
+                    >
+                      Reset Token
                     </Button>
                   )}
                 </Td>
@@ -89,11 +103,7 @@ function Students() {
                       _hover={{ color: "red.500" }}
                     />
                     <Link href={`/students/edit/${s.id}`}>
-                      <Box
-                        cursor="pointer"
-                        as={FaEdit}
-                        _hover={{ color: "blue.500" }}
-                      />
+                      <Box cursor="pointer" as={FaEdit} _hover={{ color: "blue.500" }} />
                     </Link>
                   </HStack>
                 </Td>
@@ -110,7 +120,7 @@ function Students() {
               <Text>Do you want to delete ?</Text>
               <HStack>
                 <Button onClick={onClose} colorScheme="green">
-                  o
+                  no
                 </Button>
                 <Button
                   onClick={() => {

@@ -2,17 +2,7 @@ import { Department } from "./../entities/Department";
 import { Session } from "./../entities/Session";
 import { hash, verify } from "argon2";
 import jwt from "jsonwebtoken";
-import {
-  Arg,
-  Ctx,
-  Field,
-  Int,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-  UseMiddleware,
-} from "type-graphql";
+import { Arg, Ctx, Field, Int, Mutation, ObjectType, Query, Resolver, UseMiddleware } from "type-graphql";
 import { getConnection } from "typeorm";
 import { Student } from "../entities/Student";
 import { isAdmin } from "../middleware/isAdmin";
@@ -41,9 +31,7 @@ export class StudentResolver {
 
   @UseMiddleware(isAdmin)
   @Mutation(() => StudentResponse)
-  async addStudent(
-    @Arg("input") input: AddStudentInputType
-  ): Promise<StudentResponse> {
+  async addStudent(@Arg("input") input: AddStudentInputType): Promise<StudentResponse> {
     const errors = await validateAddStudent(input);
     if (errors) {
       return { errors };
@@ -137,10 +125,7 @@ export class StudentResolver {
         relations: ["session", "department"],
       });
 
-      const token = jwt.sign(
-        { studentId: student?.id },
-        `${process.env.JWT_SECRET}`
-      );
+      const token = jwt.sign({ studentId: student?.id }, `${process.env.JWT_SECRET}`);
       res.cookie("token", token, {
         httpOnly: true,
         maxAge: 100000000,
@@ -173,10 +158,7 @@ export class StudentResolver {
         ],
       };
     }
-    const token = jwt.sign(
-      { studentId: student.id },
-      `${process.env.JWT_SECRET}`
-    );
+    const token = jwt.sign({ studentId: student.id }, `${process.env.JWT_SECRET}`);
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 100000000000,
@@ -193,5 +175,34 @@ export class StudentResolver {
     });
 
     return true;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAdmin)
+  async resetStudentToken(@Arg("registrationNumber", () => Int) registrationNumber: number): Promise<boolean> {
+    let student;
+    try {
+      await getConnection()
+        .createQueryBuilder()
+        .update(Student)
+        .set({
+          password: undefined,
+          oneTimePassword: generateRandomString(7),
+        })
+        .where("registrationNumber = :registrationNumber", { registrationNumber: registrationNumber })
+        .execute();
+
+      student = await Student.findOne({
+        where: { registrationNumber: registrationNumber },
+        relations: ["session", "department"],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    if (student) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

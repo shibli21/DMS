@@ -1,0 +1,3 @@
+mutation ResetFacultyToken($id: Int!) {
+  resetFacultyToken(id: $id)
+}

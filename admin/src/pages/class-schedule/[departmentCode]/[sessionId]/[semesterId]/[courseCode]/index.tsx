@@ -25,29 +25,13 @@ import { getSemesterName } from "../../../../../../utils/getSemesterName";
 const ClassSchedule = () => {
   const router = useRouter();
 
-  const semId =
-    typeof router.query.semesterId === "string"
-      ? parseInt(router.query.semesterId)
-      : -1;
-  const sesId =
-    typeof router.query.sessionId === "string"
-      ? parseInt(router.query.sessionId)
-      : -1;
-  const ccode =
-    typeof router.query.courseCode === "string" ? router.query.courseCode : -1;
+  const semId = typeof router.query.semesterId === "string" ? parseInt(router.query.semesterId) : -1;
+  const sesId = typeof router.query.sessionId === "string" ? parseInt(router.query.sessionId) : -1;
+  const ccode = typeof router.query.courseCode === "string" ? router.query.courseCode : -1;
 
-  const dcode =
-    typeof router.query.departmentCode === "string"
-      ? router.query.departmentCode
-      : -1;
+  const dcode = typeof router.query.departmentCode === "string" ? router.query.departmentCode : -1;
 
-  const {
-    courseCode,
-    sessionId,
-    semesterId,
-    sessionName,
-    departmentCode,
-  } = router.query;
+  const { courseCode, sessionId, semesterId, sessionName, departmentCode } = router.query;
 
   const { data, loading } = useClassScheduleByAllQuery({
     variables: {
@@ -72,14 +56,10 @@ const ClassSchedule = () => {
           <BreadcrumbLink href="/class-schedule">Class schedule</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink href={`/class-schedule/${departmentCode}`}>
-            {departmentCode}
-          </BreadcrumbLink>
+          <BreadcrumbLink href={`/class-schedule/${departmentCode}`}>{departmentCode}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink
-            href={`/class-schedule/${departmentCode}/${sessionId}?sessionName=${sessionName}`}
-          >
+          <BreadcrumbLink href={`/class-schedule/${departmentCode}/${sessionId}?sessionName=${sessionName}`}>
             {sessionName}
           </BreadcrumbLink>
         </BreadcrumbItem>
@@ -121,18 +101,10 @@ const ClassSchedule = () => {
               <Td>
                 <HStack>
                   <Link href="#">
-                    <Box
-                      cursor="pointer"
-                      as={FaTrash}
-                      _hover={{ color: "red.500" }}
-                    />
+                    <Box cursor="pointer" as={FaTrash} _hover={{ color: "red.500" }} />
                   </Link>
                   <Link href="#">
-                    <Box
-                      cursor="pointer"
-                      as={FaEdit}
-                      _hover={{ color: "blue.500" }}
-                    />
+                    <Box cursor="pointer" as={FaEdit} _hover={{ color: "blue.500" }} />
                   </Link>
                 </HStack>
               </Td>

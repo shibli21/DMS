@@ -1,0 +1,3 @@
+mutation ResetStudentToken($registrationNumber: Int!) {
+  resetStudentToken(registrationNumber: $registrationNumber)
+}
