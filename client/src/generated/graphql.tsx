@@ -29,6 +29,7 @@ export type Query = {
   faculties: Array<Faculty>;
   me?: Maybe<MeResponse>;
   notices: Array<Notice>;
+  myNotices: Array<Notice>;
   courseNotice: Array<Notice>;
   semesters: Array<Semester>;
   semestersByDepartmentAndSession: Array<Semester>;
@@ -742,6 +743,17 @@ export type MeQuery = (
   )> }
 );
 
+export type MyNoticesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyNoticesQuery = (
+  { __typename?: 'Query' }
+  & { myNotices: Array<(
+    { __typename?: 'Notice' }
+    & Pick<Notice, 'id' | 'title' | 'description' | 'createdAt'>
+  )> }
+);
+
 export type StudentCoursesBySemesterQueryVariables = Exact<{
   input: Scalars['Int'];
 }>;
@@ -1281,6 +1293,41 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const MyNoticesDocument = gql`
+    query MyNotices {
+  myNotices {
+    id
+    title
+    description
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useMyNoticesQuery__
+ *
+ * To run a query within a React component, call `useMyNoticesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyNoticesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyNoticesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyNoticesQuery(baseOptions?: Apollo.QueryHookOptions<MyNoticesQuery, MyNoticesQueryVariables>) {
+        return Apollo.useQuery<MyNoticesQuery, MyNoticesQueryVariables>(MyNoticesDocument, baseOptions);
+      }
+export function useMyNoticesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyNoticesQuery, MyNoticesQueryVariables>) {
+          return Apollo.useLazyQuery<MyNoticesQuery, MyNoticesQueryVariables>(MyNoticesDocument, baseOptions);
+        }
+export type MyNoticesQueryHookResult = ReturnType<typeof useMyNoticesQuery>;
+export type MyNoticesLazyQueryHookResult = ReturnType<typeof useMyNoticesLazyQuery>;
+export type MyNoticesQueryResult = Apollo.QueryResult<MyNoticesQuery, MyNoticesQueryVariables>;
 export const StudentCoursesBySemesterDocument = gql`
     query StudentCoursesBySemester($input: Int!) {
   studentCoursesBySemester(semesterId: $input) {

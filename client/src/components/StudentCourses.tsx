@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Divider,
   Flex,
   Grid,
   HStack,
@@ -42,11 +43,11 @@ const StudentCourses = (props: Props) => {
   return (
     <Box>
       <Flex justify="space-between" mb={6} mt={10}>
-        <Text fontWeight="bold" fontSize="3xl">
+        <Text fontWeight="bold" fontSize="3xl" bg="green.400" p={2} color="white">
           My Courses
         </Text>
         <Menu closeOnSelect={false}>
-          <MenuButton as={Button} colorScheme="purple">
+          <MenuButton as={Button} colorScheme="green" borderRadius="0">
             Select Semester
           </MenuButton>
           <MenuList minWidth="115px">
@@ -70,29 +71,21 @@ const StudentCourses = (props: Props) => {
           </MenuList>
         </Menu>
       </Flex>
-      <Grid
-        templateColumns={["1fr ", "1fr 1fr ", "1fr 1fr 1fr", "1fr 1fr 1fr"]}
-        gap={6}
-      >
+      <Grid templateColumns={["1fr ", "1fr 1fr ", "1fr 1fr 1fr", "1fr 1fr 1fr"]} gap={6}>
         {data?.studentCoursesBySemester?.map((c) => (
           <Link
             key={c.id}
-            href={`/my-courses/${c.code}?sessionId=${1}&departmentCode=${
-              c.department.departmentCode
-            }&semesterId=${c.semester.id}`}
+            href={`/my-courses/${c.code}?sessionId=${1}&departmentCode=${c.department.departmentCode}&semesterId=${
+              c.semester.id
+            }&cname=${c.name}`}
           >
-            <Box p={4} bg="purple.50" borderRadius="xl" cursor="pointer">
-              <Text
-                fontSize="xl"
-                fontWeight="500"
-                textTransform="capitalize"
-                borderBottom="1px solid"
-                mb={2}
-              >
+            <Box p={4} bg="green.50" cursor="pointer" border="2px solid" borderColor="green.100">
+              <Text fontSize="xl" fontWeight="700" textTransform="capitalize" mb={2}>
                 {c.name}
               </Text>
-              <Text>{c.department.name}</Text>
-              <HStack justify="space-between">
+              <Divider bg="green.300" height="1px" mb={1} />
+              <Text fontWeight="600">{c.department.name}</Text>
+              <HStack justify="space-between" fontFamily="poppins">
                 <Text>{getSemesterName(c.semester.number)} semester</Text>
                 {/* <Text>{c.session.name}</Text> */}
               </HStack>

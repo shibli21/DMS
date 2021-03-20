@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, HStack, Text } from "@chakra-ui/react";
+import { Box, Divider, Flex, Grid, HStack, Text } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import Link from "next/link";
 import React from "react";
@@ -26,10 +26,11 @@ const TodaySchedule = (props: Props) => {
           Today Class
         </Text>
         <Box
-          bgGradient="linear(to bottom right,purple.400,purple.600)"
+          fontWeight="bold"
+          fontSize="xl"
+          bgGradient="linear(to bottom right,red.400,red.300)"
           p={4}
           color="white"
-          borderRadius="2xl"
           maxW="400px"
         >
           No class today
@@ -41,56 +42,32 @@ const TodaySchedule = (props: Props) => {
   return (
     <>
       <HStack align="center" mb={6}>
-        <Text fontWeight="bold" fontSize="3xl">
+        <Text fontWeight="bold" fontSize="2xl">
           Today Classes
         </Text>
         <Text fontWeight="300" fontFamily="poppins" color="gray.500">
-          ({data?.todaysClassSchedule?.length})
+          ( {data?.todaysClassSchedule?.length} )
         </Text>
       </HStack>
-      <Grid
-        templateColumns={["1fr ", "1fr 1fr", "1fr 1fr 1fr", "1fr 1fr 1fr 1fr"]}
-        gap={6}
-      >
+      <Grid templateColumns={["1fr ", "1fr 1fr", "1fr 1fr 1fr", "1fr 1fr 1fr 1fr"]} gap={6}>
         {data?.todaysClassSchedule?.map((ts) => (
-          <Box
-            key={ts.id}
-            bgGradient="linear(to bottom right,purple.400,purple.600)"
-            p={4}
-            color="white"
-            borderRadius="2xl"
-          >
+          <Box p={4} bg="cyan.50" cursor="pointer" border="2px solid" borderColor="cyan.100" key={ts.id}>
             <Flex mb={2} justify="space-between">
-              <Text bg="purple.500" borderRadius="5px" px={1}>
+              <Text bg="cyan.600" borderRadius="5px" px={1} color="white">
                 Lect
               </Text>
-              <Text fontFamily="poppins">
-                {DateTime.fromISO(ts.startTime).toLocaleString(
-                  DateTime.TIME_SIMPLE
-                )}
-              </Text>
+              <Text fontFamily="poppins">{DateTime.fromISO(ts.startTime).toLocaleString(DateTime.TIME_SIMPLE)}</Text>
             </Flex>
-            <Text
-              fontSize="2xl"
-              mb={2}
-              lineHeight="1"
-              textTransform="capitalize"
-              fontWeight="500"
-            >
+            <Divider height="2px" bg="cyan.200" mb={2} />
+            <Text fontSize="2xl" mb={2} lineHeight="1" textTransform="capitalize" fontWeight="600">
               {ts.course.name}
             </Text>
-            <Text>
+            <Text fontFamily="poppins">
               {ts.faculty.designation} {ts.faculty.username}
             </Text>
           </Box>
         ))}
       </Grid>
-      <Link href="/class-schedule">
-        <HStack mt={6} cursor="pointer" _hover={{ color: "purple.400" }}>
-          <Text fontSize="lg">View all</Text>
-          <FaArrowRight />
-        </HStack>
-      </Link>
     </>
   );
 };

@@ -1,12 +1,5 @@
-import {
-  Arg,
-  Field,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-  UseMiddleware,
-} from "type-graphql";
+import { MyContext } from "./../types/MyContext";
+import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver, UseMiddleware } from "type-graphql";
 import { isFaculty } from "../middleware/isFaculty";
 import { Course } from "./../entities/Course";
 import { Department } from "./../entities/Department";
@@ -16,6 +9,7 @@ import { Session } from "./../entities/Session";
 import { AddNoticeInputType } from "./../types/InputTypes/AddNoticeInputType";
 import { CourseNoticeInputType } from "./../types/InputTypes/CourseNoticeInputType";
 import { FieldError } from "./../types/ObjectTypes/FieldErrorType";
+import { Student } from "../entities/Student";
 
 @ObjectType()
 class NoticeResponse {
@@ -36,9 +30,39 @@ export class NoticeResolver {
   }
 
   @Query(() => [Notice])
-  async courseNotice(
-    @Arg("input") input: CourseNoticeInputType
-  ): Promise<Notice[]> {
+  async myNotices(@Ctx() { req }: MyContext): Promise<Notice[]> {
+    if (req.studentId) {
+      const student = await Student.findOne({
+        where: {
+          id: req.studentId,
+        },
+        relations: ["department", "session"],
+      });
+
+      const notice = Notice.find({
+        where: {
+          department: await Department.findOne({
+            where: {
+              departmentCode: student?.department.departmentCode,
+            },
+          }),
+          session: await Session.findOne({
+            where: {
+              id: student?.session.id,
+            },
+          }),
+        },
+        relations: ["department", "session", "semester", "course"],
+        order: {
+          createdAt: "DESC",
+        },
+      });
+      return notice;
+    } else return [];
+  }
+
+  @Query(() => [Notice])
+  async courseNotice(@Arg("input") input: CourseNoticeInputType): Promise<Notice[]> {
     return Notice.find({
       relations: ["department", "session", "semester", "course"],
       order: {
@@ -71,9 +95,7 @@ export class NoticeResolver {
 
   @UseMiddleware(isFaculty)
   @Mutation(() => NoticeResponse)
-  async publishNotice(
-    @Arg("input") input: AddNoticeInputType
-  ): Promise<NoticeResponse> {
+  async publishNotice(@Arg("input") input: AddNoticeInputType): Promise<NoticeResponse> {
     let errors = [];
 
     if (!input.title) {

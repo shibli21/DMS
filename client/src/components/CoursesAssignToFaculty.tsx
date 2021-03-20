@@ -1,4 +1,4 @@
-import { Box, Grid, HStack, Text } from "@chakra-ui/react";
+import { Box, Divider, Grid, HStack, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import React from "react";
 import { useCourseAssignToFacultyQuery } from "../generated/graphql";
@@ -17,30 +17,23 @@ const CoursesAssignToFaculty = (props: Props) => {
   }
   return (
     <>
-      <Text fontWeight="bold" fontSize="3xl" mb={6} mt={10}>
+      <Text fontWeight="bold" fontSize="3xl" mb={6} mt={10} display="inline-block" color="white" bg="green.400" p={2}>
         My Courses
       </Text>
-      <Grid
-        templateColumns={["1fr ", "1fr 1fr ", "1fr 1fr 1fr", "1fr 1fr 1fr"]}
-        gap={6}
-      >
+      <Grid templateColumns={["1fr ", "1fr 1fr ", "1fr 1fr 1fr", "1fr 1fr 1fr"]} gap={6}>
         {data?.courseAssignToFaculty?.map((c) => (
           <Link
             key={c.id}
-            href={`/my-courses/${c.course.code}?sessionId=${c.session.id}&departmentCode=${c.department.departmentCode}&semesterId=${c.semester.id}`}
+            href={`/my-courses/${c.course.code}?sessionId=${c.session.id}&departmentCode=${c.department.departmentCode}&semesterId=${c.semester.id}&cname=${c.course.name}`}
           >
-            <Box p={4} bg="purple.50" borderRadius="xl" cursor="pointer">
-              <Text
-                fontSize="xl"
-                fontWeight="500"
-                textTransform="capitalize"
-                borderBottom="1px solid"
-                mb={2}
-              >
+            <Box p={4} bg="green.50" cursor="pointer" border="2px solid" borderColor="green.100">
+              <Text fontSize="xl" fontWeight="700" textTransform="capitalize" mb={2}>
                 {c.course.name}
               </Text>
-              <Text>{c.department.name}</Text>
-              <HStack justify="space-between">
+              <Divider bg="green.300" height="1px" mb={1} />
+
+              <Text fontWeight="600">{c.department.name}</Text>
+              <HStack justify="space-between" fontFamily="poppins">
                 <Text>{getSemesterName(c.semester.number)} semester</Text>
                 <Text>{c.session.name}</Text>
               </HStack>

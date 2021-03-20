@@ -1,0 +1,8 @@
+query MyNotices {
+  myNotices {
+    id
+    title
+    description
+    createdAt
+  }
+}
