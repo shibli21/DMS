@@ -18,7 +18,11 @@ import { useRouter } from "next/router";
 import { FaChevronRight, FaEdit, FaTrash } from "react-icons/fa";
 import LoadingSpinner from "../../../../../../components/LoadingSpinner";
 import withPrivateRoute from "../../../../../../components/withPrivateRoute";
-import { useClassScheduleByAllQuery } from "../../../../../../generated/graphql";
+import {
+  ClassScheduleByAllDocument,
+  useClassScheduleByAllQuery,
+  useDeleteClassScheduleMutation,
+} from "../../../../../../generated/graphql";
 import { getDayName } from "../../../../../../utils/getDayName";
 import { getSemesterName } from "../../../../../../utils/getSemesterName";
 
@@ -41,6 +45,8 @@ const ClassSchedule = () => {
       sessionId: sesId,
     },
   });
+
+  const [deleteClassSchedule] = useDeleteClassScheduleMutation();
 
   if (loading) {
     return <LoadingSpinner />;
@@ -100,11 +106,20 @@ const ClassSchedule = () => {
               <Td>{d.faculty.username}</Td>
               <Td>
                 <HStack>
-                  <Link href="#">
-                    <Box cursor="pointer" as={FaTrash} _hover={{ color: "red.500" }} />
-                  </Link>
-                  <Link href="#">
-                    <Box cursor="pointer" as={FaEdit} _hover={{ color: "blue.500" }} />
+                  <Link href="/">
+                    <Box
+                      cursor="pointer"
+                      as={FaTrash}
+                      _hover={{ color: "red.500" }}
+                      onClick={() => {
+                        deleteClassSchedule({
+                          variables: {
+                            id: d.id,
+                          },
+                        });
+                        router.reload();
+                      }}
+                    />
                   </Link>
                 </HStack>
               </Td>

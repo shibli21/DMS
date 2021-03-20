@@ -1,0 +1,20 @@
+mutation EditStudent($input: AddStudentInputType!) {
+  editStudent(input: $input) {
+    errors {
+      field
+      message
+    }
+    student {
+      id
+      username
+      email
+      registrationNumber
+      oneTimePassword
+      gender
+      address
+      contactNumber
+      createdAt
+      updatedAt
+    }
+  }
+}

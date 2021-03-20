@@ -35,6 +35,7 @@ export type Query = {
   session: Session;
   sessions: Array<Session>;
   students: Array<Student>;
+  student: Student;
 };
 
 
@@ -70,6 +71,11 @@ export type QuerySemestersByDepartmentAndSessionArgs = {
 
 export type QuerySessionArgs = {
   sessionId: Scalars['Int'];
+};
+
+
+export type QueryStudentArgs = {
+  id: Scalars['Float'];
 };
 
 export type ClassSchedule = {
@@ -209,6 +215,7 @@ export type Mutation = {
   registerAdmin: AdminResponse;
   adminLogin: AdminResponse;
   addClassSchedule: AddClassScheduleResponse;
+  deleteClassSchedule: Scalars['Boolean'];
   addCourse: CourseResponse;
   assignCourseToFaculty: CourseAssignToFacultyResponse;
   addDepartment: DepartmentResponse;
@@ -225,6 +232,7 @@ export type Mutation = {
   addSession: SessionResponse;
   deleteSession: Scalars['Boolean'];
   addStudent: StudentResponse;
+  editStudent: StudentResponse;
   registerStudent: StudentResponse;
   studentLogin: StudentResponse;
   deleteStudent: Scalars['Boolean'];
@@ -245,6 +253,11 @@ export type MutationAdminLoginArgs = {
 
 export type MutationAddClassScheduleArgs = {
   input: AddClassScheduleInputType;
+};
+
+
+export type MutationDeleteClassScheduleArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -321,6 +334,11 @@ export type MutationDeleteSessionArgs = {
 
 
 export type MutationAddStudentArgs = {
+  input: AddStudentInputType;
+};
+
+
+export type MutationEditStudentArgs = {
   input: AddStudentInputType;
 };
 
@@ -498,6 +516,7 @@ export type AddStudentInputType = {
   address: Scalars['String'];
   contactNumber?: Maybe<Scalars['Float']>;
   departmentCode?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['Float']>;
 };
 
 export type RegisterStudentInputType = {
@@ -710,6 +729,16 @@ export type AssignCourseToFacultyMutation = (
   ) }
 );
 
+export type DeleteClassScheduleMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteClassScheduleMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteClassSchedule'>
+);
+
 export type DeleteFacultyMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -748,6 +777,25 @@ export type DeleteStudentMutationVariables = Exact<{
 export type DeleteStudentMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deleteStudent'>
+);
+
+export type EditStudentMutationVariables = Exact<{
+  input: AddStudentInputType;
+}>;
+
+
+export type EditStudentMutation = (
+  { __typename?: 'Mutation' }
+  & { editStudent: (
+    { __typename?: 'StudentResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>>, student?: Maybe<(
+      { __typename?: 'Student' }
+      & Pick<Student, 'id' | 'username' | 'email' | 'registrationNumber' | 'oneTimePassword' | 'gender' | 'address' | 'contactNumber' | 'createdAt' | 'updatedAt'>
+    )> }
+  ) }
 );
 
 export type DeleteDepartmentMutationVariables = Exact<{
@@ -905,6 +953,26 @@ export type SessionsQuery = (
     { __typename?: 'Session' }
     & Pick<Session, 'id' | 'name' | 'startTime' | 'endTime'>
   )> }
+);
+
+export type StudentQueryVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type StudentQuery = (
+  { __typename?: 'Query' }
+  & { student: (
+    { __typename?: 'Student' }
+    & Pick<Student, 'id' | 'username' | 'email' | 'registrationNumber' | 'contactNumber' | 'gender' | 'address' | 'createdAt' | 'updatedAt'>
+    & { session: (
+      { __typename?: 'Session' }
+      & Pick<Session, 'id' | 'name' | 'startTime' | 'endTime'>
+    ), department: (
+      { __typename?: 'Department' }
+      & Pick<Department, 'id' | 'name' | 'departmentCode'>
+    ) }
+  ) }
 );
 
 export type StudentsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1367,6 +1435,36 @@ export function useAssignCourseToFacultyMutation(baseOptions?: Apollo.MutationHo
 export type AssignCourseToFacultyMutationHookResult = ReturnType<typeof useAssignCourseToFacultyMutation>;
 export type AssignCourseToFacultyMutationResult = Apollo.MutationResult<AssignCourseToFacultyMutation>;
 export type AssignCourseToFacultyMutationOptions = Apollo.BaseMutationOptions<AssignCourseToFacultyMutation, AssignCourseToFacultyMutationVariables>;
+export const DeleteClassScheduleDocument = gql`
+    mutation DeleteClassSchedule($id: Int!) {
+  deleteClassSchedule(id: $id)
+}
+    `;
+export type DeleteClassScheduleMutationFn = Apollo.MutationFunction<DeleteClassScheduleMutation, DeleteClassScheduleMutationVariables>;
+
+/**
+ * __useDeleteClassScheduleMutation__
+ *
+ * To run a mutation, you first call `useDeleteClassScheduleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteClassScheduleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteClassScheduleMutation, { data, loading, error }] = useDeleteClassScheduleMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteClassScheduleMutation(baseOptions?: Apollo.MutationHookOptions<DeleteClassScheduleMutation, DeleteClassScheduleMutationVariables>) {
+        return Apollo.useMutation<DeleteClassScheduleMutation, DeleteClassScheduleMutationVariables>(DeleteClassScheduleDocument, baseOptions);
+      }
+export type DeleteClassScheduleMutationHookResult = ReturnType<typeof useDeleteClassScheduleMutation>;
+export type DeleteClassScheduleMutationResult = Apollo.MutationResult<DeleteClassScheduleMutation>;
+export type DeleteClassScheduleMutationOptions = Apollo.BaseMutationOptions<DeleteClassScheduleMutation, DeleteClassScheduleMutationVariables>;
 export const DeleteFacultyDocument = gql`
     mutation DeleteFaculty($id: Int!) {
   deleteFaculty(id: $id)
@@ -1487,6 +1585,53 @@ export function useDeleteStudentMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteStudentMutationHookResult = ReturnType<typeof useDeleteStudentMutation>;
 export type DeleteStudentMutationResult = Apollo.MutationResult<DeleteStudentMutation>;
 export type DeleteStudentMutationOptions = Apollo.BaseMutationOptions<DeleteStudentMutation, DeleteStudentMutationVariables>;
+export const EditStudentDocument = gql`
+    mutation EditStudent($input: AddStudentInputType!) {
+  editStudent(input: $input) {
+    errors {
+      field
+      message
+    }
+    student {
+      id
+      username
+      email
+      registrationNumber
+      oneTimePassword
+      gender
+      address
+      contactNumber
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+export type EditStudentMutationFn = Apollo.MutationFunction<EditStudentMutation, EditStudentMutationVariables>;
+
+/**
+ * __useEditStudentMutation__
+ *
+ * To run a mutation, you first call `useEditStudentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditStudentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editStudentMutation, { data, loading, error }] = useEditStudentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useEditStudentMutation(baseOptions?: Apollo.MutationHookOptions<EditStudentMutation, EditStudentMutationVariables>) {
+        return Apollo.useMutation<EditStudentMutation, EditStudentMutationVariables>(EditStudentDocument, baseOptions);
+      }
+export type EditStudentMutationHookResult = ReturnType<typeof useEditStudentMutation>;
+export type EditStudentMutationResult = Apollo.MutationResult<EditStudentMutation>;
+export type EditStudentMutationOptions = Apollo.BaseMutationOptions<EditStudentMutation, EditStudentMutationVariables>;
 export const DeleteDepartmentDocument = gql`
     mutation DeleteDepartment($code: String!) {
   deleteDepartment(code: $code)
@@ -1935,6 +2080,58 @@ export function useSessionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<S
 export type SessionsQueryHookResult = ReturnType<typeof useSessionsQuery>;
 export type SessionsLazyQueryHookResult = ReturnType<typeof useSessionsLazyQuery>;
 export type SessionsQueryResult = Apollo.QueryResult<SessionsQuery, SessionsQueryVariables>;
+export const StudentDocument = gql`
+    query Student($id: Float!) {
+  student(id: $id) {
+    id
+    username
+    email
+    registrationNumber
+    contactNumber
+    session {
+      id
+      name
+      startTime
+      endTime
+    }
+    department {
+      id
+      name
+      departmentCode
+    }
+    gender
+    address
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useStudentQuery__
+ *
+ * To run a query within a React component, call `useStudentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStudentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStudentQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useStudentQuery(baseOptions: Apollo.QueryHookOptions<StudentQuery, StudentQueryVariables>) {
+        return Apollo.useQuery<StudentQuery, StudentQueryVariables>(StudentDocument, baseOptions);
+      }
+export function useStudentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StudentQuery, StudentQueryVariables>) {
+          return Apollo.useLazyQuery<StudentQuery, StudentQueryVariables>(StudentDocument, baseOptions);
+        }
+export type StudentQueryHookResult = ReturnType<typeof useStudentQuery>;
+export type StudentLazyQueryHookResult = ReturnType<typeof useStudentLazyQuery>;
+export type StudentQueryResult = Apollo.QueryResult<StudentQuery, StudentQueryVariables>;
 export const StudentsDocument = gql`
     query Students {
   students {

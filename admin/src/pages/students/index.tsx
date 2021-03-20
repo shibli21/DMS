@@ -102,9 +102,9 @@ function Students() {
                       as={FaTrash}
                       _hover={{ color: "red.500" }}
                     />
-                    <Link href={`/students/edit/${s.id}`}>
+                    {/* <Link href={`/students/edit/${s.id}`}>
                       <Box cursor="pointer" as={FaEdit} _hover={{ color: "blue.500" }} />
-                    </Link>
+                    </Link> */}
                   </HStack>
                 </Td>
               </Tr>

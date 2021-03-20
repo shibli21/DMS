@@ -1,14 +1,4 @@
-import {
-  Arg,
-  Ctx,
-  Field,
-  Int,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-  UseMiddleware,
-} from "type-graphql";
+import { Arg, Ctx, Field, Int, Mutation, ObjectType, Query, Resolver, UseMiddleware } from "type-graphql";
 import { getConnection } from "typeorm";
 import { isAdmin } from "../middleware/isAdmin";
 import { FieldError } from "../types/ObjectTypes/FieldErrorType";
@@ -79,9 +69,7 @@ export class ClassScheduleResolver {
 
   @UseMiddleware(isAdmin)
   @Mutation(() => AddClassScheduleResponse)
-  async addClassSchedule(
-    @Arg("input") input: AddClassScheduleInputType
-  ): Promise<AddClassScheduleResponse> {
+  async addClassSchedule(@Arg("input") input: AddClassScheduleInputType): Promise<AddClassScheduleResponse> {
     const errors = [];
     const department = await Department.findOne({
       where: { departmentCode: input.departmentCode },
@@ -181,9 +169,7 @@ export class ClassScheduleResolver {
   }
 
   @Query(() => [ClassSchedule])
-  async studentOrFacultyClassSchedule(
-    @Ctx() { req }: MyContext
-  ): Promise<ClassSchedule[]> {
+  async studentOrFacultyClassSchedule(@Ctx() { req }: MyContext): Promise<ClassSchedule[]> {
     if (req.studentId) {
       const student = await Student.findOneOrFail({
         where: {
@@ -236,9 +222,7 @@ export class ClassScheduleResolver {
   }
 
   @Query(() => [ClassSchedule])
-  async todaysClassSchedule(
-    @Ctx() { req }: MyContext
-  ): Promise<ClassSchedule[]> {
+  async todaysClassSchedule(@Ctx() { req }: MyContext): Promise<ClassSchedule[]> {
     if (req.studentId) {
       const student = await Student.findOneOrFail({
         where: {
@@ -293,5 +277,15 @@ export class ClassScheduleResolver {
 
       return classSchedule;
     }
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAdmin)
+  async deleteClassSchedule(@Arg("id", () => Int) id: number): Promise<boolean> {
+    await ClassSchedule.delete({
+      id: id,
+    });
+
+    return true;
   }
 }

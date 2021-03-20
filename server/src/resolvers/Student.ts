@@ -1,5 +1,3 @@
-import { Department } from "./../entities/Department";
-import { Session } from "./../entities/Session";
 import { hash, verify } from "argon2";
 import jwt from "jsonwebtoken";
 import { Arg, Ctx, Field, Int, Mutation, ObjectType, Query, Resolver, UseMiddleware } from "type-graphql";
@@ -10,6 +8,8 @@ import { AddStudentInputType } from "../types/InputTypes/AddStudentInputType";
 import { FieldError } from "../types/ObjectTypes/FieldErrorType";
 import { generateRandomString } from "../utils/generateRandomString";
 import { validateAddStudent } from "../utils/validateAddStudent";
+import { Department } from "./../entities/Department";
+import { Session } from "./../entities/Session";
 import { RegisterStudentInputType } from "./../types/InputTypes/RegisterStudentInputType";
 import { MyContext } from "./../types/MyContext";
 
@@ -27,6 +27,11 @@ export class StudentResolver {
   @Query(() => [Student])
   students(): Promise<Student[]> {
     return Student.find({ relations: ["session", "department"] });
+  }
+
+  @Query(() => Student)
+  student(@Arg("id") id: number): Promise<Student> {
+    return Student.findOneOrFail({ where: { id: id }, relations: ["session", "department"] });
   }
 
   @UseMiddleware(isAdmin)
@@ -64,6 +69,37 @@ export class StudentResolver {
           contactNumber: input.contactNumber,
           oneTimePassword: generateRandomString(7),
         })
+        .execute();
+
+      student = await Student.findOne({ where: { email: input.email } });
+    } catch (error) {
+      console.log(error);
+    }
+    return { student };
+  }
+
+  @UseMiddleware(isAdmin)
+  @Mutation(() => StudentResponse)
+  async editStudent(@Arg("input") input: AddStudentInputType): Promise<StudentResponse> {
+    const errors = await validateAddStudent(input);
+    if (errors) {
+      return { errors };
+    }
+
+    const emailToLower = input.email.toLowerCase();
+
+    let student;
+    try {
+      await getConnection()
+        .createQueryBuilder()
+        .update(Student)
+        .set({
+          username: input.username,
+          email: emailToLower,
+          address: input.address,
+          contactNumber: input.contactNumber,
+        })
+        .where("id = :id", { id: input.id })
         .execute();
 
       student = await Student.findOne({ where: { email: input.email } });

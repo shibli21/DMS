@@ -22,11 +22,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import withPrivateRoute from "../../components/withPrivateRoute";
-import {
-  FacultiesDocument,
-  useDeleteFacultyMutation,
-  useFacultiesQuery,
-} from "../../generated/graphql";
+import { FacultiesDocument, useDeleteFacultyMutation, useFacultiesQuery } from "../../generated/graphql";
 
 function Faculties() {
   const [facultyId, setFacultyId] = useState<number>();
@@ -77,13 +73,6 @@ function Faculties() {
                       as={FaTrash}
                       _hover={{ color: "red.500" }}
                     />
-                    <Link href={`/faculties/edit/${s.id}`}>
-                      <Box
-                        cursor="pointer"
-                        as={FaEdit}
-                        _hover={{ color: "blue.500" }}
-                      />
-                    </Link>
                   </HStack>
                 </Td>
               </Tr>

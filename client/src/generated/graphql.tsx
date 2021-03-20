@@ -35,6 +35,7 @@ export type Query = {
   session: Session;
   sessions: Array<Session>;
   students: Array<Student>;
+  student: Student;
 };
 
 
@@ -70,6 +71,11 @@ export type QuerySemestersByDepartmentAndSessionArgs = {
 
 export type QuerySessionArgs = {
   sessionId: Scalars['Int'];
+};
+
+
+export type QueryStudentArgs = {
+  id: Scalars['Float'];
 };
 
 export type ClassSchedule = {
@@ -209,6 +215,7 @@ export type Mutation = {
   registerAdmin: AdminResponse;
   adminLogin: AdminResponse;
   addClassSchedule: AddClassScheduleResponse;
+  deleteClassSchedule: Scalars['Boolean'];
   addCourse: CourseResponse;
   assignCourseToFaculty: CourseAssignToFacultyResponse;
   addDepartment: DepartmentResponse;
@@ -217,6 +224,7 @@ export type Mutation = {
   registerFaculty: FacultyResponse;
   facultyLogin: FacultyResponse;
   deleteFaculty: Scalars['Boolean'];
+  resetFacultyToken: Scalars['Boolean'];
   logout: Scalars['Boolean'];
   publishNotice: NoticeResponse;
   addSemester: SemesterResponse;
@@ -224,9 +232,11 @@ export type Mutation = {
   addSession: SessionResponse;
   deleteSession: Scalars['Boolean'];
   addStudent: StudentResponse;
+  editStudent: StudentResponse;
   registerStudent: StudentResponse;
   studentLogin: StudentResponse;
   deleteStudent: Scalars['Boolean'];
+  resetStudentToken: Scalars['Boolean'];
 };
 
 
@@ -243,6 +253,11 @@ export type MutationAdminLoginArgs = {
 
 export type MutationAddClassScheduleArgs = {
   input: AddClassScheduleInputType;
+};
+
+
+export type MutationDeleteClassScheduleArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -288,6 +303,11 @@ export type MutationDeleteFacultyArgs = {
 };
 
 
+export type MutationResetFacultyTokenArgs = {
+  id: Scalars['Int'];
+};
+
+
 export type MutationPublishNoticeArgs = {
   input: AddNoticeInputType;
 };
@@ -318,6 +338,11 @@ export type MutationAddStudentArgs = {
 };
 
 
+export type MutationEditStudentArgs = {
+  input: AddStudentInputType;
+};
+
+
 export type MutationRegisterStudentArgs = {
   input: RegisterStudentInputType;
 };
@@ -331,6 +356,11 @@ export type MutationStudentLoginArgs = {
 
 export type MutationDeleteStudentArgs = {
   id: Scalars['Int'];
+};
+
+
+export type MutationResetStudentTokenArgs = {
+  registrationNumber: Scalars['Int'];
 };
 
 export type AdminResponse = {
@@ -486,6 +516,7 @@ export type AddStudentInputType = {
   address: Scalars['String'];
   contactNumber?: Maybe<Scalars['Float']>;
   departmentCode?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['Float']>;
 };
 
 export type RegisterStudentInputType = {

@@ -22,11 +22,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import withPrivateRoute from "../../components/withPrivateRoute";
-import {
-  SessionsDocument,
-  useDeleteSessionMutation,
-  useSessionsQuery,
-} from "../../generated/graphql";
+import { SessionsDocument, useDeleteSessionMutation, useSessionsQuery } from "../../generated/graphql";
 
 function Sessions() {
   const { data } = useSessionsQuery();
@@ -75,13 +71,6 @@ function Sessions() {
                       as={FaTrash}
                       _hover={{ color: "red.500" }}
                     />
-                    <Link href={`/sessions/edit/${s.id}`}>
-                      <Box
-                        cursor="pointer"
-                        as={FaEdit}
-                        _hover={{ color: "blue.500" }}
-                      />
-                    </Link>
                   </HStack>
                 </Td>
               </Tr>

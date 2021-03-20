@@ -22,11 +22,7 @@ import React, { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import withPrivateRoute from "../../components/withPrivateRoute";
-import {
-  DepartmentsDocument,
-  useDeleteDepartmentMutation,
-  useDepartmentsQuery,
-} from "../../generated/graphql";
+import { DepartmentsDocument, useDeleteDepartmentMutation, useDepartmentsQuery } from "../../generated/graphql";
 
 interface Props {}
 
@@ -73,13 +69,6 @@ const Departments = (props: Props) => {
                       as={FaTrash}
                       _hover={{ color: "red.500" }}
                     />
-                    <Link href={`/departments/edit/${d.departmentCode}`}>
-                      <Box
-                        cursor="pointer"
-                        as={FaEdit}
-                        _hover={{ color: "blue.500" }}
-                      />
-                    </Link>
                   </HStack>
                 </Td>
               </Tr>

@@ -25,4 +25,7 @@ export class AddStudentInputType {
 
   @Field({ nullable: true })
   departmentCode: string;
+
+  @Field({ nullable: true })
+  id: number;
 }
