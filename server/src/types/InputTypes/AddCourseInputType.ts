@@ -1,4 +1,4 @@
-import { Field, InputType } from "type-graphql";
+import { Field, Float, InputType } from "type-graphql";
 
 @InputType()
 export class AddCourseInputType {
@@ -8,7 +8,7 @@ export class AddCourseInputType {
   @Field()
   name!: string;
 
-  @Field({ nullable: true })
+  @Field(() => Float, { nullable: true })
   credit: number;
 
   @Field()

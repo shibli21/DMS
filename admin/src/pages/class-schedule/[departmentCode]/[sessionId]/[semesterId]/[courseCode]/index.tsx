@@ -25,6 +25,7 @@ import {
 } from "../../../../../../generated/graphql";
 import { getDayName } from "../../../../../../utils/getDayName";
 import { getSemesterName } from "../../../../../../utils/getSemesterName";
+import { DateTime } from "luxon";
 
 const ClassSchedule = () => {
   const router = useRouter();
@@ -101,8 +102,8 @@ const ClassSchedule = () => {
               <Td>
                 <Text>{getDayName(d.day)}</Text>
               </Td>
-              <Td>{d.startTime}</Td>
-              <Td>{d.endTime}</Td>
+              <Td>{DateTime.fromISO(d.startTime).toLocaleString(DateTime.TIME_SIMPLE)}</Td>
+              <Td>{DateTime.fromISO(d.endTime).toLocaleString(DateTime.TIME_SIMPLE)}</Td>
               <Td>{d.faculty.username}</Td>
               <Td>
                 <HStack>

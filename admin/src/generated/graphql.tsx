@@ -29,6 +29,7 @@ export type Query = {
   faculties: Array<Faculty>;
   me?: Maybe<MeResponse>;
   notices: Array<Notice>;
+  myNotices: Array<Notice>;
   courseNotice: Array<Notice>;
   semesters: Array<Semester>;
   semestersByDepartmentAndSession: Array<Semester>;

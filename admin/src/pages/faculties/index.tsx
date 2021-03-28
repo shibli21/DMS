@@ -22,12 +22,18 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import withPrivateRoute from "../../components/withPrivateRoute";
-import { FacultiesDocument, useDeleteFacultyMutation, useFacultiesQuery } from "../../generated/graphql";
+import {
+  FacultiesDocument,
+  useDeleteFacultyMutation,
+  useFacultiesQuery,
+  useResetFacultyTokenMutation,
+} from "../../generated/graphql";
 
 function Faculties() {
   const [facultyId, setFacultyId] = useState<number>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [deleteFaculty] = useDeleteFacultyMutation();
+  const [resetToken] = useResetFacultyTokenMutation();
   const toast = useToast();
   const { data } = useFacultiesQuery();
   if (!data) {
@@ -61,7 +67,26 @@ function Faculties() {
                 </Td>
                 <Td>{s.username}</Td>
                 <Td>{s.email}</Td>
-                <Td>{s.oneTimePassword}</Td>
+                <Td>
+                  {s.oneTimePassword ? (
+                    s.oneTimePassword
+                  ) : (
+                    <Button
+                      size="sm"
+                      colorScheme="purple"
+                      onClick={() =>
+                        resetToken({
+                          variables: {
+                            id: s.id,
+                          },
+                          refetchQueries: [{ query: FacultiesDocument }],
+                        })
+                      }
+                    >
+                      Reset Token
+                    </Button>
+                  )}
+                </Td>
                 <Td>
                   <HStack>
                     <Box

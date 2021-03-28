@@ -28,7 +28,7 @@ export class Course extends BaseEntity {
   @Field()
   name!: string;
 
-  @Column()
+  @Column({ type: "float" })
   @Field()
   credit!: number;
 
@@ -46,10 +46,7 @@ export class Course extends BaseEntity {
   @Field(() => Semester)
   semester!: Semester;
 
-  @OneToMany(
-    () => CourseAssignToFaculty,
-    (CourseAssignToFaculty) => CourseAssignToFaculty.course
-  )
+  @OneToMany(() => CourseAssignToFaculty, (CourseAssignToFaculty) => CourseAssignToFaculty.course)
   @Field(() => [CourseAssignToFaculty])
   assignedFaculty!: CourseAssignToFaculty[];
 

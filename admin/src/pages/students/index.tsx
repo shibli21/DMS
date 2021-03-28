@@ -56,6 +56,7 @@ function Students() {
             <Tr>
               <Th>Reg No.</Th>
               <Th>Name</Th>
+              <Th>Email</Th>
               <Th>Department</Th>
               <Th>Session</Th>
               <Th>Token</Th>
@@ -69,6 +70,7 @@ function Students() {
                   <Text>{s.registrationNumber}</Text>
                 </Td>
                 <Td>{s.username}</Td>
+                <Td>{s.email}</Td>
                 <Td>{s.department.name}</Td>
                 <Td>{s.session.name}</Td>
                 <Td>

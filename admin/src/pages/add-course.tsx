@@ -1,13 +1,4 @@
-import {
-  Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Select,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Select, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
@@ -112,7 +103,7 @@ const AddCourse = (props: Props) => {
               label="Course credit"
               name="credit"
               placeholder="course credit"
-              type="number"
+              type="float"
               error={errors.credit}
             />
             <InputField
@@ -139,9 +130,7 @@ const AddCourse = (props: Props) => {
                 name="departmentCode"
                 defaultValue={undefined}
               />
-              <FormErrorMessage>
-                {errors?.departmentCode?.message}
-              </FormErrorMessage>
+              <FormErrorMessage>{errors?.departmentCode?.message}</FormErrorMessage>
             </FormControl>
             <FormControl id="session" isInvalid={errors.session}>
               <FormLabel htmlFor="session">Session</FormLabel>
@@ -178,17 +167,10 @@ const AddCourse = (props: Props) => {
                   name="semesterId"
                   defaultValue={undefined}
                 />
-                <FormErrorMessage>
-                  {errors?.semesterId?.message}
-                </FormErrorMessage>
+                <FormErrorMessage>{errors?.semesterId?.message}</FormErrorMessage>
               </FormControl>
             )}
-            <Button
-              w="100%"
-              type="submit"
-              isLoading={loading}
-              colorScheme="purple"
-            >
+            <Button w="100%" type="submit" isLoading={loading} colorScheme="purple">
               Add Semester
             </Button>
           </Stack>
