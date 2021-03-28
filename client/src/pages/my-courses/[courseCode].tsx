@@ -67,8 +67,8 @@ const MyCourse = (props: Props) => {
   const { data, loading } = useCourseNoticesQuery({
     variables: {
       input: {
-        courseCode: encodeURIComponent(cCode),
-        departmentCode: encodeURIComponent(dCode),
+        courseCode: cCode,
+        departmentCode: dCode,
         semesterId: semId,
         sessionId: sesId,
       },
@@ -76,9 +76,9 @@ const MyCourse = (props: Props) => {
   });
   const { data: classSchedule, loading: classScheduleLoading } = useClassScheduleByAllQuery({
     variables: {
-      departmentCode: encodeURIComponent(dCode),
+      departmentCode: dCode,
       semesterId: semId,
-      courseCode: encodeURIComponent(cCode),
+      courseCode: cCode,
       sessionId: sesId,
     },
   });
@@ -89,8 +89,8 @@ const MyCourse = (props: Props) => {
         input: {
           title: data.title,
           description: data.description,
-          courseCode: encodeURIComponent(cCode),
-          departmentCode: encodeURIComponent(dCode),
+          courseCode: cCode,
+          departmentCode: dCode,
           semesterId: semId,
           sessionId: sesId,
         },
@@ -100,8 +100,8 @@ const MyCourse = (props: Props) => {
           query: CourseNoticesDocument,
           variables: {
             input: {
-              courseCode: encodeURIComponent(cCode),
-              departmentCode: encodeURIComponent(dCode),
+              courseCode: cCode,
+              departmentCode: dCode,
               semesterId: semId,
               sessionId: sesId,
             },

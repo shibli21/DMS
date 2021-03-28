@@ -1,13 +1,4 @@
-import {
-  Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Divider,
-  Grid,
-  GridItem,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Divider, Grid, GridItem, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FaChevronRight } from "react-icons/fa";
@@ -18,14 +9,8 @@ import { getSemesterName } from "../../../../utils/getSemesterName";
 
 const Semesters = () => {
   const router = useRouter();
-  const sesId =
-    typeof router.query.sessionId === "string"
-      ? parseInt(router.query.sessionId)
-      : -1;
-  const dcode =
-    typeof router.query.departmentCode === "string"
-      ? router.query.departmentCode
-      : -1;
+  const sesId = typeof router.query.sessionId === "string" ? parseInt(router.query.sessionId) : -1;
+  const dcode = typeof router.query.departmentCode === "string" ? router.query.departmentCode : -1;
   const { departmentCode, sessionId, sessionName } = router.query;
   console.log("🚀 ", router.query);
 
@@ -50,9 +35,7 @@ const Semesters = () => {
           <BreadcrumbLink href="/class-schedule">Class schedule</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink href={`/class-schedule/${departmentCode}`}>
-            {departmentCode}
-          </BreadcrumbLink>
+          <BreadcrumbLink href={`/class-schedule/${departmentCode}`}>{departmentCode}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem isCurrentPage>
           <BreadcrumbLink>{sessionName}</BreadcrumbLink>
@@ -66,7 +49,7 @@ const Semesters = () => {
         {data.semestersByDepartmentAndSession.map((s) => (
           <GridItem cursor="pointer" bg="blue.200">
             <Link
-              href={`/class-schedule/${departmentCode}/${sessionId}/${s.number}?sessionName=${sessionName}`}
+              href={`/class-schedule/${departmentCode}/${sessionId}/${s.id}?sessionName=${sessionName}&semesterNumber=${s.number}`}
               key={s.id}
             >
               <Text p={4}>{getSemesterName(s.number)}</Text>

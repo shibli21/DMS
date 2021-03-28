@@ -1,13 +1,4 @@
-import {
-  Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Divider,
-  Grid,
-  GridItem,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Divider, Grid, GridItem, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FaChevronRight } from "react-icons/fa";
@@ -19,16 +10,10 @@ import { getSemesterName } from "../../../../../utils/getSemesterName";
 const Courses = () => {
   const router = useRouter();
 
-  const semId =
-    typeof router.query.semesterId === "string"
-      ? parseInt(router.query.semesterId)
-      : -1;
-  const dcode =
-    typeof router.query.departmentCode === "string"
-      ? router.query.departmentCode
-      : -1;
+  const semId = typeof router.query.semesterId === "string" ? parseInt(router.query.semesterId) : -1;
+  const dcode = typeof router.query.departmentCode === "string" ? router.query.departmentCode : -1;
+  const semesterNumber = typeof router.query.semesterNumber === "string" ? parseInt(router.query.semesterNumber) : -1;
   const { departmentCode, sessionId, semesterId, sessionName } = router.query;
-  console.log("🚀 ", router.query);
 
   const { data, loading } = useCoursesByDeptSemesterQuery({
     variables: {
@@ -51,19 +36,15 @@ const Courses = () => {
           <BreadcrumbLink href="/class-schedule">Class schedule</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink href={`/class-schedule/${departmentCode}`}>
-            {departmentCode}
-          </BreadcrumbLink>
+          <BreadcrumbLink href={`/class-schedule/${departmentCode}`}>{departmentCode}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink
-            href={`/class-schedule/${departmentCode}/${sessionId}?sessionName=${sessionName}`}
-          >
+          <BreadcrumbLink href={`/class-schedule/${departmentCode}/${sessionId}?sessionName=${sessionName}`}>
             {sessionName}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem isCurrentPage>
-          <BreadcrumbLink>{getSemesterName(semId)}</BreadcrumbLink>
+          <BreadcrumbLink>{getSemesterName(semesterNumber)}</BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
       <Divider my={4} bg="gray.900" h=".5px" />
@@ -74,7 +55,7 @@ const Courses = () => {
         {data.coursesByDeptSemester.map((c) => (
           <GridItem cursor="pointer" bg="blue.200">
             <Link
-              href={`/class-schedule/${departmentCode}/${sessionId}/${semesterId}/${c.code}?sessionName=${sessionName}`}
+              href={`/class-schedule/${departmentCode}/${sessionId}/${semesterId}/${c.code}?sessionName=${sessionName}&semesterNumber=${semesterNumber}`}
               key={c.id}
             >
               <Text p={4}>{c.name}</Text>

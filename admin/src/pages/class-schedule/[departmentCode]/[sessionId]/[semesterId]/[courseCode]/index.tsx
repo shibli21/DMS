@@ -13,19 +13,15 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import { DateTime } from "luxon";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FaChevronRight, FaEdit, FaTrash } from "react-icons/fa";
+import { FaChevronRight, FaTrash } from "react-icons/fa";
 import LoadingSpinner from "../../../../../../components/LoadingSpinner";
 import withPrivateRoute from "../../../../../../components/withPrivateRoute";
-import {
-  ClassScheduleByAllDocument,
-  useClassScheduleByAllQuery,
-  useDeleteClassScheduleMutation,
-} from "../../../../../../generated/graphql";
+import { useClassScheduleByAllQuery, useDeleteClassScheduleMutation } from "../../../../../../generated/graphql";
 import { getDayName } from "../../../../../../utils/getDayName";
 import { getSemesterName } from "../../../../../../utils/getSemesterName";
-import { DateTime } from "luxon";
 
 const ClassSchedule = () => {
   const router = useRouter();
@@ -35,14 +31,15 @@ const ClassSchedule = () => {
   const ccode = typeof router.query.courseCode === "string" ? router.query.courseCode : -1;
 
   const dcode = typeof router.query.departmentCode === "string" ? router.query.departmentCode : -1;
+  const semesterNumber = typeof router.query.semesterNumber === "string" ? parseInt(router.query.semesterNumber) : -1;
 
   const { courseCode, sessionId, semesterId, sessionName, departmentCode } = router.query;
 
   const { data, loading } = useClassScheduleByAllQuery({
     variables: {
-      departmentCode: encodeURIComponent(dcode),
+      departmentCode: dcode,
       semesterId: semId,
-      courseCode: encodeURIComponent(ccode),
+      courseCode: ccode,
       sessionId: sesId,
     },
   });
@@ -66,15 +63,17 @@ const ClassSchedule = () => {
           <BreadcrumbLink href={`/class-schedule/${departmentCode}`}>{departmentCode}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink href={`/class-schedule/${departmentCode}/${sessionId}?sessionName=${sessionName}`}>
+          <BreadcrumbLink
+            href={`/class-schedule/${departmentCode}/${sessionId}?sessionName=${sessionName}&semesterNumber=${semesterNumber}`}
+          >
             {sessionName}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
           <BreadcrumbLink
-            href={`/class-schedule/${departmentCode}/${sessionId}/${semesterId}?sessionName=${sessionName}`}
+            href={`/class-schedule/${departmentCode}/${sessionId}/${semesterId}?sessionName=${sessionName}&semesterNumber=${semesterNumber}`}
           >
-            {getSemesterName(semId)}
+            {getSemesterName(semesterNumber)}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem isCurrentPage>

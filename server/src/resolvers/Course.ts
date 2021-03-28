@@ -1,14 +1,4 @@
-import {
-  Arg,
-  Ctx,
-  Field,
-  Int,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-  UseMiddleware,
-} from "type-graphql";
+import { Arg, Ctx, Field, Int, Mutation, ObjectType, Query, Resolver, UseMiddleware } from "type-graphql";
 import { getConnection } from "typeorm";
 import { isAdmin } from "../middleware/isAdmin";
 import { FieldError } from "../types/ObjectTypes/FieldErrorType";
@@ -92,9 +82,7 @@ export class CourseResolver {
 
   @UseMiddleware(isAdmin)
   @Mutation(() => CourseResponse)
-  async addCourse(
-    @Arg("input") input: AddCourseInputType
-  ): Promise<CourseResponse> {
+  async addCourse(@Arg("input") input: AddCourseInputType): Promise<CourseResponse> {
     let errors = [];
     if (!input.name) {
       errors.push({
@@ -136,6 +124,8 @@ export class CourseResolver {
       where: { department: department, id: input.semesterId },
       relations: ["department"],
     });
+
+    console.log("semester", semester);
 
     if (!semester) {
       errors.push({

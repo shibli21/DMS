@@ -151,9 +151,7 @@ const AssignCourseToFaculty = (props: Props) => {
                 name="departmentCode"
                 defaultValue={undefined}
               />
-              <FormErrorMessage>
-                {errors?.departmentCode?.message}
-              </FormErrorMessage>
+              <FormErrorMessage>{errors?.departmentCode?.message}</FormErrorMessage>
             </FormControl>
             <FormControl id="sessionId" isInvalid={errors.sessionId}>
               <FormLabel htmlFor="sessionId">Session</FormLabel>
@@ -181,7 +179,7 @@ const AssignCourseToFaculty = (props: Props) => {
                   as={
                     <Select placeholder="Select option">
                       {semesters?.semestersByDepartmentAndSession?.map((s) => (
-                        <option value={s.number} key={s.id}>
+                        <option value={s.id} key={s.id}>
                           {s.number}
                         </option>
                       ))}
@@ -191,9 +189,7 @@ const AssignCourseToFaculty = (props: Props) => {
                   name="semesterId"
                   defaultValue={undefined}
                 />
-                <FormErrorMessage>
-                  {errors?.semesterId?.message}
-                </FormErrorMessage>
+                <FormErrorMessage>{errors?.semesterId?.message}</FormErrorMessage>
               </FormControl>
             )}
             {dCode && semesterId && (
@@ -213,17 +209,10 @@ const AssignCourseToFaculty = (props: Props) => {
                   name="courseCode"
                   defaultValue=""
                 />
-                <FormErrorMessage>
-                  {errors?.courseCode?.message}
-                </FormErrorMessage>
+                <FormErrorMessage>{errors?.courseCode?.message}</FormErrorMessage>
               </FormControl>
             )}
-            <Button
-              w="100%"
-              type="submit"
-              isLoading={loading}
-              colorScheme="purple"
-            >
+            <Button w="100%" type="submit" isLoading={loading} colorScheme="purple">
               Assign
             </Button>
           </Stack>
